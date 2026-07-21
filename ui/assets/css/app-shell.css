@@ -1,3 +1,5 @@
+@import url("/ui/assets/css/developer-guide.css");
+@import url("/ui/assets/css/docs-page.css");
 /*
  * Abhipraya application system — selected visual direction (2026-07).
  * A dependency-free, WCAG-conscious base shared by admin pages.

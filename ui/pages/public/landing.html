@@ -1,40 +1,11 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Abhipraya open public-feedback platform documentation">
-  <title>Abhipraya | Open public feedback</title>
-  <link rel="stylesheet" href="/ui/assets/css/reset.css">
-  <link rel="stylesheet" href="/ui/assets/css/variables.css">
-  <link rel="stylesheet" href="/ui/assets/css/global.css">
-  <link rel="stylesheet" href="/ui/assets/css/abhipraya.css">
-  <link rel="stylesheet" href="/ui/assets/css/app-shell.css">
-  <link rel="stylesheet" href="/ui/assets/css/brand.css">
-  <link rel="stylesheet" href="/ui/assets/css/landing.css">
-</head>
-<body class="ab-landing">
-  <header class="ab-landing-header">
-    <img class="ab-landing-logo" src="/ui/assets/img/abhipraya-logo.png" alt="Abhipraya">
-    <a class="ab-landing-button ab-landing-button--secondary" href="/admin/login">Administrator sign in</a>
-  </header>
-  <main class="ab-landing-main">
-    <section class="ab-landing-hero" aria-labelledby="landing-title">
-      <div class="ab-landing-copy">
-        <p class="ab-landing-kicker">Open public feedback platform</p>
-        <h1 id="landing-title">Listen better.<br>Improve faster.</h1>
-        <p class="ab-landing-lead">Abhipraya helps health facilities collect anonymous multilingual feedback through QR surveys, understand service experience, and turn insight into action.</p>
-        <p class="ab-landing-actions"><a class="ab-landing-button" href="/admin/login">Open administrator portal <span aria-hidden="true">→</span></a><a class="ab-landing-button ab-landing-button--secondary" href="/docs/README.md">Read documentation</a></p>
-      </div>
-      <aside class="ab-landing-hero-panel" aria-label="Abhipraya overview"><span class="ab-landing-panel-label">Built for better service delivery</span><strong>QR feedback</strong><p>Simple for citizens. Actionable for facilities.</p><dl><div><dt>2</dt><dd>survey languages</dd></div><div><dt>1</dt><dd>secure feedback flow</dd></div></dl></aside>
-    </section>
-    <section class="ab-landing-grid" aria-label="Abhipraya guides">
-      <article class="ab-landing-card"><h2>User guide</h2><p>Generate facility QR codes, collect feedback, review reports, and manage improvement actions.</p><a href="/docs/user-guide.md">Open user guide</a></article>
-      <article class="ab-landing-card"><h2>Developer guide</h2><p>Understand the PHP and IIS architecture, API routes, deployment process, and survey configuration.</p><a href="/docs/developer-guide.md">Open developer guide</a></article>
-      <article class="ab-landing-card"><h2>Security &amp; DPG</h2><p>Review VAPT remediation, open-source governance, and Digital Public Good readiness work.</p><a href="/docs/dpg-readiness.md">Open DPG readiness guide</a></article>
-    </section>
-    <aside class="ab-landing-note"><strong>For survey participants:</strong> scan the QR code displayed at your facility. It opens the public survey language page; the administrator portal is for authorised users only.</aside>
-  </main>
-  <footer class="ab-landing-footer">Abhipraya · Apna Rai, Bina Pehchan · Licensed under GPL-3.0</footer>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Abhipraya secure QR-based healthcare feedback system"><title>Abhipraya | Scan. Share. Improve.</title><link rel="stylesheet" href="/ui/assets/css/reset.css"><link rel="stylesheet" href="/ui/assets/css/variables.css"><link rel="stylesheet" href="/ui/assets/css/global.css"><link rel="stylesheet" href="/ui/assets/css/landing.css"></head>
+<body class="ab-landing"><header class="ab-landing-header"><a href="/" aria-label="Abhipraya home"><img class="ab-landing-logo" src="/ui/assets/img/abhipraya-logo.png" alt="Abhipraya"></a><nav class="ab-landing-nav" aria-label="Main navigation"><a href="#features">Features</a><a href="#workflow">Workflow</a><a href="/docs/README.md">Documentation</a><a class="ab-button ab-button-outline" href="/admin/login">Administrator sign in</a></nav></header>
+<main><section class="ab-hero"><div><p class="ab-kicker">QR-based healthcare feedback</p><h1>Scan. Share.<br>Improve.</h1><p class="ab-lead">Abhipraya is a secure, geo-verified, and user-friendly feedback system for collecting structured responses from healthcare facility visitors.</p><div class="ab-actions"><a class="ab-button" href="/admin/login">Open administrator portal <span aria-hidden="true">→</span></a><a class="ab-button ab-button-outline" href="/docs/user-guide.md">Read user guide</a></div><ul class="ab-trust"><li>Anonymous feedback</li><li>200 m GPS verification</li><li>Multilingual surveys</li></ul></div><figure class="ab-poster"><img src="/ui/assets/img/landing/abhipraya-face-qr-poster.png" alt="Abhipraya feedback poster with a decorative non-functional face QR graphic"><figcaption>Illustrative face QR graphic — not scannable</figcaption></figure></section>
+<section class="ab-objective"><div><p class="ab-kicker">Objective</p><h2>Make every visitor's experience count.</h2></div><p>Use facility-linked QR codes, dynamic questionnaires, and location validation to gather dependable feedback and translate it into measurable service improvement.</p></section>
+<section class="ab-section" id="features"><header class="ab-section-head"><p class="ab-kicker">Key features implemented</p><h2>A complete feedback journey, built around the facility.</h2></header><div class="ab-feature-grid"><article><span>01</span><h3>NIN-linked QR codes</h3><p>Facility details are auto-fetched from the NIN embedded in each QR survey URL.</p></article><article><span>02</span><h3>Facility information</h3><p>Name, type, coordinates, and location context load from JSON configuration.</p></article><article><span>03</span><h3>Dynamic multilingual surveys</h3><p>Questions, answers, labels, and acknowledgement messages are JSON-driven.</p></article><article><span>04</span><h3>GPS verification</h3><p>Submission is permitted only within the configured 200 metre radius.</p></article><article><span>05</span><h3>Duplicate prevention</h3><p>Device identity, IP address, and a 24-hour window restrict repeat entries.</p></article><article><span>06</span><h3>Real-time submission</h3><p>Fetch API requests provide a seamless submission experience.</p></article><article><span>07</span><h3>Thank-you confirmation</h3><p>A clear acknowledgement confirms successful feedback submission.</p></article></div></section>
+<section class="ab-dashboard"><div class="ab-dashboard-inner"><header class="ab-section-head"><p class="ab-kicker">Dashboard features</p><h2>Feedback teams can understand and act on.</h2></header><div class="ab-dashboard-grid"><div class="ab-dashboard-list"><p><strong>Facility-wise overall rating</strong><span>Visual rating based on the four-point feedback scale.</span></p><p><strong>Question-wise ratings</strong><span>Compare indicators and identify low-scoring areas.</span></p></div><aside class="ab-rating"><p>Facility experience</p><strong>3.7</strong><div aria-label="Example rating">★ ★ ★ ◕ ☆</div><small>Clean, visual, real-time rating display</small></aside></div></div></section>
+<section class="ab-section" id="workflow"><header class="ab-section-head"><p class="ab-kicker">How it works</p><h2>Seven steps from scan to insight.</h2></header><ol class="ab-workflow"><li><b>Scan QR code</b><span>Open the NIN-linked survey URL.</span></li><li><b>Load facility</b><span>Resolve facility name and coordinates.</span></li><li><b>Load questions</b><span>Read the dynamic JSON questionnaire.</span></li><li><b>Verify location</b><span>Confirm the visitor is within 200 m.</span></li><li><b>Check duplicate</b><span>Apply device, IP, and time controls.</span></li><li><b>Submit response</b><span>Send answers and location securely.</span></li><li><b>Acknowledge</b><span>Show the thank-you confirmation.</span></li></ol></section>
+<section class="ab-tech"><div><p class="ab-kicker">Technical highlights</p><h2>Configurable by design.</h2></div><ul><li>JSON-driven questions, answers, buttons, and facility data</li><li>GPS-based location verification at ≤ 200 m</li><li>Duplicate controls using device identity, IP, and time window</li><li>Versioned PHP APIs with CSRF, secure sessions, CSP, and login throttling</li></ul></section>
+<section class="ab-section"><header class="ab-section-head"><p class="ab-kicker">Explore Abhipraya</p><h2>Guides for users, implementers, and reviewers.</h2></header><div class="ab-guide-grid"><a href="/docs/user-guide.md"><strong>User guide</strong><span>Run surveys and use reports.</span></a><a href="/developer.php"><strong>Developer hub</strong><span>Architecture, APIs, ERD, and deployment.</span></a><a href="/docs/dpg-readiness.md"><strong>Open source &amp; DPG</strong><span>Governance, privacy, and readiness.</span></a></div></section></main>
+<footer class="ab-footer"><div class="ab-footer-brand"><span>Abhipraya · Apna Rai, Bina Pehchan</span><span>Open source · GPL-3.0</span></div><a class="ab-footer-partner" href="https://www.piramalswasthya.org/" aria-label="Piramal Swasthya website"><span>Powered by</span><img src="/ui/assets/img/landing/piramal-swasthya-logo.png" alt="Piramal Swasthya"></a></footer></body></html>

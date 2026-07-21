@@ -9,6 +9,7 @@ $route = trim((string) ($_GET['route'] ?? ''), '/');
 
 $views = [
     'landing' => __DIR__ . '/pages/public/landing.html',
+    'developer' => __DIR__ . '/pages/public/developer-hub.html',
     'admin/login' => __DIR__ . '/pages/auth/login.html',
     'admin/forgot-password' => __DIR__ . '/pages/auth/forgot-password.html',
     'admin/dashboard' => __DIR__ . '/pages/dashboard/index.html',

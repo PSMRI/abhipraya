@@ -7,7 +7,7 @@
   async function fetchToken() {
     if (pending) return pending;
 
-    pending = fetch('/api/v1/auth/csrf', {
+    pending = fetch('/api/v1/auth/csrf-token', {
       credentials: 'include',
       headers: { Accept: 'application/json' },
       cache: 'no-store'

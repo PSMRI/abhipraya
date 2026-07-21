@@ -47,7 +47,7 @@
     try { if (rememberField.checked) { localStorage.setItem('abhipraya_remembered_username', username); } else { localStorage.removeItem('abhipraya_remembered_username'); } } catch (_) { /* Local storage is optional. */ }
     submit.disabled = true; submit.textContent = 'Signing in…'; message.removeAttribute('role'); message.textContent = '';
     try {
-      const response = await fetch('/api/v1/auth/login', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password, captcha }) });
+      const response = await fetch('/api/v1/auth/login-current', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password, captcha }) });
       const payload = await readApiResponse(response);
       if (!response.ok || payload.status !== 'success') throw new Error(payload.message || 'Invalid username or password.');
       const roleId = Number(payload.data?.user?.role_id || 0);

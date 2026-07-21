@@ -29,3 +29,32 @@ Create a local `.env` with database connection values. Never commit `.env` or pr
 ## Extending surveys
 
 Add questions by department in `api/masters/dept_id_<departmentId>.json`. Use language code `1` for English and `2` for Hindi. Survey radius defaults and explicit per-facility overrides belong in `api/masters/radius.json`.
+
+## Validation and test status
+
+The following static checks were run on the workspace on 2026-07-21:
+
+- IIS XML validation passed for `web.config` and `api/web.config`.
+- Required landing, documentation, security, and migration assets are present.
+- No third-party JavaScript `<script>` sources were found in the UI pages.
+- The landing route, documentation renderer route, and developer hub route are registered.
+- Modified PHP files for routing, sessions, CSRF, authentication, and public survey work passed `php -l` checks.
+
+### Existing PHP lint blockers
+
+Four existing files fail standalone PHP lint and must be corrected before a full release gate can pass:
+
+| File | Reported issue |
+| --- | --- |
+| `api/middleware/AuditMiddleware.php` | `?callable` typed property is not valid PHP. |
+| `api/middleware/RateLimitMiddleware.php` | `?callable` typed property is not valid PHP. |
+| `api/services/FacilityService.php` | Invalid constant expression. |
+| `api/services/PublicSurveyService.php` | Invalid constant expression. |
+
+### Production test checklist
+
+1. Apply all database migrations, including `20260721_login_rate_limit.sql`.
+2. Recycle the IIS application pool after deployment.
+3. Open `/`, `/developer.php`, and each `/docs/*.md` guide.
+4. Verify administrator login, CAPTCHA, five-failure lockout, QR generation, survey location validation, language selection, and submission.
+5. Verify HTTPS headers and cookies with a production VAPT retest.
