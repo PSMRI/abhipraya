@@ -1,0 +1,19 @@
+.map-container {
+  min-height: 28rem;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-muted);
+}
+
+.map-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.map-popup {
+  min-width: 12rem;
+  color: var(--color-text);
+}

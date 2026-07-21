@@ -1,0 +1,15 @@
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --color-bg: #f4f7fb;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef3f8;
+  --color-surface-elevated: #ffffff;
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-heading: #0f172a;
+  --color-border: #d8e0ea;
+  --color-border-strong: #b8c5d4;
+  --overlay: rgba(15, 23, 42, .55);
+}

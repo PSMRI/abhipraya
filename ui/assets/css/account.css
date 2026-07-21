@@ -1,0 +1,26 @@
+.ab-account-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 1120px;
+}
+
+.ab-account-grid .ab-panel { margin: 0; }
+
+.ab-panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.ab-panel-heading h2 { margin: 0 0 .25rem; font-size: 1rem; }
+.ab-panel-heading p { margin: 0; color: var(--ab-muted, #58667a); font-size: .875rem; line-height: 1.5; }
+.ab-panel-heading > i { color: #b76f22; font-size: 1.2rem; }
+
+.ab-form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+
+@media (max-width: 840px) {
+  .ab-account-grid, .ab-form-row { grid-template-columns: 1fr; }
+}

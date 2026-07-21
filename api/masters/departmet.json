@@ -1,0 +1,92 @@
+[
+  {
+    "langCode": 1,
+    "departmentId": 1,
+    "departmentName": "Labour Room (LR)"
+  },
+  {
+    "langCode": 1,
+    "departmentId": 2,
+    "departmentName": "Maternity Ward"
+  },
+  {
+    "langCode": 1,
+    "departmentId": 3,
+    "departmentName": "IPD"
+  },
+  {
+    "langCode": 1,
+    "departmentId": 4,
+    "departmentName": "OPD"
+  },
+   {
+    "langCode": 1,
+    "departmentId": 5,
+    "departmentName": "Maternity OT"
+  },
+   {
+    "langCode": 1,
+    "departmentId": 6,
+    "departmentName": "ICU"
+  },
+   {
+    "langCode": 1,
+    "departmentId": 7,
+    "departmentName": "SNCU"
+  },
+   {
+    "langCode": 1,
+    "departmentId": 8,
+    "departmentName": "PP unit"
+  },
+  {
+    "langCode": 1,
+    "departmentId": 9,
+    "departmentName": "Accident and emergency "
+  },
+  {
+    "langCode": 2,
+    "departmentId": 1,
+    "departmentName": "प्रसूति कक्ष (एलआर)"
+  },
+  {
+    "langCode": 2,
+    "departmentId": 2,
+    "departmentName": "प्रसूति वार्ड"
+  },
+  {
+    "langCode": 2,
+    "departmentId": 3,
+    "departmentName": "आईपीडी"
+  },
+  {
+    "langCode": 2,
+    "departmentId": 4,
+    "departmentName": "बाह्य रोगी विभाग (ओपीडी)"
+  },
+  {
+  "langCode": 2,
+  "departmentId": 5,
+  "departmentName": "मातृत्व ऑपरेशन थिएटर"
+},
+{
+  "langCode": 2,
+  "departmentId": 6,
+  "departmentName": "गहन चिकित्सा इकाई"
+},
+{
+  "langCode": 2,
+  "departmentId": 7,
+  "departmentName": "विशेष नवजात शिशु देखभाल इकाई"
+},
+{
+  "langCode": 2,
+  "departmentId": 8,
+  "departmentName": "प्रसूति पश्चात इकाई"
+},
+{
+  "langCode": 2,
+  "departmentId": 9,
+  "departmentName": "दुर्घटना एवं आपातकालीन विभाग"
+}
+]

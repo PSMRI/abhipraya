@@ -1,0 +1,90 @@
+.form-group {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+label,
+legend {
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.form-control,
+.form-select,
+textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: .65rem .8rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.form-control:hover,
+.form-select:hover,
+textarea:hover {
+  border-color: var(--color-border-strong);
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-focus) 18%, transparent);
+  outline: none;
+}
+
+.form-control[disabled],
+.form-select[disabled],
+textarea[disabled] {
+  cursor: not-allowed;
+  opacity: .65;
+  background: var(--color-surface-muted);
+}
+
+.form-help {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.form-error {
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.input-group {
+  display: flex;
+}
+
+.input-group > * {
+  border-radius: 0;
+}
+
+.input-group > :first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.input-group > :last-child {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.checkbox,
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.field{display:grid;gap:.35rem;margin-bottom:1rem}.field input,.field select,.field textarea{width:100%;padding:.7rem .8rem;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}.field input:focus,.field select:focus,.field textarea:focus{outline:3px solid color-mix(in srgb,var(--brand) 25%,transparent);border-color:var(--brand)}

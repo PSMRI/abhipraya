@@ -1,0 +1,32 @@
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tab-button {
+  position: relative;
+  padding: .8rem 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tab-button[aria-selected="true"] {
+  color: var(--color-primary);
+}
+
+.tab-button[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto .75rem -1px;
+  height: 2px;
+  background: var(--color-primary);
+}
+
+.tab-panel {
+  padding-top: var(--space-5);
+}

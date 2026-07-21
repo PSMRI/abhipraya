@@ -1,0 +1,42 @@
+@media print {
+  .admin-sidebar,
+  .admin-header,
+  .admin-footer,
+  .public-survey-header,
+  .public-survey-footer,
+  .survey-navigation,
+  .button,
+  .icon-button,
+  .dropdown,
+  .filter-panel,
+  .pagination-wrapper,
+  .toast-container,
+  .global-loader {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .admin-main-shell {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .admin-main-content {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .card,
+  .table-wrapper {
+    box-shadow: none !important;
+    border-color: #bbb !important;
+  }
+
+  a {
+    color: #000 !important;
+  }
+}

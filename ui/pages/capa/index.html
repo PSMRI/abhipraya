@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Corrective and Preventive Action indicator register">
+  <title>CAPA | Abhipraya</title>
+  <link rel="stylesheet" href="/ui/assets/css/reset.css">
+  <link rel="stylesheet" href="/ui/assets/css/variables.css">
+  <link rel="stylesheet" href="/ui/assets/css/global.css">
+  <link rel="stylesheet" href="/ui/assets/css/abhipraya.css">
+  <link rel="stylesheet" href="/ui/assets/css/app-shell.css">
+  <link rel="stylesheet" href="/ui/assets/css/brand.css">
+  <link rel="stylesheet" href="/ui/assets/css/compact.css">
+  <link rel="stylesheet" href="/ui/assets/css/feedback.css">
+  <link rel="stylesheet" href="/ui/assets/css/analytics.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="ab-admin-body">
+  <a class="ab-skip" href="#main-content">Skip to main content</a>
+  <div class="ab-app">
+    <aside class="ab-sidebar" id="primary-navigation" aria-label="Primary navigation">
+      <a class="ab-wordmark" href="/admin/dashboard"><img src="/ui/assets/img/abhipraya-logo.png" alt="Abhipraya — Apna Rai, Bina Pehchan"><span class="ab-product">Anonymous public feedback</span></a>
+      <nav class="ab-nav">
+        <a href="/admin/dashboard" aria-label="Overview"><i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span></a>
+        <a href="/admin/qr" aria-label="QR codes"><i class="bi bi-qr-code" aria-hidden="true"></i><span>QR codes</span></a>
+        <a href="/admin/reports" aria-label="Reports"><i class="bi bi-bar-chart-line" aria-hidden="true"></i><span>Reports</span></a>
+        <a href="/admin/capa" aria-current="page" aria-label="CAPA"><i class="bi bi-clipboard2-pulse" aria-hidden="true"></i><span>CAPA</span></a>
+      </nav>
+      <div class="ab-sidebar-footer">Abhipraya v1.0<br>Accessible, configurable feedback.</div>
+    </aside>
+    <div class="ab-main">
+      <header class="ab-topbar">
+        <button class="ab-sidebar-toggle" type="button" data-sidebar-toggle aria-controls="primary-navigation" aria-expanded="false" title="Collapse sidebar"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i><span class="sr-only">Collapse sidebar</span></button>
+        <span class="ab-mobile-meta">Abhipraya</span>
+        <details class="ab-profile-menu"><summary><i class="bi bi-person-circle" aria-hidden="true"></i><span class="ab-user">Administrator</span><i class="bi bi-chevron-down" aria-hidden="true"></i></summary><div class="ab-profile-dropdown"><p class="ab-profile-name" data-profile-name>Administrator</p><a href="/admin/account"><i class="bi bi-person-gear" aria-hidden="true"></i>My account</a><button type="button" id="logout-button"><i class="bi bi-box-arrow-right" aria-hidden="true"></i>Sign out</button></div></details>
+      </header>
+      <main class="ab-page" id="main-content" tabindex="-1">
+        <p class="ab-breadcrumb"><a href="/admin/dashboard">Overview</a> / CAPA</p>
+        <section class="ab-hero"><div><h1>Corrective and Preventive Action</h1><p>Identify the three lowest-rated patient feedback indicators for focused facility improvement.</p></div></section>
+        <section class="ab-section">
+          <form class="ab-panel ab-capa-filter" id="capa-filter" novalidate>
+            <div class="ab-field" id="capa-facility-field"><label for="capa-facility-search">Facility</label><input class="ab-input" id="capa-facility-search" type="search" autocomplete="off" placeholder="Search facility name or NIN" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="capa-facility-results"><input id="capa-facility" type="hidden"><div class="ab-facility-results" id="capa-facility-results" role="listbox" hidden></div><p class="ab-hint">Search by facility name or NIN number.</p></div>
+            <div class="ab-field"><label for="capa-month">Month</label><input class="ab-input" id="capa-month" type="month" required></div>
+            <div class="ab-field"><label for="capa-department">Department <span class="ab-required" aria-hidden="true">*</span></label><select class="ab-select" id="capa-department" required><option value="">Select department</option></select></div>
+            <button class="ab-primary" type="submit"><i class="bi bi-search" aria-hidden="true"></i> Generate CAPA list</button>
+          </form>
+          <div id="capa-message" class="ab-auth-message" aria-live="polite" hidden></div>
+          <section class="ab-capa-report-header" id="capa-report-header" hidden aria-label="CAPA report information"><h2>Corrective and Preventive Action Report</h2><dl><div><dt>Facility</dt><dd id="capa-header-facility">—</dd></div><div><dt>NIN</dt><dd id="capa-header-nin">—</dd></div><div><dt>Department</dt><dd id="capa-header-department">—</dd></div><div><dt>Report month</dt><dd id="capa-header-month">—</dd></div><div><dt>Generated on</dt><dd id="capa-header-date">—</dd></div></dl></section>
+          <header class="ab-section-heading ab-report-heading"><div><h2>Lowest-rated indicators</h2><p id="capa-context" aria-live="polite">Choose a facility, department and month to prepare the CAPA list.</p></div><button class="ab-row-action" id="download-capa" type="button" disabled><i class="bi bi-download" aria-hidden="true"></i> Download CSV</button></header>
+          <div class="ab-table-wrap"><table class="ab-data-table"><caption class="sr-only">Corrective and Preventive Action lowest indicator list</caption><thead><tr><th scope="col">Sl. No.</th><th scope="col">Indicator</th><th scope="col">Star marking</th><th scope="col">Status</th></tr></thead><tbody id="capa-results"><tr><td colspan="4" class="muted">No CAPA list has been generated.</td></tr></tbody></table></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="/ui/assets/js/feedback.js"></script>
+  <script src="/ui/assets/js/session-keepalive.js"></script>
+  <script src="/ui/assets/js/header-controls.js"></script>
+  <script src="/ui/assets/js/capa-v1.js"></script>
+</body>
+</html>

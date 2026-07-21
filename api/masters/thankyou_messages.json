@@ -1,0 +1,18 @@
+[
+  {
+    "lang": "1","icon":"assets/img/hand_only.png",
+    "message": "Thank you for your opinion. If you have any grievances, please call 104."
+  },
+  {
+    "lang": "2","icon":"assets/img/hand_only.png",
+    "message": "आपकी राय के लिए धन्यवाद। यदि आपके पास कोई शिकायत है, तो कृपया 104 पर कॉल करें।"
+  },
+  {
+    "lang": "3","icon":"assets/img/hand_only.png",
+    "message": "আপনার মতামতের জন্য ধন্যবাদ। যদি আপনার কোনো অভিযোগ থাকে, অনুগ্রহ করে 104 নম্বরে কল করুন।"
+  },
+  {
+    "lang": "4","icon":"assets/img/hand_only.png",
+    "message": "আপোনাৰ মতামত দিয়াৰ বাবে ধন্যবাদ। যদি আপোনাৰ কোনো অভিযোগ থাকে, অনুগ্ৰহ কৰি 104 নম্বৰত কল কৰক।"
+  }
+]

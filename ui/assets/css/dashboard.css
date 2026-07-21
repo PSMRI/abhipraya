@@ -1,0 +1,28 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.dashboard-span-3 { grid-column: span 3; }
+.dashboard-span-4 { grid-column: span 4; }
+.dashboard-span-6 { grid-column: span 6; }
+.dashboard-span-8 { grid-column: span 8; }
+.dashboard-span-12 { grid-column: span 12; }
+
+.dashboard-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: end;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.dashboard-kpi-value {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800;
+  color: var(--color-heading);
+}

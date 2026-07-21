@@ -1,0 +1,98 @@
+@media (max-width: 1100px) {
+  .dashboard-span-3 { grid-column: span 6; }
+  .dashboard-span-4 { grid-column: span 6; }
+  .dashboard-span-8 { grid-column: span 12; }
+}
+
+@media (max-width: 900px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .admin-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .admin-main-shell {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-brand-panel {
+    min-height: 18rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  :root {
+    --header-height: 3.75rem;
+  }
+
+  .admin-header,
+  .admin-main-content,
+  .admin-footer {
+    padding-inline: var(--space-4);
+  }
+
+  .admin-header-search {
+    display: none;
+  }
+
+  .page-header-content,
+  .admin-footer,
+  .survey-context-inner,
+  .public-survey-footer-inner,
+  .blank-footer-inner {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dashboard-span-3,
+  .dashboard-span-4,
+  .dashboard-span-6,
+  .dashboard-span-8 {
+    grid-column: span 12;
+  }
+
+  .survey-navigation-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .survey-navigation-center {
+    display: none;
+  }
+
+  .pagination-wrapper {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-content-wrapper,
+  .public-survey-card-body,
+  .survey-question-card {
+    padding: var(--space-4);
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .qr-card-actions {
+    flex-direction: column;
+  }
+}
+@media(max-width:760px){.admin-shell{grid-template-columns:1fr}.sidebar{display:none}.grid-3{grid-template-columns:1fr}.site-footer .container,.site-header .container{flex-direction:column;align-items:flex-start}.page-header{align-items:flex-start;flex-direction:column}}

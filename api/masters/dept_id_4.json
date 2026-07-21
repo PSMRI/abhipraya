@@ -1,0 +1,343 @@
+[
+  {
+    "qn": 1,
+    "lang": "2",
+    "ques": "आप अस्पताल में सूचना की उपलब्धता, जैसे साइनबोर्ड और विभिन्न योजनाओं के विवरण को कैसे आंकेंगे?",
+    "options": [
+      { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q01.png"
+  },
+  {
+    "qn": 2,
+    "lang": "2",
+    "ques": "पंजीकरण काउंटर पर प्रतीक्षा समय का आप कैसे मूल्यांकन करेंगे?",
+    "options": [
+     { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q02.png"
+  },
+  {
+    "qn": 3,
+    "lang": "2",
+    "ques": "आप अस्पताल के कर्मचारियों के रवैये और व्यवहार का कैसे आँकलन करेंगे?",
+    "options": [
+      { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q03.png"
+  },
+  {
+    "qn": 4,
+    "lang": "2",
+    "ques": "आप प्रतीक्षा क्षेत्र में कुर्सियों, पंखों, पीने के पानी और बाथरूम और शौचालयों की सफाई सहित सुविधाओं का कैसे आँकलन करेंगे?",
+    "options": [
+      { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q04.png"
+  },
+  {
+    "qn": 5,
+    "lang": "2",
+    "ques": "डॉक्टरों के रवैये और संचार का कैसे आँकलन करेंगे?",
+    "options": [
+      { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q05.png"
+  },
+  {
+    "qn": 6,
+    "lang": "2",
+    "ques": "आप डॉक्टरों द्वारा परामर्श, जांच और काउंसलिंग पर दिए गए समय का कैसे आँकलन करेंगे?",
+    "options": [
+       { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q06.png"
+  },
+  {
+    "qn": 7,
+    "lang": "2",
+    "ques": "आप अस्पताल के भीतर लैब और रेडियोलॉजी जांच सुविधाओं की उपलब्धता का कैसे आँकलन करेंगे?",
+    "options": [
+     { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" },
+      { "text": "सुविधा नहीं ली" }
+    ],
+    "icon": "/api/assets/img/q07.png"
+  },
+  {
+    "qn": 8,
+    "lang": "2",
+    "ques": "आप दवा वितरण काउंटर पर तत्परता का कैसे आँकलन करेंगे?",
+    "options": [
+      { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q08.png"
+  },
+  {
+    "qn": 9,
+    "lang": "2",
+    "ques": "आप अस्पताल की डिस्पेंसरी में निर्धारित दवाओं की उपलब्धता का कैसे आँकलन करेंगे?",
+    "options": [
+     { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q09.png"
+  },
+  {
+    "qn": 10,
+    "lang": "2",
+    "ques": "अस्पताल में अपनी यात्रा के दौरान कुल मिलाकर आपकी संतुष्टि का स्तर क्या था?",
+    "options": [
+      { "text": "बहुत बुरा"},
+      { "text": "सामान्य"},
+      { "text": "अच्छा"},
+      { "text": "बहुत अच्छा"},
+      { "text": "उत्कृष्ट" }
+    ],
+    "icon": "/api/assets/img/q10.png"
+  },
+  {
+    "qn": 11,
+    "lang": "2",
+    "ques": "मैं",
+    "options": [
+      { "text": "एक लाभार्थी हूँ"},
+      { "text": "एक नागरिक हूँ"},
+      { "text": "उत्तर देने से इंकार"}
+    ],
+    "icon": "/api/assets/img/q11.png"
+  },
+  {
+    "qn": 12,
+    "lang": "2",
+    "ques": "मैं हूँ",
+    "options": [
+      { "text": "पुरुष" },
+      { "text": "महिला" },
+      { "text": "अन्य" },
+      { "text": "उत्तर नहीं देना चाहता/चाहती" }
+    ],
+    "icon": "/api/assets/img/q12.png"
+  },
+  {
+    "qn": 13,
+    "lang": "2",
+    "ques": "मेरा आयु वर्ग है",
+    "options": [
+      { "text": "10–20 वर्ष" },
+      { "text": "21–30 वर्ष"},
+      { "text": "31–40 वर्ष"},
+      { "text": "41–50 वर्ष"},
+      { "text": "51–60 वर्ष"},
+      { "text": "60 वर्ष से अधिक" },
+      { "text": "उत्तर नहीं देना चाहते" }
+    ],
+    "icon": "/api/assets/img/q13.png"
+  },
+  {
+    "qn": 1,
+    "lang": "1",
+    "ques": "How would you rate the availability of information in the hospital, such as signboards and details of various schemes?",
+    "options": [
+      { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q01.png"
+  },
+  {
+    "qn": 2,
+    "lang": "1",
+    "ques": "How would you rate the waiting time at the registration counter?",
+    "options": [
+      { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q02.png"
+  },
+  {
+    "qn": 3,
+    "lang": "1",
+    "ques": "How would you rate the attitude and behaviour of hospital staff?",
+    "options": [
+      { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q03.png"
+  },
+  {
+    "qn": 4,
+    "lang": "1",
+    "ques": "How would you rate the amenities in the waiting area, including chairs, fans, drinking water, and cleanliness of bathrooms and toilets?",
+    "options": [
+       { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q04.png"
+  },
+  {
+    "qn": 5,
+    "lang": "1",
+    "ques": "How would you rate the attitude and communication of the doctors?",
+    "options": [
+       { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q05.png"
+  },
+  {
+    "qn": 6,
+    "lang": "1",
+    "ques": "How would you rate the time spent by doctors on consultation, examination, and counselling?",
+    "options": [
+     { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q06.png"
+  },
+  {
+    "qn": 7,
+    "lang": "1",
+    "ques": "How would you rate the availability of lab and radiology investigation facilities within the hospital?",
+    "options": [
+     { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"},
+       { "text": "Did not avail the service" }
+    ],
+    "icon": "/api/assets/img/q07.png"
+  },
+  {
+    "qn": 8,
+    "lang": "1",
+    "ques": "How would you rate the promptness at the medicine distribution counter?",
+    "options": [
+      { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q08.png"
+  },
+  {
+    "qn": 9,
+    "lang": "1",
+    "ques": "How would you rate the availability of prescribed drugs at the hospital dispensary?",
+    "options": [
+      { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q09.png"
+  },
+  {
+    "qn": 10,
+    "lang": "1",
+    "ques": "Overall, how satisfied were you during your visit to the hospital?",
+    "options": [
+       { "text": "Very Poor"},
+      { "text": "Average"},
+      { "text": "Good"},
+      { "text": "Very Good"},
+      { "text": "Excellent"}
+    ],
+    "icon": "/api/assets/img/q10.png"
+  },
+  {
+    "qn": 11,
+    "lang": "1",
+    "ques": "I am a...",
+    "report_type": "category",
+    "options": [
+      { "text": "A beneficiary"},
+      { "text": "A citizen"},
+      { "text": "Prefer not to say"}
+    ],
+    "icon": "/api/assets/img/q11.png"
+  },
+  {
+    "qn": 12,
+    "lang": "1",
+    "ques": "My gender is...",
+    "report_type": "category",
+    "options": [
+      { "text": "Male"},
+      { "text": "Female"},
+      { "text": "Other"},
+      { "text": "Prefer not to say"}
+    ],
+    "icon": "/api/assets/img/q12.png"
+  },
+  {
+    "qn": 13,
+    "lang": "1",
+    "ques": "My age group is...",
+    "report_type": "category",
+    "options": [
+      { "text": "10–20 years" },
+      { "text": "21–30 years" },
+      { "text": "31–40 years" },
+      { "text": "41–50 years" },
+      { "text": "51–60 years" },
+      { "text": "60+ years" },
+      { "text": "Prefer not to say"}
+    ],
+    "icon": "/api/assets/img/q13.png"
+  }
+]

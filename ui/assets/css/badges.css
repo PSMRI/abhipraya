@@ -1,0 +1,44 @@
+.badge,
+.status-badge,
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+  min-height: 1.6rem;
+  padding: .25rem .6rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+}
+
+.status-badge-success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.status-badge-warning {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+
+.status-badge-danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.status-badge-info {
+  background: var(--color-info-soft);
+  color: var(--color-info);
+}
+
+.status-badge-neutral {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.chip {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}

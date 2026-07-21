@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Generate a department feedback QR code">
+  <title>Generate QR code | Abhipraya</title>
+  <link rel="stylesheet" href="/ui/assets/css/reset.css">
+  <link rel="stylesheet" href="/ui/assets/css/variables.css">
+  <link rel="stylesheet" href="/ui/assets/css/global.css">
+  <link rel="stylesheet" href="/ui/assets/css/abhipraya.css">
+  <link rel="stylesheet" href="/ui/assets/css/app-shell.css">
+  <link rel="stylesheet" href="/ui/assets/css/brand.css">
+  <link rel="stylesheet" href="/ui/assets/css/compact.css">
+  <link rel="stylesheet" href="/ui/assets/css/feedback.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="ab-admin-body">
+  <a class="ab-skip" href="#main-content">Skip to main content</a>
+  <div class="ab-app">
+    <aside class="ab-sidebar" id="primary-navigation" aria-label="Primary navigation">
+      <a class="ab-wordmark" href="/admin/dashboard"><img src="/ui/assets/img/abhipraya-logo.png" alt="Abhipraya — Apna Rai, Bina Pehchan"><span class="ab-product">Anonymous public feedback</span></a>
+      <nav class="ab-nav">
+        <a href="/admin/dashboard" aria-label="Overview"><i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span></a>
+        <a href="/admin/qr" aria-current="page" aria-label="QR codes"><i class="bi bi-qr-code" aria-hidden="true"></i><span>QR codes</span></a>
+        <a href="/admin/reports" aria-label="Reports"><i class="bi bi-bar-chart-line" aria-hidden="true"></i><span>Reports</span></a>
+        <a href="/admin/capa" aria-label="CAPA"><i class="bi bi-clipboard2-pulse" aria-hidden="true"></i><span>CAPA</span></a>
+      </nav>
+      <div class="ab-sidebar-footer">Abhipraya v1.0<br>Accessible, configurable feedback.</div>
+    </aside>
+
+    <div class="ab-main">
+      <header class="ab-topbar">
+        <button class="ab-menu-button ab-theme-button" type="button" aria-controls="primary-navigation" aria-expanded="false" data-menu-toggle>Menu</button>
+        <span class="ab-mobile-meta">Abhipraya</span>
+        <button class="ab-sidebar-toggle" type="button" data-sidebar-toggle aria-controls="primary-navigation" aria-pressed="false" title="Collapse sidebar"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i><span class="sr-only">Collapse sidebar</span></button>
+        <details class="ab-accessibility-menu">
+          <summary title="Accessibility options"><i class="bi bi-universal-access" aria-hidden="true"></i><span class="sr-only">Open accessibility options</span></summary>
+          <div class="ab-accessibility-dropdown" aria-label="Accessibility options">
+            <p>Text size</p>
+            <div class="ab-accessibility-actions"><button type="button" data-text-size="decrease" aria-label="Decrease text size">A−</button><button type="button" data-text-size="reset" aria-label="Reset text size">A</button><button type="button" data-text-size="increase" aria-label="Increase text size">A+</button></div>
+            <button type="button" data-read-page><i class="bi bi-volume-up" aria-hidden="true"></i>Read page aloud</button>
+            <button type="button" data-stop-reading disabled><i class="bi bi-volume-mute" aria-hidden="true"></i>Stop reading</button>
+            <p class="ab-accessibility-status" data-accessibility-status aria-live="polite">Text size: normal</p>
+          </div>
+        </details>
+        <span class="ab-date" id="current-date"></span>
+        <button class="ab-theme-button ab-icon-button" type="button" data-theme-toggle aria-label="Switch between light and dark colour theme" title="Change colour theme"><i class="bi bi-circle-half" aria-hidden="true"></i><span class="sr-only">Change colour theme</span></button>
+        <details class="ab-profile-menu">
+          <summary><i class="bi bi-person-circle" aria-hidden="true"></i><span class="ab-user">Administrator</span><i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+          <div class="ab-profile-dropdown">
+            <p class="ab-profile-name" data-profile-name>Administrator</p>
+            <a href="/admin/account"><i class="bi bi-person-gear" aria-hidden="true"></i>My account</a>
+            <button type="button" id="logout-button"><i class="bi bi-box-arrow-right" aria-hidden="true"></i>Sign out</button>
+          </div>
+        </details>
+      </header>
+
+      <main class="ab-page" id="main-content" tabindex="-1" aria-labelledby="page-title">
+        <p class="ab-breadcrumb"><a href="/admin/dashboard">Overview</a> / QR codes / Generate</p>
+        <section class="ab-hero" aria-labelledby="page-title">
+          <div>
+            <h1 id="page-title">Generate QR code</h1>
+            <p>Choose a facility and department to create a public feedback link. The survey uses that department’s approved JSON question configuration.</p>
+          </div>
+        </section>
+
+        <div id="qr-message" class="ab-auth-message" aria-live="polite">Checking administrator access…</div>
+        <section class="ab-grid-two ab-section" id="qr-workspace" hidden>
+          <form class="ab-panel" id="qr-form" novalidate aria-labelledby="qr-form-title">
+            <h2 id="qr-form-title" style="margin-top:0">QR survey details</h2>
+            <p class="ab-hint" style="margin-bottom:20px">Required fields are marked with an asterisk.</p>
+
+            <div class="ab-field">
+              <label for="facility-search">Facility <span class="ab-required" aria-hidden="true">*</span></label>
+              <input id="facility-search" class="ab-input" type="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="facility-results" aria-describedby="facility-help" placeholder="Search by facility name or NIN">
+              <input id="facility-nin" name="facility_nin" type="hidden" required>
+              <div id="facility-results" class="ab-facility-results" role="listbox" hidden></div>
+              <p class="ab-hint" id="facility-help">Administrators can search every facility. Facility Administrators are restricted to their assigned facility.</p>
+            </div>
+
+            <div id="selected-facility" class="ab-selected-facility" hidden aria-live="polite">
+              <div><strong id="selected-facility-name"></strong><span id="selected-facility-meta"></span></div>
+            </div>
+
+            <div class="ab-field" style="margin-top:16px">
+              <label for="department-id">Department <span class="ab-required" aria-hidden="true">*</span></label>
+              <select class="ab-select" id="department-id" name="department_id" required disabled>
+                <option value="">Select department</option>
+              </select>
+              <p class="ab-hint">Feedback submitted from the QR code will be stored against this department.</p>
+            </div>
+            <button class="ab-primary" id="generate-button" type="submit" disabled>Generate QR code</button>
+          </form>
+
+          <aside class="ab-panel ab-qr-preview" aria-labelledby="qr-preview-title">
+            <h2 id="qr-preview-title">Printable QR poster</h2>
+            <p class="ab-hint">The QR code is placed inside the four scan markers on the approved feedback poster.</p>
+            <div id="qr-empty-state" class="ab-hint" style="padding:60px 10px 44px">Select a facility and department to prepare the feedback QR code.</div>
+            <div id="qr-result" hidden>
+              <img id="qr-image" alt="Generated QR code source" hidden>
+              <img id="qr-poster" class="ab-qr-poster" alt="Printable feedback QR poster">
+              <strong id="qr-facility"></strong>
+              <p class="ab-hint" id="qr-department"></p>
+              <input id="qr-url" type="hidden" aria-hidden="true">
+              <p class="ab-qr-actions"><button id="download-qr-poster" class="ab-primary" type="button"><i class="bi bi-download" aria-hidden="true"></i> Download QR poster</button><button id="copy-qr-url" class="ab-row-action" type="button"><i class="bi bi-clipboard" aria-hidden="true"></i> Copy survey link</button></p>
+              <dl class="ab-qr-meta"><dt>Reference</dt><dd id="qr-reference"></dd><dt>Access</dt><dd>Public feedback survey</dd></dl>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="/ui/assets/js/feedback.js"></script>
+  <script src="/ui/assets/js/session-keepalive.js"></script>
+  <script src="/ui/assets/js/accessibility-tools.js?v=20260720-1"></script>
+  <script src="/ui/assets/js/qr-generate-v2.js?v=20260720-5"></script>
+</body>
+</html>

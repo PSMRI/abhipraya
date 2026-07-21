@@ -1,0 +1,44 @@
+[
+  {
+    "role_id": 1,
+    "role_code": "SUPER_ADMIN",
+    "role_name": "Super Administrator",
+    "active_status": 1,
+    "description": "Full access to all Abhipraya modules and data."
+  },
+  {
+    "role_id": 2,
+    "role_code": "FACILITY_ADMIN",
+    "role_name": "Facility Administrator",
+    "active_status": 1,
+    "description": "Manages the assigned facility, its departments, QR codes and reports."
+  },
+  {
+    "role_id": 3,
+    "role_code": "MAIN_ADMIN",
+    "role_name": "Administrator",
+    "active_status": 1,
+    "description": "Manages all facilities, departments, QR codes, users, reports and trends across the platform."
+  },
+  {
+    "role_id": 4,
+    "role_code": "SURVEY_MANAGER",
+    "role_name": "Survey Manager",
+    "active_status": 1,
+    "description": "Creates, validates, publishes and assigns surveys."
+  },
+  {
+    "role_id": 5,
+    "role_code": "DATA_ANALYST",
+    "role_name": "Data Analyst",
+    "active_status": 1,
+    "description": "Views responses, dashboards and exports reports."
+  },
+  {
+    "role_id": 6,
+    "role_code": "VIEWER",
+    "role_name": "Viewer",
+    "active_status": 1,
+    "description": "Read-only access to dashboards and reports."
+  }
+]

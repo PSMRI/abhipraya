@@ -1,0 +1,15 @@
+/* Compact operational layout shared by administration modules. */
+:root { --ab-topbar-height: 52px; }
+.ab-topbar { min-height: 52px; padding-inline: 20px; }
+.ab-page { padding: 18px 28px 30px; }
+.ab-breadcrumb { margin-bottom: 8px; }
+.ab-hero { padding-bottom: 14px; }
+.ab-hero h1 { font-size: clamp(24px, 2vw, 30px); line-height: 1.14; }
+.ab-hero p { margin-top: 4px; font-size: 13px; line-height: 1.4; }
+.ab-section { padding-top: 18px; }
+.ab-panel { padding: 16px; }
+
+@media (max-width: 880px) {
+  .ab-topbar { padding-inline: 14px; }
+  .ab-page { padding: 14px 16px 24px; }
+}

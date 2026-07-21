@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Secure administration sign in for Abhipraya">
+  <title>Administrator sign in | Abhipraya</title>
+  <link rel="stylesheet" href="/ui/assets/css/reset.css">
+  <link rel="stylesheet" href="/ui/assets/css/variables.css">
+  <link rel="stylesheet" href="/ui/assets/css/global.css">
+  <link rel="stylesheet" href="/ui/assets/css/abhipraya.css">
+  <link rel="stylesheet" href="/ui/assets/css/app-shell.css">
+  <link rel="stylesheet" href="/ui/assets/css/brand.css">
+  <link rel="stylesheet" href="/ui/assets/css/feedback.css">
+</head>
+<body class="ab-login-page">
+  <a class="ab-skip" href="#main-content">Skip to sign in</a>
+  <header class="ab-public-header">
+    <a href="index.html" class="ab-public-brand" aria-label="Abhipraya public feedback home">
+      <img src="/ui/assets/img/abhipraya-logo.png" alt="Abhipraya — Apna Rai, Bina Pehchan">
+    </a>
+    <span class="ab-public-caption">Anonymous public feedback system</span>
+  </header>
+
+  <main class="ab-login-main" id="main-content" tabindex="-1">
+    <section class="ab-login-card" aria-labelledby="sign-in-title">
+      <div class="ab-login-heading">
+        <p class="ab-eyebrow"><img src="/ui/assets/icons/user.svg" alt="" aria-hidden="true"> Authorised access</p>
+        <h1 id="sign-in-title">Administrator sign in</h1>
+        <p>This area is for authorised facility and programme administrators.</p>
+      </div>
+
+      <form id="login-form" novalidate>
+        <div class="ab-auth-message" id="login-message" aria-live="polite"></div>
+        <div class="ab-field">
+          <label for="username">Username</label>
+          <input class="ab-input" id="username" name="username" type="text" autocomplete="username" required aria-describedby="username-error">
+          <span class="sr-only" id="username-error"></span>
+        </div>
+        <div class="ab-field">
+          <div class="ab-login-label-row"><label for="password">Password</label><a class="ab-auth-link" href="forgot-password.html">Forgot password?</a></div>
+          <input class="ab-input" id="password" name="password" type="password" autocomplete="current-password" required aria-describedby="password-error">
+          <span class="sr-only" id="password-error"></span>
+        </div>
+        <section class="ab-captcha" aria-labelledby="captcha-title">
+          <div class="ab-captcha-title"><span id="captcha-title">Security check</span><button class="ab-captcha-refresh" type="button" id="captcha-refresh">New question</button></div>
+          <label class="ab-captcha-question" for="captcha-answer" id="captcha-question">Loading question…</label>
+          <input class="ab-input" id="captcha-answer" name="captcha_answer" type="text" inputmode="numeric" autocomplete="off" required aria-describedby="captcha-help">
+          <span class="sr-only" id="captcha-help">Answer the arithmetic question before signing in.</span>
+        </section>
+        <label class="ab-check" for="remember-username"><input id="remember-username" name="remember_username" type="checkbox">Remember my username on this device</label>
+        <button class="ab-primary ab-login-submit" type="submit">Sign in securely</button>
+      </form>
+    </section>
+  </main>
+  <footer class="ab-public-footer"><span>Abhipraya · Apna Rai, Bina Pehchan · Anonymous public feedback</span></footer>
+  <script src="/ui/assets/js/feedback.js"></script>
+  <script src="/ui/assets/js/login-v2.js?v=20260720-4"></script>
+</body>
+</html>

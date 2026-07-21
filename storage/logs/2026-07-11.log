@@ -1,0 +1,2 @@
+{"timestamp":"2026-07-11T22:44:24+05:30","level":"ERROR","request_id":"779c5ca2d2ce4bd0eadc0c6b21071442","message":"Database connection failed","context":{"exception":"SQLSTATE[HY000] [2002] An attempt was made to access a socket in a way forbidden by its access permissions"}}
+{"timestamp":"2026-07-11T23:33:42+05:30","level":"ERROR","request_id":"bf347d54d42b74c33b6f904be4c71003","message":"Database connection failed","context":{"exception":"SQLSTATE[HY000] [2002] An attempt was made to access a socket in a way forbidden by its access permissions"}}

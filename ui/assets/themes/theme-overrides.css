@@ -1,0 +1,20 @@
+[data-theme="dark"] .admin-header,
+[data-theme="dark"] .survey-navigation {
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+}
+
+[data-theme="high-contrast"] .admin-header,
+[data-theme="high-contrast"] .survey-navigation {
+  background: #000;
+  backdrop-filter: none;
+}
+
+[data-theme="dark"] .qr-card-preview {
+  background: var(--color-surface-muted);
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] textarea {
+  color-scheme: dark;
+}
