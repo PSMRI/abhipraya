@@ -119,11 +119,14 @@ class SessionManager
             setcookie(
                 session_name(),
                 '',
-                time() - 42000,
-                $params['path'],
-                $params['domain'],
-                $params['secure'],
-                $params['httponly']
+                [
+                    'expires' => time() - 42000,
+                    'path' => $params['path'] ?: '/',
+                    'domain' => $params['domain'] ?? '',
+                    'secure' => (bool) $params['secure'],
+                    'httponly' => (bool) $params['httponly'],
+                    'samesite' => 'Strict',
+                ]
             );
         }
 
@@ -320,7 +323,6 @@ class SessionManager
             'message' => $message,
             'data' => null,
             'errors' => null,
-            'timestamp' => date('Y-m-d H:i:s')
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         exit;
     }

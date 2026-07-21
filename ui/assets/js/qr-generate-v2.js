@@ -199,7 +199,10 @@
     if (!nin.value || !department.value) { showMessage('Select a facility and department.', true); return; }
     generate.disabled = true; generate.textContent = 'Generating…';
     try {
-      const response = await fetch('/api/v1/qr/generate', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify({ facility_nin: nin.value, department_id: department.value }) });
+      const csrfToken = await window.AbhiprayaCsrf?.get();
+      const headers = { Accept: 'application/json', 'Content-Type': 'application/json' };
+      if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+      const response = await fetch('/api/v1/qr/generate', { method: 'POST', credentials: 'same-origin', headers, body: JSON.stringify({ facility_nin: nin.value, department_id: department.value }) });
       const payload = await json(response);
       if (!response.ok || payload.status !== 'success') throw new Error(payload.message || 'Unable to generate the QR code.');
       const data = payload.data;

@@ -20,9 +20,10 @@ final class SurveyConfig
         }
 
         $radiusSettings = self::radiusSettings();
+        // Survey geofencing is configured exclusively in masters/radius.json.
+        // A per-facility value can be added there when required; values in the
+        // facility master are descriptive data and must not change this rule.
         $facilityRadius = $radiusSettings['facility_overrides'][(string) $matches[1]]
-            ?? $facility['geo_radius']
-            ?? $facility['facilityGeoRadiusMeters']
             ?? $radiusSettings['default_radius_meters'];
         $geoRadius = max(
             (int) $radiusSettings['minimum_radius_meters'],

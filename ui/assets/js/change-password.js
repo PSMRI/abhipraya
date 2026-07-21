@@ -22,7 +22,14 @@
     }
   }
   async function request(url, options) {
-    const response = await fetch(url, Object.assign({ credentials: 'same-origin', headers: { Accept: 'application/json' } }, options));
+    const requestOptions = Object.assign({ credentials: 'same-origin', headers: { Accept: 'application/json' } }, options);
+    const headers = new Headers(requestOptions.headers || {});
+    if (!['GET', 'HEAD'].includes((requestOptions.method || 'GET').toUpperCase())) {
+      const token = await window.AbhiprayaCsrf?.get();
+      if (token) headers.set('X-CSRF-Token', token);
+    }
+    requestOptions.headers = headers;
+    const response = await fetch(url, requestOptions);
     const text = await response.text();
     let payload = {};
     try { payload = text ? JSON.parse(text) : {}; } catch (_) { throw new Error('The server returned an invalid response. Please sign in again.'); }

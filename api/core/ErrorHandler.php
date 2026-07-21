@@ -98,7 +98,6 @@ class ErrorHandler
             'errors' => [
                 'request_id' => self::requestId()
             ],
-            'timestamp' => date('Y-m-d H:i:s')
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
         exit;

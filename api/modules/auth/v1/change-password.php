@@ -6,6 +6,7 @@ require_once dirname(__DIR__, 3) . '/assets/conn/db.php';
 
 Security::requireMethod('POST');
 SessionManager::requireLogin();
+Csrf::validate();
 
 $payload = Security::jsonInput();
 Security::requireFields($payload, ['current_password', 'new_password', 'confirm_password']);

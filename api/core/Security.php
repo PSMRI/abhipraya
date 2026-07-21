@@ -63,7 +63,6 @@ class Security
                 'message' => 'Method not allowed. Required method: ' . $requiredMethod,
                 'data' => null,
                 'errors' => null,
-                'timestamp' => date('Y-m-d H:i:s')
             ]);
             exit;
         }
@@ -90,7 +89,6 @@ class Security
                 'allowed_methods' => $allowed,
                 'data' => null,
                 'errors' => null,
-                'timestamp' => date('Y-m-d H:i:s')
             ]);
             exit;
         }
@@ -119,7 +117,6 @@ class Security
                 'errors' => [
                     'json' => json_last_error_msg()
                 ],
-                'timestamp' => date('Y-m-d H:i:s')
             ]);
             exit;
         }
@@ -152,7 +149,6 @@ class Security
                 'message' => 'Validation failed',
                 'data' => null,
                 'errors' => $errors,
-                'timestamp' => date('Y-m-d H:i:s')
             ]);
             exit;
         }
@@ -248,7 +244,6 @@ class Security
             'message' => $message,
             'data' => null,
             'errors' => $errors,
-            'timestamp' => date('Y-m-d H:i:s')
         ]);
         exit;
     }
@@ -268,7 +263,6 @@ class Security
             'message' => $message,
             'data' => $data,
             'errors' => null,
-            'timestamp' => date('Y-m-d H:i:s')
         ]);
         exit;
     }

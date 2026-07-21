@@ -204,8 +204,6 @@ class Csrf
             'message' => $message,
             'data' => null,
             'errors' => null,
-            'debug' => $debug,
-            'timestamp' => date('Y-m-d H:i:s')
         ]);
 
         exit;

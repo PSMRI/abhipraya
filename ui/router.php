@@ -8,7 +8,9 @@ declare(strict_types=1);
 $route = trim((string) ($_GET['route'] ?? ''), '/');
 
 $views = [
+    'landing' => __DIR__ . '/pages/public/landing.html',
     'admin/login' => __DIR__ . '/pages/auth/login.html',
+    'admin/forgot-password' => __DIR__ . '/pages/auth/forgot-password.html',
     'admin/dashboard' => __DIR__ . '/pages/dashboard/index.html',
     'admin/qr' => __DIR__ . '/pages/qr/generate.html',
     'admin/account' => __DIR__ . '/pages/account/security.html',
@@ -27,6 +29,9 @@ if (!isset($views[$route])) {
 
 $view = $views[$route];
 header('X-Content-Type-Options: nosniff');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 if (str_ends_with($view, '.php')) {
     require $view;

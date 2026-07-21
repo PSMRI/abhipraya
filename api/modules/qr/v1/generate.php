@@ -6,6 +6,7 @@ require_once dirname(__DIR__, 3) . '/helpers/SurveyConfig.php';
 
 Security::requireMethod('POST');
 SessionManager::requireLogin();
+Csrf::validate();
 
 $roleId = (int) (SessionManager::user()['role_id'] ?? 0);
 if (!in_array($roleId, [1, 2, 3], true)) {

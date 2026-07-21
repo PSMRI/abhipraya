@@ -53,6 +53,7 @@ try {
     }
 
     Security::requireMethod('POST');
+    Csrf::validate();
     $payload = Security::jsonInput();
     $profile = [
         'first_name' => profileValue($payload, 'first_name', 80),
