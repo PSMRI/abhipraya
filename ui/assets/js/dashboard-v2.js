@@ -116,8 +116,8 @@
       document.querySelectorAll('.ab-user, [data-profile-name]').forEach((node) => { node.textContent = displayName; });
       document.getElementById('page-title').textContent = 'Welcome back, ' + displayName;
     } catch (error) {
-      if (/unauthorized/i.test(error.message)) { window.location.assign('/admin/login?reason=session-expired'); return; }
-      window.AbhiprayaFeedback?.error('Unable to load account information. Please refresh the page.');
+      /* Any failed session/user lookup means the admin context is unusable. */
+      window.location.assign('/admin/login?reason=session-expired');
     }
   }
 

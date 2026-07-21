@@ -7,6 +7,16 @@ declare(strict_types=1);
  */
 $route = trim((string) ($_GET['route'] ?? ''), '/');
 
+/* Protect direct navigation to administrator pages before sending HTML. */
+$adminRoutes = ['admin/dashboard', 'admin/qr', 'admin/account', 'admin/reports', 'admin/capa'];
+if (in_array($route, $adminRoutes, true)) {
+    require_once __DIR__ . '/../api/bootstrap.php';
+    if (!SessionManager::isLoggedIn()) {
+        header('Location: /admin/login?reason=session-expired', true, 302);
+        exit;
+    }
+}
+
 $views = [
     'landing' => __DIR__ . '/pages/public/landing.html',
     'developer' => __DIR__ . '/pages/public/developer-hub.html',
