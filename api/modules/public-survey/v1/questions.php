@@ -12,6 +12,7 @@ try {
     Response::success('Survey questions loaded', [
         'reference' => $context['reference'],
         'language' => $language,
+        'buttons' => SurveyConfig::buttonLabels($language),
         'questions' => SurveyConfig::questions($context, $language),
     ]);
 } catch (InvalidArgumentException $exception) {

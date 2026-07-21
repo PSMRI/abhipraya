@@ -16,6 +16,7 @@ try {
         'languages' => [1, 2],
         'geo_required' => true,
         'geo_radius_meters' => $context['geo_radius_meters'],
+        'duplicate_window_hours' => $context['duplicate_window_hours'],
     ]);
 } catch (InvalidArgumentException $exception) {
     Response::error($exception->getMessage(), null, 404);

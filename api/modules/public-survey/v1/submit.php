@@ -26,13 +26,14 @@ try {
 
     $nin = (string) $context['facility']['facilityNIN'];
     $departmentId = (string) $context['department']['departmentId'];
-    $duplicate = $con->prepare('SELECT id FROM srvy_responses WHERE hospital_nin = ? AND department_id = ? AND device_id = ? AND srvy_rpl_dt >= DATE_SUB(NOW(), INTERVAL 24 HOUR) LIMIT 1');
-    $duplicate->bind_param('sss', $nin, $departmentId, $deviceId);
+    $duplicateWindowHours = (int) $context['duplicate_window_hours'];
+    $duplicate = $con->prepare('SELECT id FROM srvy_responses WHERE hospital_nin = ? AND department_id = ? AND device_id = ? AND srvy_rpl_dt >= DATE_SUB(NOW(), INTERVAL ? HOUR) LIMIT 1');
+    $duplicate->bind_param('sssi', $nin, $departmentId, $deviceId, $duplicateWindowHours);
     $duplicate->execute();
     $alreadySubmitted = $duplicate->get_result()->num_rows > 0;
     $duplicate->close();
     if ($alreadySubmitted) {
-        Response::error('Feedback from this device was already submitted in the last 24 hours.', null, 409);
+        Response::error('Feedback from this device was already submitted for this department in the last ' . $duplicateWindowHours . ' hours.', null, 409);
     }
 
     /* Legacy response columns are zero-based: qn 1 -> srvy_Q0. */
@@ -59,7 +60,11 @@ try {
     $insert->execute();
     $insert->close();
 
-    Response::success('Feedback submitted successfully.', ['submission_id' => $submissionId, 'distance_meters' => round($distance)], 201);
+    Response::success('Feedback submitted successfully.', [
+        'submission_id' => $submissionId,
+        'distance_meters' => round($distance),
+        'thank_you' => SurveyConfig::thankYouMessage($language),
+    ], 201);
 } catch (Throwable $exception) {
     Response::serverError($exception->getMessage());
 }

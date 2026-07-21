@@ -12,6 +12,8 @@
   let questions = [];
   let language = 1;
   let currentIndex = 0;
+  let buttonLabels = { 1: 'Start Survey', 2: 'Previous', 3: 'Next', 4: 'Submit' };
+  let verifiedLocation = null;
   const answers = {};
 
   function apiUrl(path, query) {
@@ -82,23 +84,69 @@
   }
 
   function questionIcon(question) {
+    const iconValue = String(question.icon || '').trim();
+
+    // A question package may use an emoji (for example "⏳") instead of an image.
+    // Render it as text, never as a broken image URL.
+    if (iconValue && !/^(?:assets\/|https?:\/\/)/i.test(iconValue)) {
+      const emoji = document.createElement('span');
+      emoji.className = 'ab-survey-icon-emoji';
+      emoji.textContent = iconValue;
+      emoji.setAttribute('aria-hidden', 'true');
+      return emoji;
+    }
+
     const image = document.createElement('img');
     image.className = 'ab-survey-icon-image';
     image.alt = '';
     image.setAttribute('aria-hidden', 'true');
-    const configuredPath = String(question.icon || '').replace(/^\/+/, '');
-    image.src = configuredPath ? `/api/${configuredPath}` : '/ui/assets/img/abhipraya-logo.png';
+    image.referrerPolicy = 'no-referrer';
+    const configuredPath = iconValue.replace(/^\/+/, '');
+    image.src = /^https?:\/\//i.test(configuredPath)
+      ? configuredPath
+      : (configuredPath ? `/api/${configuredPath}` : '/ui/assets/img/abhipraya-logo.png');
     image.addEventListener('error', () => {
       image.hidden = true;
     }, { once: true });
     return image;
   }
 
-  function renderLanguageChoice() {
+  function currentPosition() {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Location is unavailable on this device.'));
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(resolve, reject, {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      });
+    });
+  }
+
+  function locationStatus(location) {
+    const status = document.createElement('div');
+    status.className = `ab-location-status${location.within_radius ? '' : ' ab-location-denied'}`;
+    const heading = document.createElement('strong');
+    heading.textContent = location.within_radius ? 'Facility location verified' : 'Outside facility premises';
+    const detail = document.createElement('span');
+    detail.textContent = `You are approximately ${location.distance_meters} metres from the facility. Allowed radius: ${location.allowed_radius_meters} metres.`;
+    status.append(heading, detail);
+    return status;
+  }
+
+  function renderLanguageChoice(location) {
     clearError();
     const view = document.createElement('section');
     view.className = 'ab-language-view';
     view.appendChild(brand(true));
+    view.appendChild(locationStatus(location));
+
+    if (!location.within_radius) {
+      root.replaceChildren(view);
+      return;
+    }
 
     const actions = document.createElement('div');
     actions.className = 'ab-language-actions';
@@ -124,6 +172,7 @@
     try {
       const data = await request(apiUrl('questions.php', { ref: reference, lang: language }));
       questions = data.questions || [];
+      buttonLabels = { ...buttonLabels, ...(data.buttons || {}) };
       currentIndex = 0;
       if (!questions.length) {
         throw new Error('No survey questions are available.');
@@ -175,7 +224,7 @@
 
     const previous = document.createElement('button');
     previous.type = 'button';
-    previous.textContent = 'Previous';
+    previous.textContent = buttonLabels[2] || 'Previous';
     previous.hidden = currentIndex === 0;
     previous.addEventListener('click', () => {
       currentIndex -= 1;
@@ -188,7 +237,9 @@
 
     const next = document.createElement('button');
     next.type = 'button';
-    next.textContent = currentIndex === questions.length - 1 ? 'Submit' : 'Next';
+    next.textContent = currentIndex === questions.length - 1
+      ? (buttonLabels[4] || 'Submit')
+      : (buttonLabels[3] || 'Next');
     next.addEventListener('click', async () => {
       if (!answers[question.qn]) {
         showError('Please select an answer before continuing.');
@@ -210,22 +261,12 @@
   async function submitSurvey(button) {
     clearError();
     button.disabled = true;
-    button.textContent = 'Checking location\u2026';
+    button.textContent = 'Submitting\u2026';
     try {
-      const position = await new Promise((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error('Location is unavailable.'));
-          return;
-        }
-        navigator.geolocation.getCurrentPosition(resolve, reject, {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 0,
-        });
-      });
-
-      button.textContent = 'Submitting\u2026';
-      await request(apiUrl('submit.php'), {
+      if (!verifiedLocation) {
+        throw new Error('Facility location has not been verified. Please scan the QR code again.');
+      }
+      const submitted = await request(apiUrl('submit.php'), {
         method: 'POST',
         credentials: 'same-origin',
         headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
@@ -233,25 +274,35 @@
           ref: reference,
           lang: language,
           device_id: deviceId(),
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude: verifiedLocation.latitude,
+          longitude: verifiedLocation.longitude,
           answers,
         }),
       });
 
       const success = document.createElement('section');
       success.className = 'ab-survey-success';
+      const thankYou = submitted.thank_you || {};
+      if (thankYou.icon) {
+        const icon = document.createElement('img');
+        icon.className = 'ab-survey-thank-you-icon';
+        icon.alt = '';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.src = `/api/${String(thankYou.icon).replace(/^\/+/, '')}`;
+        icon.addEventListener('error', () => { icon.hidden = true; }, { once: true });
+        success.appendChild(icon);
+      }
       const heading = document.createElement('h1');
       heading.textContent = 'Thank you';
       const message = document.createElement('p');
-      message.textContent = 'Your anonymous feedback has been submitted successfully.';
+      message.textContent = thankYou.message || 'Your anonymous feedback has been submitted successfully.';
       success.append(heading, message);
       root.replaceChildren(success);
     } catch (error) {
       const denied = error && error.code === 1;
       showError(denied ? 'Location permission is required to submit feedback from the facility premises.' : (error.message || 'Unable to submit feedback.'));
       button.disabled = false;
-      button.textContent = 'Submit';
+      button.textContent = buttonLabels[4] || 'Submit';
     }
   }
 
@@ -263,9 +314,24 @@
     }
     try {
       context = await request(apiUrl('resolve.php', { ref: reference }));
-      renderLanguageChoice();
+      root.textContent = 'Checking your distance from the facility\u2026';
+      const position = await currentPosition();
+      verifiedLocation = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      };
+      const location = await request(apiUrl('location.php'), {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ref: reference, ...verifiedLocation }),
+      });
+      renderLanguageChoice(location);
     } catch (error) {
-      showError(error.message || 'This survey is unavailable.');
+      const denied = error && error.code === 1;
+      showError(denied
+        ? 'Please allow location access to verify your distance from the facility.'
+        : (error.message || 'This survey is unavailable.'));
       root.textContent = '';
     }
   }

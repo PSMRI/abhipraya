@@ -25,5 +25,6 @@ return [
         '/v1/auth/profile' => $module('auth', 'profile'),
         '/v1/qr/generate' => $module('qr', 'generate'),
         '/v1/public-survey/submit' => $module('public-survey', 'submit'),
+        '/v1/public-survey/location' => $module('public-survey', 'location'),
     ],
 ];

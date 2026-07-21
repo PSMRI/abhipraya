@@ -10,7 +10,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q01.png"
+    "icon": "assets/img/q01.png"
   },
   {
     "qn": 2,
@@ -23,7 +23,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q02.png"
+    "icon": "assets/img/q02.png"
   },
   {
     "qn": 3,
@@ -36,7 +36,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q03.png"
+    "icon": "assets/img/q03.png"
   },
   {
     "qn": 4,
@@ -49,7 +49,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q04.png"
+    "icon": "assets/img/q04.png"
   },
   {
     "qn": 5,
@@ -62,7 +62,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q05.png"
+    "icon": "assets/img/q05.png"
   },
   {
     "qn": 6,
@@ -75,7 +75,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q06.png"
+    "icon": "assets/img/q06.png"
   },
   {
     "qn": 7,
@@ -89,7 +89,7 @@
       { "text": "उत्कृष्ट" },
       { "text": "सुविधा नहीं ली" }
     ],
-    "icon": "/api/assets/img/q07.png"
+    "icon": "assets/img/q07.png"
   },
   {
     "qn": 8,
@@ -102,7 +102,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q08.png"
+    "icon": "assets/img/q08.png"
   },
   {
     "qn": 9,
@@ -115,7 +115,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q09.png"
+    "icon": "assets/img/q09.png"
   },
   {
     "qn": 10,
@@ -128,7 +128,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
-    "icon": "/api/assets/img/q10.png"
+    "icon": "assets/img/q10.png"
   },
   {
     "qn": 11,
@@ -139,7 +139,7 @@
       { "text": "एक नागरिक हूँ"},
       { "text": "उत्तर देने से इंकार"}
     ],
-    "icon": "/api/assets/img/q11.png"
+    "icon": "assets/img/q11.png"
   },
   {
     "qn": 12,
@@ -151,7 +151,7 @@
       { "text": "अन्य" },
       { "text": "उत्तर नहीं देना चाहता/चाहती" }
     ],
-    "icon": "/api/assets/img/q12.png"
+    "icon": "assets/img/q12.png"
   },
   {
     "qn": 13,
@@ -166,7 +166,7 @@
       { "text": "60 वर्ष से अधिक" },
       { "text": "उत्तर नहीं देना चाहते" }
     ],
-    "icon": "/api/assets/img/q13.png"
+    "icon": "assets/img/q13.png"
   },
   {
     "qn": 1,
@@ -179,7 +179,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q01.png"
+    "icon": "assets/img/q01.png"
   },
   {
     "qn": 2,
@@ -192,7 +192,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q02.png"
+    "icon": "assets/img/q02.png"
   },
   {
     "qn": 3,
@@ -205,7 +205,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q03.png"
+    "icon": "assets/img/q03.png"
   },
   {
     "qn": 4,
@@ -218,7 +218,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q04.png"
+    "icon": "assets/img/q04.png"
   },
   {
     "qn": 5,
@@ -231,7 +231,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q05.png"
+    "icon": "assets/img/q05.png"
   },
   {
     "qn": 6,
@@ -244,7 +244,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q06.png"
+    "icon": "assets/img/q06.png"
   },
   {
     "qn": 7,
@@ -258,7 +258,7 @@
       { "text": "Excellent"},
        { "text": "Did not avail the service" }
     ],
-    "icon": "/api/assets/img/q07.png"
+    "icon": "assets/img/q07.png"
   },
   {
     "qn": 8,
@@ -271,7 +271,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q08.png"
+    "icon": "assets/img/q08.png"
   },
   {
     "qn": 9,
@@ -284,7 +284,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q09.png"
+    "icon": "assets/img/q09.png"
   },
   {
     "qn": 10,
@@ -297,7 +297,7 @@
       { "text": "Very Good"},
       { "text": "Excellent"}
     ],
-    "icon": "/api/assets/img/q10.png"
+    "icon": "assets/img/q10.png"
   },
   {
     "qn": 11,
@@ -309,7 +309,7 @@
       { "text": "A citizen"},
       { "text": "Prefer not to say"}
     ],
-    "icon": "/api/assets/img/q11.png"
+    "icon": "assets/img/q11.png"
   },
   {
     "qn": 12,
@@ -322,7 +322,7 @@
       { "text": "Other"},
       { "text": "Prefer not to say"}
     ],
-    "icon": "/api/assets/img/q12.png"
+    "icon": "assets/img/q12.png"
   },
   {
     "qn": 13,
@@ -338,6 +338,6 @@
       { "text": "60+ years" },
       { "text": "Prefer not to say"}
     ],
-    "icon": "/api/assets/img/q13.png"
+    "icon": "assets/img/q13.png"
   }
 ]

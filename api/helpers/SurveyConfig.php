@@ -19,11 +19,22 @@ final class SurveyConfig
             throw new RuntimeException('No survey questions are configured for this department.');
         }
 
+        $radiusSettings = self::radiusSettings();
+        $facilityRadius = $radiusSettings['facility_overrides'][(string) $matches[1]]
+            ?? $facility['geo_radius']
+            ?? $facility['facilityGeoRadiusMeters']
+            ?? $radiusSettings['default_radius_meters'];
+        $geoRadius = max(
+            (int) $radiusSettings['minimum_radius_meters'],
+            min((int) $radiusSettings['maximum_radius_meters'], (int) $facilityRadius)
+        );
+
         return [
             'reference' => $matches[1] . '_' . $department['departmentId'],
             'facility' => $facility,
             'department' => $department,
-            'geo_radius_meters' => max(1, (int) ($facility['facilityGeoRadiusMeters'] ?? Env::get('SURVEY_DEFAULT_GEO_RADIUS_METERS', '200'))),
+            'geo_radius_meters' => $geoRadius,
+            'duplicate_window_hours' => (int) $radiusSettings['duplicate_window_hours'],
             'question_file' => $questionFile,
         ];
     }
@@ -39,6 +50,36 @@ final class SurveyConfig
 
         usort($questions, static fn(array $left, array $right): int => (int) $left['qn'] <=> (int) $right['qn']);
         return $questions;
+    }
+
+    /** @return array<string, string> */
+    public static function buttonLabels(int $language): array
+    {
+        $labels = ['1' => 'Start Survey', '2' => 'Previous', '3' => 'Next', '4' => 'Submit'];
+        foreach (self::readJson(self::MASTER_DIR . '/buttons.json') as $button) {
+            if ((int) ($button['lang'] ?? 0) === $language && isset($button['btn'], $button['txt'])) {
+                $labels[(string) $button['btn']] = (string) $button['txt'];
+            }
+        }
+        return $labels;
+    }
+
+    /** @return array{icon: string, message: string} */
+    public static function thankYouMessage(int $language): array
+    {
+        foreach (self::readJson(self::MASTER_DIR . '/thankyou_messages.json') as $message) {
+            if ((int) ($message['lang'] ?? 0) === $language) {
+                return [
+                    'icon' => (string) ($message['icon'] ?? ''),
+                    'message' => (string) ($message['message'] ?? ''),
+                ];
+            }
+        }
+
+        return [
+            'icon' => '',
+            'message' => 'Thank you for your feedback.',
+        ];
     }
 
     /** @return array<int, array<string, mixed>> */
@@ -135,6 +176,18 @@ final class SurveyConfig
             throw new RuntimeException('Invalid survey configuration.');
         }
         return $data;
+    }
+
+    /** @return array<string, mixed> */
+    private static function radiusSettings(): array
+    {
+        $settings = self::readJson(self::MASTER_DIR . '/radius.json');
+        $settings['default_radius_meters'] = max(1, (int) ($settings['default_radius_meters'] ?? 200));
+        $settings['minimum_radius_meters'] = max(1, (int) ($settings['minimum_radius_meters'] ?? 25));
+        $settings['maximum_radius_meters'] = max((int) $settings['minimum_radius_meters'], (int) ($settings['maximum_radius_meters'] ?? 5000));
+        $settings['duplicate_window_hours'] = max(1, min(168, (int) ($settings['duplicate_window_hours'] ?? 24)));
+        $settings['facility_overrides'] = is_array($settings['facility_overrides'] ?? null) ? $settings['facility_overrides'] : [];
+        return $settings;
     }
 
     private function __construct() {}

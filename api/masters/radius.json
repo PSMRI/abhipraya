@@ -1,0 +1,7 @@
+{
+  "default_radius_meters": 200,
+  "minimum_radius_meters": 25,
+  "maximum_radius_meters": 5000,
+  "duplicate_window_hours": 24,
+  "facility_overrides": {}
+}
