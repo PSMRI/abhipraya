@@ -31,4 +31,10 @@ The [DPG readiness](dpg-readiness.md) page links the evidence required for a pub
 
 Abhipraya is licensed under [GPL-3.0-or-later](../LICENSE). Public releases must also include the [NOTICE](../NOTICE), [third-party notices](../THIRD_PARTY_NOTICES.md), [Code of Conduct](../CODE_OF_CONDUCT.md), [maintainer template](../MAINTAINERS.md), and the [open-source readiness checklist](compliance/open_source_readiness_checklist.md). See [licence consistency and attribution](compliance/license_consistency.md), [public data audit](compliance/public_data_audit.md), and the [data privacy policy baseline](compliance/data_privacy_policy.md).
 
+## Mobile documentation access
+
+The documentation site is designed for phone and tablet use. On small screens, the navigation remains at the top of the page in its own scrollable area; select a section to expand it and open a document. Tables can scroll horizontally so that no evidence or report column is hidden.
+
+For the best experience on a phone, open the documentation home page first, choose the required section from the navigation, and then read the selected page below it.
+
 Use the [GitBook table of contents](SUMMARY.md) to browse the available pages. For HTML deployment instructions, see [GitBook publishing](gitbook.md).
