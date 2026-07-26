@@ -16,7 +16,7 @@
   {
     "role_id": 3,
     "role_code": "MAIN_ADMIN",
-    "role_name": "Administrator",
+    "role_name": "Kajal",
     "active_status": 1,
     "description": "Manages all facilities, departments, QR codes, users, reports and trends across the platform."
   },

@@ -1,0 +1,14 @@
+{
+    "department_id": 6,
+    "survey_code": "DEPARTMENT_6_FEEDBACK",
+    "active_version": "1.0",
+    "versions": [
+        {
+            "version": "1.0",
+            "status": "published",
+            "published_at": "2026-07-25",
+            "path": "v1.0/survey.json",
+            "schema_hash": "2c9e54fafb072f4f703f1caae5f6f3e5588e01b6522bd639172d614688c23b12"
+        }
+    ]
+}

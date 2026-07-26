@@ -1,0 +1,22 @@
+:root{
+  --ab-primary:#145a7a;--ab-primary-strong:#0f4660;--ab-primary-soft:#e8f4f8;
+  --ab-success:#2e7d32;--ab-warning:#b26a00;--ab-danger:#b42318;
+  --score-critical:#991b1b;--score-critical-bg:#fde8e7;
+  --score-priority:#c2413b;--score-priority-bg:#fff0ee;
+  --score-monitor:#b26a00;--score-monitor-bg:#fff4d6;
+  --score-good:#4b8f4f;--score-good-bg:#edf7ed;
+  --score-excellent:#176b36;--score-excellent-bg:#e3f3e7;
+  --score-empty:#cbd5e1;
+  --icon-feedback:#145a7a;--icon-feedback-bg:#e8f4f8;
+  --icon-rating:#a86400;--icon-rating-bg:#fff3d6;
+  --icon-facility:#2e7d32;--icon-facility-bg:#eaf5eb;
+  --icon-priority:#b42318;--icon-priority-bg:#fdecea;
+  --icon-report:#6b4fa3;--icon-report-bg:#f0ebf8;
+  --ab-bg:#f4f7fa;--ab-surface:#fff;--ab-surface-muted:#f8fafc;
+  --ab-border:#d8e1e8;--ab-text:#17212b;--ab-muted:#52606d;
+  --ab-shadow:0 8px 24px rgba(23,33,43,.08);--ab-radius:12px;--ab-sidebar:250px;
+  --ab-font:Inter,"Noto Sans Devanagari","Noto Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}html{font-family:var(--ab-font);color:var(--ab-text);background:var(--ab-bg)}body{margin:0;background:var(--ab-bg)}
+button,input,select{font:inherit}a{color:inherit}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:focus-visible{outline:3px solid rgba(20,90,122,.28);outline-offset:2px}.ab-skip{position:fixed;left:12px;top:-60px;z-index:9999;background:#fff;padding:10px 14px;border-radius:8px}.ab-skip:focus{top:12px}

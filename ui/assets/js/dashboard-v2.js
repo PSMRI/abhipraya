@@ -27,10 +27,87 @@
 
   async function loadOverview() {
     try {
-      const payload = await getJson('/api/v1/analytics/summary?summary_only=1&trend_months=6');
+      const [payload, detailPayload] = await Promise.all([
+        getJson('/api/v1/analytics/summary?summary_only=1&trend_months=6'),
+        getJson('/api/v1/analytics/summary')
+      ]);
       const summary = payload.data?.summary || {};
       document.getElementById('total-responses').textContent = summary.total_responses ?? 0;
       document.getElementById('facility-count').textContent = summary.facility_count ?? 0;
+      const metricGrid = document.querySelector('.ab-metric-grid');
+      if (metricGrid && !document.getElementById('facilities-without-feedback')) {
+        metricGrid.classList.add('has-real-gap');
+        const gapCard = document.createElement('article');
+        gapCard.id = 'facilities-without-feedback';
+        gapCard.className = 'ab-metric-card';
+        gapCard.innerHTML = '<span>Facilities without recent feedback</span><strong>—</strong><small>Facilities requiring outreach</small>';
+        metricGrid.appendChild(gapCard);
+      }
+      let configuredFacilities = Number(summary.configured_facility_count);
+      if (!Number.isFinite(configuredFacilities) || configuredFacilities <= 0) {
+        try {
+          const masterResponse = await fetch('/api/masters/facilityCodes.json', { credentials: 'same-origin', headers: { Accept: 'application/json' } });
+          const masterFacilities = await masterResponse.json();
+          configuredFacilities = Array.isArray(masterFacilities) ? masterFacilities.length : 0;
+        } catch (_) { configuredFacilities = 0; }
+      }
+      const reportingFacilities = Number(summary.facility_count || 0);
+      const gapValue = Number.isFinite(configuredFacilities) ? Math.max(0, configuredFacilities - reportingFacilities) : 0;
+      document.querySelector('#facilities-without-feedback strong')?.replaceChildren(String(gapValue));
+      const indicators = (detailPayload.data?.indicators || []).filter((item) => Number.isFinite(Number(item.score)));
+      const ranked = [...indicators].sort((a, b) => Number(b.score) - Number(a.score));
+      const cards = document.querySelectorAll('.ab-overview-card strong');
+      if (cards[0]) cards[0].textContent = summary.score == null ? '—' : `${summary.score} / 5`;
+      if (cards[1]) cards[1].textContent = ranked[0] ? ranked[0].indicator_name : '—';
+      if (cards[2]) cards[2].textContent = ranked.at(-1) ? ranked.at(-1).indicator_name : '—';
+      if (cards[3]) cards[3].textContent = summary.total_responses ?? 0;
+      const overviewGrid = document.querySelector('.ab-overview-grid');
+      if (overviewGrid && !document.getElementById('today-responses-card')) {
+        const todayCard = document.createElement('article');
+        todayCard.id = 'today-responses-card';
+        todayCard.className = 'ab-overview-card status-blue';
+        todayCard.innerHTML = '<span>Today\'s responses</span><strong>—</strong><small>Feedback received today</small>';
+        overviewGrid.appendChild(todayCard);
+      }
+      const now = new Date();
+      const iso = now.toISOString().slice(0, 10);
+      try {
+      const todayPayload = await getJson(`/api/v1/analytics/summary?summary_only=1&from=${iso}&to=${iso}`);
+        const todayValue = todayPayload.data?.summary?.total_responses ?? 0;
+        document.querySelector('#today-responses-card strong')?.replaceChildren(String(todayValue));
+        const monthStart = `${iso.slice(0, 8)}01`;
+        const monthPayload = await getJson(`/api/v1/analytics/summary?summary_only=1&from=${monthStart}&to=${iso}`);
+        if (cards[3]) cards[3].textContent = monthPayload.data?.summary?.total_responses ?? 0;
+      } catch (_) { /* The main overview remains usable if the optional daily count fails. */ }
+      const labels = document.querySelectorAll('.ab-overview-card span');
+      if (labels[1] && ranked[0]) labels[1].textContent = `Highest-rated: ${ranked[0].indicator_name}`;
+      if (labels[2] && ranked.at(-1)) labels[2].textContent = `Lowest-rated: ${ranked.at(-1).indicator_name}`;
+      const notes = document.querySelectorAll('.ab-overview-card small');
+      if (notes[1] && ranked[0]) notes[1].textContent = `Average rating: ${ranked[0].score} / 5`;
+      if (notes[2] && ranked.at(-1)) notes[2].textContent = `Average rating: ${ranked.at(-1).score} / 5`;
+      const analysisGrid = document.querySelector('.ab-analysis-grid');
+      if (analysisGrid && ranked.length && !document.getElementById('indicator-high-low-summary')) {
+        const summaryCard = document.createElement('section');
+        summaryCard.id = 'indicator-high-low-summary';
+        summaryCard.className = 'ab-analysis-card ab-indicator-summary';
+        summaryCard.innerHTML = `<header><h3>Top-performing indicators</h3><span>Current period</span></header>${ranked.slice(0, 3).map((item, index) => `<p class="highlight-good"><span>#${index + 1}</span><b>${item.indicator_name}<small>★★★★★ ${Number(item.score).toFixed(1)}/5</small></b></p>`).join('')}`;
+        analysisGrid.appendChild(summaryCard);
+      }
+      const healthHeading = document.querySelector('.ab-analysis-card:first-child h3');
+      if (healthHeading) healthHeading.textContent = 'Low-performing indicators';
+      const healthCard = document.querySelector('.ab-analysis-card:first-child');
+      if (healthCard) {
+        healthCard.querySelectorAll('p').forEach((row) => row.remove());
+        [...indicators].sort((a, b) => Number(a.score) - Number(b.score)).slice(0, 3).forEach((match) => {
+          const score = Number(match.score);
+          const status = score >= 4 ? 'good' : (score >= 3 ? 'watch' : 'priority');
+          const row = document.createElement('p');
+          row.className = `ab-health-row ${status}`;
+          const stars = Array.from({ length: 5 }, (_, index) => index + 1 <= Math.round(score) ? '★' : '☆').join('');
+          row.innerHTML = `<span class="ab-health-icon" aria-hidden="true">${status === 'good' ? '✓' : (status === 'watch' ? '!' : '×')}</span><span class="ab-health-name">${match.indicator_name}</span><b class="ab-health-rating" aria-label="Rating ${score.toFixed(1)} out of 5">${stars}<small>${score.toFixed(1)}/5</small></b>`;
+          healthCard.appendChild(row);
+        });
+      }
       renderMonthlyTrend(payload.data?.monthly_trend || []);
     } catch (error) {
       document.getElementById('total-responses').textContent = '—';

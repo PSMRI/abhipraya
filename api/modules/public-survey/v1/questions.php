@@ -11,6 +11,9 @@ try {
     }
     Response::success('Survey questions loaded', [
         'reference' => $context['reference'],
+        'survey_code' => $context['survey_code'],
+        'survey_version' => $context['survey_version'],
+        'survey_schema_hash' => $context['survey_schema_hash'],
         'language' => $language,
         'buttons' => SurveyConfig::buttonLabels($language),
         'questions' => SurveyConfig::questions($context, $language),

@@ -8,7 +8,7 @@ declare(strict_types=1);
 $route = trim((string) ($_GET['route'] ?? ''), '/');
 
 /* Protect direct navigation to administrator pages before sending HTML. */
-$adminRoutes = ['admin/dashboard', 'admin/qr', 'admin/account', 'admin/reports', 'admin/capa'];
+$adminRoutes = ['admin/dashboard', 'admin/qr', 'admin/analytics', 'admin/account', 'admin/reports', 'admin/capa', 'admin/feedback'];
 if (in_array($route, $adminRoutes, true)) {
     require_once __DIR__ . '/../api/bootstrap.php';
     if (!SessionManager::isLoggedIn()) {
@@ -24,9 +24,11 @@ $views = [
     'admin/forgot-password' => __DIR__ . '/pages/auth/forgot-password.html',
     'admin/dashboard' => __DIR__ . '/pages/dashboard/index.html',
     'admin/qr' => __DIR__ . '/pages/qr/generate.html',
+    'admin/analytics' => __DIR__ . '/pages/analytics/index.html',
     'admin/account' => __DIR__ . '/pages/account/security.html',
     'admin/reports' => __DIR__ . '/pages/reports/indicators.html',
     'admin/capa' => __DIR__ . '/pages/capa/index.html',
+    'admin/feedback' => __DIR__ . '/pages/feedback/index.html',
     'survey' => __DIR__ . '/pages/public-survey/question.php',
     'question' => __DIR__ . '/pages/public-survey/question.php',
 ];

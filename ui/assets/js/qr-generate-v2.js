@@ -155,13 +155,29 @@
   }
 
   async function createPoster(data) {
-    const qrSource = 'https://api.qrserver.com/v1/create-qr-code/?size=700x700&data=' + encodeURIComponent(data.survey_url);
+    const qrSource = '/ui/qr-image.php?data=' + encodeURIComponent(data.survey_url);
     const sourceImage = document.getElementById('qr-image');
     sourceImage.src = qrSource;
-    const [template, qrImage] = await Promise.all([
-      loadImage('/ui/assets/img/qr-poster-template.jpg', false),
-      loadImage(qrSource, true)
-    ]);
+    let template;
+    let qrImage;
+    try {
+      [template, qrImage] = await Promise.all([
+        loadImage('/ui/assets/img/qr-poster-template.jpg', false),
+        loadImage(qrSource, false)
+      ]);
+    } catch (_) {
+      /* Production environments may block canvas CORS for the QR provider.
+         Keep the generated QR usable instead of failing the whole request. */
+      posterDataUrl = qrSource;
+      const poster = document.getElementById('qr-poster');
+      const sourceImage = document.getElementById('qr-image');
+      poster.src = '/ui/assets/img/qr-poster-template.jpg';
+      poster.alt = `Feedback QR poster outline for ${data.facility_name || 'facility'}`;
+      sourceImage.hidden = true;
+      sourceImage.src = qrSource;
+      sourceImage.alt = `Generated feedback QR code for ${data.facility_name || 'facility'}`;
+      return;
+    }
     const canvas = document.createElement('canvas');
     canvas.width = template.naturalWidth;
     canvas.height = template.naturalHeight;
@@ -189,10 +205,21 @@
     context.imageSmoothingEnabled = false;
     context.drawImage(qrImage, x, y, size, size);
 
-    posterDataUrl = canvas.toDataURL('image/png');
     const poster = document.getElementById('qr-poster');
-    poster.src = posterDataUrl;
-    poster.alt = `Feedback QR poster for ${facilityName}, ${departmentName}`;
+    try {
+      posterDataUrl = canvas.toDataURL('image/png');
+      poster.src = posterDataUrl;
+      poster.alt = `Feedback QR poster for ${facilityName}, ${departmentName}`;
+    } catch (_) {
+      /* A cross-origin QR image can taint the canvas during export. */
+      posterDataUrl = qrSource;
+      poster.src = '/ui/assets/img/qr-poster-template.jpg';
+      poster.alt = `Feedback QR poster outline for ${facilityName || 'facility'}`;
+      const sourceImage = document.getElementById('qr-image');
+      sourceImage.hidden = true;
+      sourceImage.src = qrSource;
+      sourceImage.alt = `Generated feedback QR code for ${facilityName || 'facility'}`;
+    }
   }
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); showMessage('');

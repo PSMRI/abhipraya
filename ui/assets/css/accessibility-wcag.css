@@ -1,0 +1,216 @@
+:root {
+  --ab-focus: #005fcc;
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--ab-focus) !important;
+  outline-offset: 3px !important;
+}
+
+.ab-wcag-menu {
+  position: relative;
+  flex: none;
+}
+
+.ab-wcag-menu > summary {
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  list-style: none;
+  border: 1px solid var(--ab-border, #d8e1e8);
+  border-radius: 9px;
+  color: var(--ab-primary, #145a7a);
+  background: var(--ab-surface, #fff);
+  cursor: pointer;
+}
+
+.ab-wcag-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.ab-wcag-menu > summary:hover {
+  background: var(--ab-primary-soft, #e8f4f8);
+}
+
+.ab-wcag-menu[open] > summary {
+  color: #fff;
+  background: var(--ab-primary, #145a7a);
+}
+
+.ab-wcag-panel {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  z-index: 1000;
+  width: min(310px, calc(100vw - 24px));
+  padding: 15px;
+  border: 1px solid var(--ab-border, #d8e1e8);
+  border-radius: 12px;
+  color: var(--ab-text, #17212b);
+  background: var(--ab-surface, #fff);
+  box-shadow: 0 16px 40px rgba(23, 33, 43, .18);
+}
+
+.ab-wcag-panel h2 {
+  margin: 0;
+  font-size: .95rem;
+}
+
+.ab-wcag-panel > p {
+  margin: 4px 0 13px;
+  color: var(--ab-muted, #52606d);
+  font-size: .72rem;
+  line-height: 1.45;
+}
+
+.ab-wcag-group {
+  display: grid;
+  gap: 7px;
+  padding: 11px 0;
+  border-top: 1px solid var(--ab-border, #d8e1e8);
+}
+
+.ab-wcag-label {
+  color: var(--ab-muted, #52606d);
+  font-size: .68rem;
+  font-weight: 800;
+}
+
+.ab-wcag-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.ab-wcag-buttons button,
+.ab-wcag-toggle {
+  min-height: 42px;
+  border: 1px solid var(--ab-border, #d8e1e8);
+  border-radius: 8px;
+  color: var(--ab-text, #17212b);
+  background: var(--ab-surface, #fff);
+  font: inherit;
+  font-size: .75rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.ab-wcag-buttons button:hover,
+.ab-wcag-toggle:hover {
+  border-color: var(--ab-primary, #145a7a);
+  background: var(--ab-primary-soft, #e8f4f8);
+}
+
+.ab-wcag-buttons button[aria-pressed="true"] {
+  border-color: var(--ab-primary, #145a7a);
+  color: #fff;
+  background: var(--ab-primary, #145a7a);
+}
+
+.ab-wcag-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 9px;
+  padding: 0 11px;
+  text-align: left;
+}
+
+.ab-wcag-toggle[aria-pressed="true"] {
+  border-color: var(--ab-primary, #145a7a);
+  color: var(--ab-primary-strong, #0f4660);
+  background: var(--ab-primary-soft, #e8f4f8);
+}
+
+.ab-wcag-status {
+  min-height: 18px;
+  margin: 10px 0 0;
+  color: var(--ab-muted, #52606d);
+  font-size: .68rem;
+}
+
+html.ab-text-large {
+  font-size: 112.5%;
+}
+
+html.ab-text-larger {
+  font-size: 125%;
+}
+
+html.ab-high-contrast {
+  --ab-bg: #000;
+  --ab-surface: #000;
+  --ab-surface-muted: #111;
+  --ab-border: #fff;
+  --ab-text: #fff;
+  --ab-muted: #f2f2f2;
+  --ab-primary: #00e5ff;
+  --ab-primary-strong: #7df5ff;
+  --ab-primary-soft: #002f35;
+  --home-header: #000;
+  --home-navy: #fff;
+  --home-blue: #00e5ff;
+  --home-blue-soft: #002f35;
+  --home-green: #5cff85;
+  --home-amber: #ffd54a;
+  --home-red: #ff6b6b;
+  --home-shadow: none;
+  --score-empty: #aaa;
+  color-scheme: dark;
+}
+
+html.ab-high-contrast body,
+html.ab-high-contrast .app-header,
+html.ab-high-contrast .header-primary,
+html.ab-high-contrast .nav-row {
+  color: #fff !important;
+  background: #000 !important;
+}
+
+html.ab-high-contrast a {
+  color: #00e5ff;
+}
+
+html.ab-high-contrast :where(input, select, textarea, button) {
+  border-color: #fff !important;
+}
+
+html.ab-high-contrast .surface,
+html.ab-high-contrast .panel,
+html.ab-high-contrast .kpi,
+html.ab-high-contrast .report-output,
+html.ab-high-contrast .report-builder {
+  border-color: #fff !important;
+  color: #fff !important;
+  background: #000 !important;
+  box-shadow: none !important;
+}
+
+html.ab-reduce-motion *,
+html.ab-reduce-motion *::before,
+html.ab-reduce-motion *::after {
+  scroll-behavior: auto !important;
+  animation-duration: .01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .ab-wcag-panel {
+    position: fixed;
+    top: 68px;
+    right: 12px;
+  }
+}

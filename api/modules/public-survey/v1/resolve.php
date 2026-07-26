@@ -7,6 +7,9 @@ try {
     $context = SurveyConfig::resolveReference((string) ($_GET['ref'] ?? ''));
     Response::success('Survey link resolved', [
         'reference' => $context['reference'],
+        'survey_code' => $context['survey_code'],
+        'survey_version' => $context['survey_version'],
+        'survey_schema_hash' => $context['survey_schema_hash'],
         'facility' => [
             'nin' => (string) $context['facility']['facilityNIN'],
             'name' => $context['facility']['facilityName'],

@@ -1,31 +1,34 @@
-# Abhipraya
+# Abhipraya documentation
 
-## Open feedback for stronger public services
+## Anonymous feedback for better healthcare services
 
-Abhipraya helps health facilities collect anonymous, multilingual feedback through QR-code surveys and turn it into actionable improvement work.
+Abhipraya is an open-source, QR-based public-feedback platform for healthcare facilities. It helps beneficiaries share feedback anonymously and helps authorised officials identify gaps, monitor trends, and document improvement actions.
 
-| Start here | What you can do |
+## Start here
+
+| Audience | Recommended guide |
 | --- | --- |
-| [User guide](user-guide.md) | Sign in, generate a QR code, collect feedback, and use reports. |
-| [Developer guide](developer-guide.md) | Install, configure, deploy, and extend the PHP/IIS application. |
-| [Security guide](security.md) | Review the implemented VAPT remediation controls. |
-| [DPG readiness](dpg-readiness.md) | Assess open-source and Digital Public Good readiness. |
+| Health officials and facility teams | [User guide](user/user_guide.md) |
+| Developers and implementers | [Abhipraya overview](architecture/project_overview.md) |
+| Solution architects and technical reviewers | [Technical architecture overview](architecture/technical_architecture.md) |
+| Survey authors | [Survey version publishing](survey-version-publishing.md) |
+| Security and operations teams | [Security guide](security.md) |
 
-## What Abhipraya provides
+## Documentation sections
 
-- Public QR survey entry with English and Hindi language selection.
-- Facility location validation before survey completion.
-- Anonymous feedback collection and duplicate-submission controls.
-- Administrator dashboard, QR management, reports, CAPA support, profile management, and password change.
-- Versioned API routes under `/api/v1/`.
+- **Product and architecture** — [overview](architecture/project_overview.md), [use cases](architecture/use_cases.md), [technical architecture](architecture/technical_architecture.md), [service map](architecture/service_map.md), [configuration formats](architecture/configuration_formats.md), and [coding standards](architecture/coding_standards.md).
+- **User guide** — [administrator and public feedback guide](user/user_guide.md).
+- **Developer guide** — [database](database/data_dictionary_erd.md), [API](api/README.md), and [developer guide](developer-guide.md).
+- **Security and operations** — [security](security.md), [deployment](deployment/deployment_guide.md), [backup and restore](deployment/backup_restore_guide.md), [troubleshooting](deployment/troubleshooting_faq.md), [testing](testing/test_plan.md), and [accessibility](testing/wcag_web_platform_compliance.md).
+- **Open source and DPG** — [privacy](compliance/privacy_data_protection.md), [governance](compliance/governance_and_ownership.md), and [open-source/DPG readiness](compliance/open_source_dpg_release_status.md).
 
-## Project status
 
-Abhipraya is licensed under GPL-3.0 and is being prepared for open-source and Digital Public Good adoption. Production deployments must configure HTTPS, database credentials, backups, monitoring, and the IIS controls described in the developer and security guides.
+## DPG readiness evidence
 
-## Quick links
+The [DPG readiness](dpg-readiness.md) page links the evidence required for a public release: [SDG mapping](compliance/sdg_mapping.md), [evidence register](compliance/dpg_evidence_register.md), [non-PII export](compliance/non_pii_data_export_import.md), [open standards](compliance/open_standards_mapping.md), [privacy confirmation](compliance/legal_privacy_confirmation.md), and the [release checklist](compliance/release_checklist.md).
 
-- [GitHub/GitBook navigation](SUMMARY.md)
-- [Contributing](../CONTRIBUTING.md)
-- [Security policy](../SECURITY.md)
-- [License](../LICENSE)
+## Licence and open-source governance
+
+Abhipraya is licensed under [GPL-3.0-or-later](../LICENSE). Public releases must also include the [NOTICE](../NOTICE), [third-party notices](../THIRD_PARTY_NOTICES.md), [Code of Conduct](../CODE_OF_CONDUCT.md), [maintainer template](../MAINTAINERS.md), and the [open-source readiness checklist](compliance/open_source_readiness_checklist.md). See [licence consistency and attribution](compliance/license_consistency.md), [public data audit](compliance/public_data_audit.md), and the [data privacy policy baseline](compliance/data_privacy_policy.md).
+
+Use the [GitBook table of contents](SUMMARY.md) to browse the available pages. For HTML deployment instructions, see [GitBook publishing](gitbook.md).

@@ -1,0 +1,41 @@
+body { background: #f7f9fc; color: #12213a; font-family: Inter, "Segoe UI", Arial, sans-serif; }
+.docs-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px clamp(20px, 6vw, 72px); background: #fff; border-bottom: 1px solid #dce4ef; }
+.docs-head a { color: #1557c0; font-weight: 750; text-decoration: none; }
+.docs-head nav { font-size: 0; }
+.docs-head nav a[href="/developer.php"] { display: none; }
+.docs-head nav a { font-size: .95rem; }
+.docs-sidebar a[href="/developer.php"] { display: none; }
+.docs-layout { display: grid; grid-template-columns: 244px minmax(0, 1fr); min-height: calc(100vh - 65px); }
+.docs-sidebar { position: sticky; top: 0; height: calc(100vh - 65px); padding: 20px 16px 28px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; background: #fff; border-right: 1px solid #dce4ef; }
+.docs-sidebar::-webkit-scrollbar { width: 10px; }
+.docs-sidebar::-webkit-scrollbar-thumb { background: #b7c8d8; border: 3px solid #fff; border-radius: 12px; }
+.docs-sidebar::-webkit-scrollbar-thumb:hover { background: #7d9bb5; }
+.docs-sidebar-title { margin: 0 10px 10px; color: #52657f; font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.docs-sidebar-group { margin-top: 28px; }
+.docs-sidebar a { display: block; padding: 9px 10px; color: #314864; border-radius: 7px; font-size: .92rem; text-decoration: none; }
+.docs-sidebar a:hover, .docs-sidebar a:focus-visible, .docs-sidebar a.is-active { color: #083f73; background: #eaf4fb; outline: none; }
+.docs-nav-group { margin: 8px 0; }
+.docs-nav-group summary { display: flex; align-items: center; justify-content: space-between; padding: 10px; color: #52657f; cursor: pointer; border-radius: 7px; font-size: .78rem; font-weight: 800; letter-spacing: .08em; list-style: none; text-transform: uppercase; }
+.docs-nav-group summary::-webkit-details-marker { display: none; }
+.docs-nav-group summary::after { content: '+'; color: #0a6598; font-size: 1.15rem; font-weight: 500; line-height: 1; }
+.docs-nav-group[open] summary { color: #083f73; background: #eef7fc; }
+.docs-nav-group[open] summary::after { content: '−'; }
+.docs-nav-group a { margin-left: 8px; }
+.docs-main { width: min(920px, 100%); margin: 0 auto; padding: 42px 28px 72px; }
+.docs-content { padding: clamp(24px, 4vw, 42px); background: #fff; border: 1px solid #dce4ef; border-radius: 12px; box-shadow: 0 8px 24px rgba(15, 35, 68, .05); }
+.docs-content h1 { margin: 0 0 24px; color: #062a5b; font-size: clamp(2rem, 4vw, 2.5rem); }
+.docs-content h2 { margin: 36px 0 12px; color: #073776; font-size: clamp(1.35rem, 3vw, 1.65rem); }
+.docs-content h3 { margin: 28px 0 10px; font-size: 1.15rem; }
+.docs-content p, .docs-content li { color: #43546c; line-height: 1.7; }
+.docs-content ul, .docs-content ol { margin: 12px 0 18px; padding-left: 24px; }
+.docs-content a { color: #1557c0; font-weight: 700; }
+.docs-content pre { overflow-x: auto; padding: 16px; color: #dceeff; background: #082b52; border-radius: 8px; line-height: 1.55; }
+.docs-content code { font-family: Consolas, "Courier New", monospace; }
+.docs-figure { margin: 24px 0 30px; padding: 14px; background: #f8fbfd; border: 1px solid #dce4ef; border-radius: 12px; }
+.docs-figure img { display: block; width: 100%; height: auto; }
+.docs-figure figcaption { margin-top: 10px; color: #52657f; font-size: .9rem; text-align: center; }
+.docs-table-wrap { overflow-x: auto; margin: 16px 0 24px; }
+.docs-content table { width: 100%; border-collapse: collapse; font-size: .94rem; }
+.docs-content th, .docs-content td { padding: 11px 12px; color: #43546c; text-align: left; vertical-align: top; border: 1px solid #dce4ef; line-height: 1.55; }
+.docs-content th { color: #083f73; background: #edf6fc; font-weight: 800; }
+@media (max-width: 760px) { .docs-layout { display: block; } .docs-sidebar { position: static; height: auto; max-height: 46vh; border-right: 0; border-bottom: 1px solid #dce4ef; } .docs-sidebar a { display: inline-block; } .docs-main { padding: 24px 14px 50px; } .docs-head { padding: 14px 18px; } }

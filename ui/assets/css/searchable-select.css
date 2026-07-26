@@ -1,0 +1,117 @@
+.ab-navigation-open {
+  overflow: hidden;
+}
+
+.searchable-select {
+  position: relative;
+  width: 100%;
+  min-width: 150px;
+}
+
+.searchable-native-select {
+  position: absolute !important;
+  width: 1px !important;
+  min-width: 0 !important;
+  height: 1px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.searchable-select-input {
+  width: 100%;
+  min-width: 0;
+  padding-right: 42px !important;
+}
+
+.searchable-select-toggle {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  display: grid;
+  width: 38px;
+  height: 40px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid #d8e1e8;
+  border-radius: 0 8px 8px 0;
+  color: #52606d;
+  background: transparent;
+  cursor: pointer;
+}
+
+.searchable-select-toggle:hover,
+.searchable-select-toggle:focus-visible {
+  color: #145a7a;
+  background: #edf6fa;
+}
+
+.searchable-select-list {
+  position: absolute;
+  z-index: 1200;
+  top: calc(100% + 5px);
+  left: 0;
+  width: max(100%, 240px);
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid #cbd8e1;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 14px 32px rgb(18 61 85 / 16%);
+}
+
+.searchable-select-option {
+  display: block;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 6px;
+  color: #17212b;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.searchable-select-option:hover,
+.searchable-select-option:focus-visible {
+  outline: none;
+  color: #0f4f6d;
+  background: #e8f4f8;
+}
+
+.searchable-select-option[aria-selected="true"] {
+  color: #fff;
+  background: #145a7a;
+}
+
+.searchable-select-option:disabled {
+  color: #8a98a5;
+  cursor: not-allowed;
+}
+
+.searchable-select-empty {
+  margin: 0;
+  padding: 11px;
+  color: #667788;
+  font-size: .75rem;
+  text-align: center;
+}
+
+.searchable-select.is-disabled {
+  opacity: .65;
+}
+
+@media (max-width: 620px) {
+  .searchable-select {
+    min-width: 0;
+  }
+
+  .searchable-select-list {
+    width: 100%;
+  }
+}

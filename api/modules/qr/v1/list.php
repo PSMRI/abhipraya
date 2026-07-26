@@ -13,7 +13,7 @@ if (!in_array(SessionManager::roleId(), [1, 2, 3], true)) {
 
 try {
     $search = trim((string) ($_GET['search'] ?? ''));
-    $limit = max(1, min(100, (int) ($_GET['limit'] ?? 25)));
+    $limit = max(1, min(500, (int) ($_GET['limit'] ?? 25)));
     $facilities = SurveyConfig::facilities($search);
     // Role 2 is a Facility Administrator. The server, not only the UI,
     // limits the picker to the facility mapped to their account.

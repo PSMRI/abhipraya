@@ -10,6 +10,7 @@
       { "text": "बहुत अच्छा"},
       { "text": "उत्कृष्ट" }
     ],
+    "report_type": "rating",
     "icon": "assets/img/q01.png"
   },
   {
@@ -133,6 +134,7 @@
   {
     "qn": 11,
     "lang": "2",
+    "report_type": "category",
     "ques": "मैं",
     "options": [
       { "text": "एक लाभार्थी हूँ"},
@@ -144,6 +146,7 @@
   {
     "qn": 12,
     "lang": "2",
+    "report_type": "category",
     "ques": "मैं हूँ",
     "options": [
       { "text": "पुरुष" },
@@ -156,6 +159,7 @@
   {
     "qn": 13,
     "lang": "2",
+    "report_type": "category",
     "ques": "मेरा आयु वर्ग है",
     "options": [
       { "text": "10–20 वर्ष" },

@@ -1,0 +1,844 @@
+[
+    {
+        "qn": 1,
+        "lang": "2",
+        "ques": "क्या पंजीकरण/प्रवेश काउंटर पर पर्याप्त जानकारी उपलब्ध थी?",
+        "options": [
+            {
+                "text": "बहुत अच्छा"
+            },
+            {
+                "text": "अच्छा"
+            },
+            {
+                "text": "ठीक-ठाक"
+            },
+            {
+                "text": "खराब"
+            },
+            {
+                "text": "बहुत खराब"
+            }
+        ],
+        "icon": "📋",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q1",
+        "question_id": "DEPT_1_Q1_V1_0"
+    },
+    {
+        "qn": 1,
+        "lang": "1",
+        "ques": "Was sufficient information available at the Registration/OPD Counter?",
+        "options": [
+            {
+                "text": "Very Good"
+            },
+            {
+                "text": "Good"
+            },
+            {
+                "text": "Average"
+            },
+            {
+                "text": "Poor"
+            },
+            {
+                "text": "Very Poor"
+            }
+        ],
+        "icon": "📋",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q1",
+        "question_id": "DEPT_1_Q1_V1_0"
+    },
+    {
+        "qn": 2,
+        "lang": "2",
+        "ques": "पंजीकरण/प्रवेश काउंटर पर प्रतीक्षा का समय:",
+        "options": [
+            {
+                "text": "5 मिनट से कम"
+            },
+            {
+                "text": "6 से 10 मिनट"
+            },
+            {
+                "text": "11 से 20 मिनट"
+            },
+            {
+                "text": "21 से 30 मिनट"
+            },
+            {
+                "text": "30 मिनट से अधिक"
+            }
+        ],
+        "icon": "⏳",
+        "report_type": "duration",
+        "indicator_key": "DEPT_1_Q2",
+        "question_id": "DEPT_1_Q2_V1_0"
+    },
+    {
+        "qn": 2,
+        "lang": "1",
+        "ques": "Waiting time at the Registration/OPD Counter:",
+        "options": [
+            {
+                "text": "Less than 5 minutes"
+            },
+            {
+                "text": "6 to 10 minutes"
+            },
+            {
+                "text": "11 to 20 minutes"
+            },
+            {
+                "text": "21 to 30 minutes"
+            },
+            {
+                "text": "More than 30 minutes"
+            }
+        ],
+        "icon": "⏳",
+        "report_type": "duration",
+        "indicator_key": "DEPT_1_Q2",
+        "question_id": "DEPT_1_Q2_V1_0"
+    },
+    {
+        "qn": 3,
+        "lang": "2",
+        "ques": "क्या अस्पताल आने के लिए मार्गदर्शन प्राप्त हुआ?",
+        "options": [
+            {
+                "text": "हाँ"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "🧭",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q3",
+        "question_id": "DEPT_1_Q3_V1_0"
+    },
+    {
+        "qn": 3,
+        "lang": "1",
+        "ques": "Did you get proper guidance to reach the hospital?",
+        "options": [
+            {
+                "text": "Yes"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "🧭",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q3",
+        "question_id": "DEPT_1_Q3_V1_0"
+    },
+    {
+        "qn": 4,
+        "lang": "2",
+        "ques": "अस्पताल स्टाफ के व्यवहार के बारे में आपका क्या विचार है?",
+        "options": [
+            {
+                "text": "बहुत अच्छा"
+            },
+            {
+                "text": "अच्छा"
+            },
+            {
+                "text": "ठीक-ठाक"
+            },
+            {
+                "text": "खराब"
+            },
+            {
+                "text": "बहुत खराब"
+            }
+        ],
+        "icon": "🤝",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q4",
+        "question_id": "DEPT_1_Q4_V1_0"
+    },
+    {
+        "qn": 4,
+        "lang": "1",
+        "ques": "What was your impression about hospital staff behavior?",
+        "options": [
+            {
+                "text": "Very Good"
+            },
+            {
+                "text": "Good"
+            },
+            {
+                "text": "Average"
+            },
+            {
+                "text": "Poor"
+            },
+            {
+                "text": "Very Poor"
+            }
+        ],
+        "icon": "🤝",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q4",
+        "question_id": "DEPT_1_Q4_V1_0"
+    },
+    {
+        "qn": 5,
+        "lang": "2",
+        "ques": "क्या आपको उपचार प्रक्रिया के लिए स्पष्ट दिशा-निर्देश दिए गए?",
+        "options": [
+            {
+                "text": "हाँ"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "🩺",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q5",
+        "question_id": "DEPT_1_Q5_V1_0"
+    },
+    {
+        "qn": 5,
+        "lang": "1",
+        "ques": "Were you provided clear directions for the treatment process?",
+        "options": [
+            {
+                "text": "Yes"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "🩺",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q5",
+        "question_id": "DEPT_1_Q5_V1_0"
+    },
+    {
+        "qn": 6,
+        "lang": "2",
+        "ques": "क्या सेवाएँ प्रदान करने में देरी हुई?",
+        "options": [
+            {
+                "text": "हाँ"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "⏰",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q6",
+        "question_id": "DEPT_1_Q6_V1_0"
+    },
+    {
+        "qn": 6,
+        "lang": "1",
+        "ques": "Was there any delay in providing services?",
+        "options": [
+            {
+                "text": "Yes"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "⏰",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q6",
+        "question_id": "DEPT_1_Q6_V1_0"
+    },
+    {
+        "qn": 7,
+        "lang": "2",
+        "ques": "क्या आपकी जाँच समय पर डॉक्टर द्वारा की गई?",
+        "options": [
+            {
+                "text": "हाँ"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "👨‍⚕️",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q7",
+        "question_id": "DEPT_1_Q7_V1_0"
+    },
+    {
+        "qn": 7,
+        "lang": "1",
+        "ques": "Was your check-up done on time by the doctor?",
+        "options": [
+            {
+                "text": "Yes"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "👨‍⚕️",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q7",
+        "question_id": "DEPT_1_Q7_V1_0"
+    },
+    {
+        "qn": 8,
+        "lang": "2",
+        "ques": "वार्ड, शौचालय और अस्पताल परिसर की स्वच्छता कैसी थी?",
+        "options": [
+            {
+                "text": "बहुत अच्छा"
+            },
+            {
+                "text": "अच्छा"
+            },
+            {
+                "text": "ठीक-ठाक"
+            },
+            {
+                "text": "खराब"
+            },
+            {
+                "text": "बहुत खराब"
+            }
+        ],
+        "icon": "🧼",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q8",
+        "question_id": "DEPT_1_Q8_V1_0"
+    },
+    {
+        "qn": 8,
+        "lang": "1",
+        "ques": "How was the cleanliness of ward, toilets, and hospital premises?",
+        "options": [
+            {
+                "text": "Very Good"
+            },
+            {
+                "text": "Good"
+            },
+            {
+                "text": "Average"
+            },
+            {
+                "text": "Poor"
+            },
+            {
+                "text": "Very Poor"
+            }
+        ],
+        "icon": "🧼",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q8",
+        "question_id": "DEPT_1_Q8_V1_0"
+    },
+    {
+        "qn": 9,
+        "lang": "2",
+        "ques": "डॉक्टरों द्वारा जाँच और जानकारी देने में लिया गया समय:",
+        "options": [
+            {
+                "text": "5 मिनट से कम"
+            },
+            {
+                "text": "6 से 10 मिनट"
+            },
+            {
+                "text": "11 से 20 मिनट"
+            },
+            {
+                "text": "21 से 30 मिनट"
+            },
+            {
+                "text": "30 मिनट से अधिक"
+            }
+        ],
+        "icon": "⌚",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q9",
+        "question_id": "DEPT_1_Q9_V1_0"
+    },
+    {
+        "qn": 9,
+        "lang": "1",
+        "ques": "Time taken by doctors for examination and providing information?",
+        "options": [
+            {
+                "text": "Less than 5 minutes"
+            },
+            {
+                "text": "6 to 10 minutes"
+            },
+            {
+                "text": "11 to 20 minutes"
+            },
+            {
+                "text": "21 to 30 minutes"
+            },
+            {
+                "text": "More than 30 minutes"
+            }
+        ],
+        "icon": "⌚",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q9",
+        "question_id": "DEPT_1_Q9_V1_0"
+    },
+    {
+        "qn": 10,
+        "lang": "2",
+        "ques": "नर्स और वार्ड अटेंडेंट का व्यवहार कैसा था?",
+        "options": [
+            {
+                "text": "बहुत अच्छा"
+            },
+            {
+                "text": "अच्छा"
+            },
+            {
+                "text": "ठीक-ठाक"
+            },
+            {
+                "text": "खराब"
+            },
+            {
+                "text": "बहुत खराब"
+            }
+        ],
+        "icon": "👩‍⚕️",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q10",
+        "question_id": "DEPT_1_Q10_V1_0"
+    },
+    {
+        "qn": 10,
+        "lang": "1",
+        "ques": "How was the behavior of nurses and ward attendants?",
+        "options": [
+            {
+                "text": "Very Good"
+            },
+            {
+                "text": "Good"
+            },
+            {
+                "text": "Average"
+            },
+            {
+                "text": "Poor"
+            },
+            {
+                "text": "Very Poor"
+            }
+        ],
+        "icon": "👩‍⚕️",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q10",
+        "question_id": "DEPT_1_Q10_V1_0"
+    },
+    {
+        "qn": 11,
+        "lang": "2",
+        "ques": "क्या अस्पताल ने आपकी सुरक्षा और गोपनीयता का ध्यान रखा?",
+        "options": [
+            {
+                "text": "हाँ"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "🔒",
+        "report_type": "category",
+        "indicator_key": "DEPT_1_Q11",
+        "question_id": "DEPT_1_Q11_V1_0"
+    },
+    {
+        "qn": 11,
+        "lang": "1",
+        "ques": "Did hospital staff take care of your safety and privacy?",
+        "options": [
+            {
+                "text": "Yes"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "🔒",
+        "report_type": "category",
+        "indicator_key": "DEPT_1_Q11",
+        "question_id": "DEPT_1_Q11_V1_0"
+    },
+    {
+        "qn": 12,
+        "lang": "2",
+        "ques": "क्या आपको अस्पताल से सभी दवाइयाँ मिलीं?",
+        "options": [
+            {
+                "text": "हाँ"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "💊",
+        "report_type": "category",
+        "indicator_key": "DEPT_1_Q12",
+        "question_id": "DEPT_1_Q12_V1_0"
+    },
+    {
+        "qn": 12,
+        "lang": "1",
+        "ques": "Did you receive all prescribed medicines from the hospital?",
+        "options": [
+            {
+                "text": "Yes"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "💊",
+        "report_type": "category",
+        "indicator_key": "DEPT_1_Q12",
+        "question_id": "DEPT_1_Q12_V1_0"
+    },
+    {
+        "qn": 13,
+        "lang": "2",
+        "ques": "क्या आपको पैथोलॉजी और रेडियोलॉजी जाँच की सुविधा मिली?",
+        "options": [
+            {
+                "text": "हाँ"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "🧪",
+        "report_type": "category",
+        "indicator_key": "DEPT_1_Q13",
+        "question_id": "DEPT_1_Q13_V1_0"
+    },
+    {
+        "qn": 13,
+        "lang": "1",
+        "ques": "Did you get facilities for pathological and radiological tests?",
+        "options": [
+            {
+                "text": "Yes"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "🧪",
+        "report_type": "category",
+        "indicator_key": "DEPT_1_Q13",
+        "question_id": "DEPT_1_Q13_V1_0"
+    },
+    {
+        "qn": 14,
+        "lang": "2",
+        "ques": "क्या आपको समय पर भोजन मिला और भोजन की गुणवत्ता कैसी थी?",
+        "options": [
+            {
+                "text": "बहुत अच्छा"
+            },
+            {
+                "text": "अच्छा"
+            },
+            {
+                "text": "ठीक-ठाक"
+            },
+            {
+                "text": "खराब"
+            },
+            {
+                "text": "बहुत खराब"
+            }
+        ],
+        "icon": "🍛",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q14",
+        "question_id": "DEPT_1_Q14_V1_0"
+    },
+    {
+        "qn": 14,
+        "lang": "1",
+        "ques": "Did you get food on time, and how was its quality?",
+        "options": [
+            {
+                "text": "Very Good"
+            },
+            {
+                "text": "Good"
+            },
+            {
+                "text": "Average"
+            },
+            {
+                "text": "Poor"
+            },
+            {
+                "text": "Very Poor"
+            }
+        ],
+        "icon": "🍛",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q14",
+        "question_id": "DEPT_1_Q14_V1_0"
+    },
+    {
+        "qn": 15,
+        "lang": "2",
+        "ques": "अस्पताल आने से लेकर छुट्टी मिलने तक आपने कितना खर्च किया?",
+        "options": [
+            {
+                "text": "₹ में राशि दर्ज करें"
+            }
+        ],
+        "icon": "💰",
+        "report_type": "numeric",
+        "indicator_key": "DEPT_1_Q15",
+        "question_id": "DEPT_1_Q15_V1_0"
+    },
+    {
+        "qn": 15,
+        "lang": "1",
+        "ques": "How much money did you spend from coming to hospital till discharge?",
+        "options": [
+            {
+                "text": "Enter amount in ₹"
+            }
+        ],
+        "icon": "💰",
+        "report_type": "numeric",
+        "indicator_key": "DEPT_1_Q15",
+        "question_id": "DEPT_1_Q15_V1_0"
+    },
+    {
+        "qn": 16,
+        "lang": "2",
+        "ques": "किस सुविधा/वस्तु पर खर्च हुआ?",
+        "options": [
+            {
+                "text": "जाँच"
+            },
+            {
+                "text": "दवाइयाँ"
+            },
+            {
+                "text": "रक्त"
+            },
+            {
+                "text": "सेवा प्रदाता"
+            },
+            {
+                "text": "अन्य"
+            }
+        ],
+        "report_type": "category",
+        "icon": "📦",
+        "indicator_key": "DEPT_1_Q16",
+        "question_id": "DEPT_1_Q16_V1_0"
+    },
+    {
+        "qn": 16,
+        "lang": "1",
+        "ques": "On which services/items did you spend money?",
+        "options": [
+            {
+                "text": "Investigation"
+            },
+            {
+                "text": "Medicines"
+            },
+            {
+                "text": "Blood"
+            },
+            {
+                "text": "Service provider"
+            },
+            {
+                "text": "Other"
+            }
+        ],
+        "report_type": "category",
+        "icon": "📦",
+        "indicator_key": "DEPT_1_Q16",
+        "question_id": "DEPT_1_Q16_V1_0"
+    },
+    {
+        "qn": 17,
+        "lang": "2",
+        "ques": "क्या अस्पताल में आपको कोई अतिरिक्त राशि देनी पड़ी?",
+        "options": [
+            {
+                "text": "₹ में राशि दर्ज करें किसे और कितना अगर हाँ",
+                "sentiment": "negative"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "report_type": "binary",
+        "positive_value": 2,
+        "negative_value": 1,
+        "icon": "💵",
+        "indicator_key": "DEPT_1_Q17",
+        "question_id": "DEPT_1_Q17_V1_0"
+    },
+    {
+        "qn": 17,
+        "lang": "1",
+        "ques": "Did you have to pay any extra money at the hospital?",
+        "options": [
+            {
+                "text": "Enter the amount (₹), to whom and how much, if Yes",
+                "sentiment": "negative"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "report_type": "binary",
+        "positive_value": 2,
+        "negative_value": 1,
+        "icon": "💵",
+        "indicator_key": "DEPT_1_Q17",
+        "question_id": "DEPT_1_Q17_V1_0"
+    },
+    {
+        "qn": 18,
+        "lang": "2",
+        "ques": "क्या आप अस्पताल द्वारा दी गई सेवाओं से संतुष्ट हैं?",
+        "options": [
+            {
+                "text": "बहुत संतुष्ट"
+            },
+            {
+                "text": "संतुष्ट"
+            },
+            {
+                "text": "सामान्य"
+            },
+            {
+                "text": "असंतुष्ट"
+            },
+            {
+                "text": "बहुत असंतुष्ट"
+            }
+        ],
+        "icon": "😊",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q18",
+        "question_id": "DEPT_1_Q18_V1_0"
+    },
+    {
+        "qn": 18,
+        "lang": "1",
+        "ques": "Are you satisfied with the services provided in the hospital?",
+        "options": [
+            {
+                "text": "Very Satisfied"
+            },
+            {
+                "text": "Satisfied"
+            },
+            {
+                "text": "Neutral"
+            },
+            {
+                "text": "Unsatisfied"
+            },
+            {
+                "text": "Very Unsatisfied"
+            }
+        ],
+        "icon": "😊",
+        "report_type": "rating",
+        "indicator_key": "DEPT_1_Q18",
+        "question_id": "DEPT_1_Q18_V1_0"
+    },
+    {
+        "qn": 19,
+        "lang": "2",
+        "ques": "क्या आपके पास अस्पताल की सेवाओं में सुधार के लिए कोई सुझाव है?",
+        "options": [
+            {
+                "text": "खुला सुझाव"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "💬",
+        "report_type": "text",
+        "indicator_key": "DEPT_1_Q19",
+        "question_id": "DEPT_1_Q19_V1_0"
+    },
+    {
+        "qn": 19,
+        "lang": "1",
+        "ques": "Do you have any suggestions to improve hospital services?",
+        "options": [
+            {
+                "text": "Open feedback"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "💬",
+        "report_type": "text",
+        "indicator_key": "DEPT_1_Q19",
+        "question_id": "DEPT_1_Q19_V1_0"
+    },
+    {
+        "qn": 20,
+        "lang": "2",
+        "ques": "क्या आप भविष्य में इलाज के लिए इस अस्पताल आना चाहेंगे?",
+        "options": [
+            {
+                "text": "हाँ"
+            },
+            {
+                "text": "नहीं"
+            }
+        ],
+        "icon": "🏥",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q20",
+        "question_id": "DEPT_1_Q20_V1_0"
+    },
+    {
+        "qn": 20,
+        "lang": "1",
+        "ques": "Would you like to visit this hospital again for treatment?",
+        "options": [
+            {
+                "text": "Yes"
+            },
+            {
+                "text": "No"
+            }
+        ],
+        "icon": "🏥",
+        "report_type": "binary",
+        "indicator_key": "DEPT_1_Q20",
+        "question_id": "DEPT_1_Q20_V1_0"
+    }
+]

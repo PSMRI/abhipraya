@@ -47,3 +47,4 @@
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
+.ab-qr-source{display:block;width:min(280px,100%);height:auto;margin:14px auto;border:1px solid #d9e3ef;background:#fff}

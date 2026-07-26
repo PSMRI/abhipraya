@@ -5,7 +5,7 @@ final class SurveyConfig
 {
     private const MASTER_DIR = __DIR__ . '/../masters';
 
-    public static function resolveReference(string $reference): array
+    public static function resolveReference(string $reference, ?string $version = null): array
     {
         if (!preg_match('/^(\d{6,20})_(\d{1,2})$/', trim($reference), $matches)) {
             throw new InvalidArgumentException('Invalid survey reference.');
@@ -13,10 +13,57 @@ final class SurveyConfig
 
         $facility = self::findFacility($matches[1]);
         $department = self::findDepartment((int) $matches[2]);
-        $questionFile = self::MASTER_DIR . '/dept_id_' . $department['departmentId'] . '.json';
+        $departmentId = (int) $department['departmentId'];
+        $manifestFile = self::MASTER_DIR . '/surveys/department_' . $departmentId . '/manifest.json';
+        $surveyCode = 'DEPARTMENT_' . $departmentId . '_FEEDBACK';
+        $surveyVersion = $version !== null && trim($version) !== '' ? trim($version) : '1.0';
+        $questionFile = self::MASTER_DIR . '/dept_id_' . $departmentId . '.json';
+        $expectedSchemaHash = '';
+
+        if (is_file($manifestFile)) {
+            $manifest = self::readJson($manifestFile);
+            $surveyCode = trim((string) ($manifest['survey_code'] ?? $surveyCode));
+            $surveyVersion = $version !== null && trim($version) !== ''
+                ? trim($version)
+                : trim((string) ($manifest['active_version'] ?? ''));
+            if (!preg_match('/^\d+\.\d+(?:\.\d+)?$/', $surveyVersion)) {
+                throw new RuntimeException('The survey manifest has an invalid active version.');
+            }
+
+            $configuredVersion = null;
+            foreach (($manifest['versions'] ?? []) as $candidate) {
+                if (is_array($candidate) && (string) ($candidate['version'] ?? '') === $surveyVersion) {
+                    $configuredVersion = $candidate;
+                    break;
+                }
+            }
+            if ($configuredVersion === null) {
+                throw new InvalidArgumentException('The requested survey version is unavailable.');
+            }
+            $status = strtolower(trim((string) ($configuredVersion['status'] ?? '')));
+            if (!in_array($status, ['published', 'retired'], true)) {
+                throw new InvalidArgumentException('The requested survey version is not published.');
+            }
+            $relativePath = trim((string) ($configuredVersion['path'] ?? ''));
+            $expectedSchemaHash = strtolower(trim((string) ($configuredVersion['schema_hash'] ?? '')));
+            $questionFile = $relativePath !== ''
+                ? self::MASTER_DIR . '/surveys/department_' . $departmentId . '/' . ltrim($relativePath, '/\\')
+                : self::MASTER_DIR . '/surveys/department_' . $departmentId . '/v' . $surveyVersion . '/survey.json';
+        } elseif ($version !== null && trim($version) !== '' && trim($version) !== '1.0') {
+            throw new InvalidArgumentException('The requested survey version is unavailable.');
+        }
 
         if (!is_file($questionFile)) {
             throw new RuntimeException('No survey questions are configured for this department.');
+        }
+        $schemaHash = hash_file('sha256', $questionFile);
+        if (!is_string($schemaHash) || $schemaHash === '') {
+            throw new RuntimeException('The survey configuration hash could not be calculated.');
+        }
+        if ($expectedSchemaHash !== '' && !hash_equals($expectedSchemaHash, strtolower($schemaHash))) {
+            throw new RuntimeException(
+                'The published survey file does not match its manifest. Publish a new version instead of editing it.'
+            );
         }
 
         $radiusSettings = self::radiusSettings();
@@ -37,6 +84,9 @@ final class SurveyConfig
             'geo_radius_meters' => $geoRadius,
             'duplicate_window_hours' => (int) $radiusSettings['duplicate_window_hours'],
             'question_file' => $questionFile,
+            'survey_code' => $surveyCode,
+            'survey_version' => $surveyVersion,
+            'survey_schema_hash' => $schemaHash,
         ];
     }
 
@@ -50,7 +100,19 @@ final class SurveyConfig
         }
 
         usort($questions, static fn(array $left, array $right): int => (int) $left['qn'] <=> (int) $right['qn']);
-        return $questions;
+        $departmentId = (int) ($context['department']['departmentId'] ?? 0);
+        $versionToken = preg_replace('/[^0-9A-Za-z]+/', '_', (string) ($context['survey_version'] ?? '1.0'));
+        return array_map(static function (array $question) use ($departmentId, $versionToken): array {
+            $number = (int) ($question['qn'] ?? 0);
+            $question['indicator_key'] = trim((string) ($question['indicator_key'] ?? ''))
+                ?: 'DEPT_' . $departmentId . '_Q' . $number;
+            $question['question_id'] = trim((string) ($question['question_id'] ?? ''))
+                ?: $question['indicator_key'] . '_V' . $versionToken;
+            $question['storage_column'] = $number >= 1 && $number <= 31
+                ? 'srvy_Q' . ($number - 1)
+                : null;
+            return $question;
+        }, $questions);
     }
 
     /** @return array<string, string> */
@@ -120,6 +182,46 @@ final class SurveyConfig
         ));
         usort($departments, static fn(array $left, array $right): int => (int) ($left['departmentId'] ?? 0) <=> (int) ($right['departmentId'] ?? 0));
         return $departments;
+    }
+
+    /** @return array<int, string> */
+    public static function surveyVersions(?int $departmentId = null): array
+    {
+        $versions = [];
+        $departmentIds = $departmentId !== null
+            ? [$departmentId]
+            : array_map(
+                static fn(array $department): int => (int) ($department['departmentId'] ?? 0),
+                self::departments()
+            );
+
+        foreach (array_unique($departmentIds) as $configuredDepartmentId) {
+            if ($configuredDepartmentId < 1) {
+                continue;
+            }
+            $manifestFile = self::MASTER_DIR . '/surveys/department_'
+                . $configuredDepartmentId . '/manifest.json';
+            if (!is_file($manifestFile)) {
+                continue;
+            }
+            foreach ((self::readJson($manifestFile)['versions'] ?? []) as $entry) {
+                if (!is_array($entry)) {
+                    continue;
+                }
+                $version = trim((string) ($entry['version'] ?? ''));
+                $status = strtolower(trim((string) ($entry['status'] ?? '')));
+                if (
+                    preg_match('/^\d+\.\d+(?:\.\d+)?$/', $version)
+                    && in_array($status, ['published', 'retired'], true)
+                ) {
+                    $versions[$version] = true;
+                }
+            }
+        }
+
+        $result = array_keys($versions);
+        usort($result, static fn(string $left, string $right): int => version_compare($right, $left));
+        return $result;
     }
 
     public static function surveyUrl(string $reference): string

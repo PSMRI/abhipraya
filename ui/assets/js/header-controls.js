@@ -16,9 +16,10 @@
 
   function updateThemeIcon(button) {
     const dark = root.dataset.theme === 'dark';
+    const saffron = root.dataset.theme === 'saffron';
     const icon = button.querySelector('i');
     if (icon) icon.className = 'bi bi-circle-half';
-    button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    button.setAttribute('aria-label', dark ? 'Switch to light theme' : (saffron ? 'Switch to dark theme' : 'Switch to saffron theme'));
     button.title = button.getAttribute('aria-label');
   }
 
@@ -34,12 +35,20 @@
   try { root.dataset.theme = localStorage.getItem('abhipraya_theme') || root.dataset.theme || 'light'; } catch (_) { /* Storage is optional. */ }
   updateThemeIcon(themeButton);
   themeButton.addEventListener('click', () => {
-    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = root.dataset.theme === 'light' ? 'saffron' : (root.dataset.theme === 'saffron' ? 'dark' : 'light');
     try { localStorage.setItem('abhipraya_theme', root.dataset.theme); } catch (_) { /* Storage is optional. */ }
     updateThemeIcon(themeButton);
   });
 
-  if (header.querySelector('.ab-accessibility-menu')) return;
+  const sidebar = document.getElementById('primary-navigation');
+  const menuToggle = document.querySelector('[data-sidebar-toggle]');
+  if (sidebar && !sidebar.querySelector('.ab-mobile-close')) {
+    const close = document.createElement('button');
+    close.type = 'button'; close.className = 'ab-mobile-close'; close.textContent = '×'; close.setAttribute('aria-label', 'Close navigation menu');
+    close.addEventListener('click', () => { sidebar.classList.remove('is-open'); menuToggle?.setAttribute('aria-expanded', 'false'); });
+    sidebar.prepend(close);
+  }
+  if (document.querySelector('script[data-accessibility-loader]') || header.querySelector('.ab-accessibility-menu, .ab-wcag-menu')) return;
   const menu = document.createElement('details');
   menu.className = 'ab-accessibility-menu';
   menu.innerHTML = '<summary title="Accessibility options"><i class="bi bi-universal-access" aria-hidden="true"></i><span class="sr-only">Open accessibility options</span></summary><div class="ab-accessibility-dropdown" aria-label="Accessibility options"><p>Text size</p><div class="ab-accessibility-actions"><button type="button" data-size="decrease" aria-label="Decrease text size">A−</button><button type="button" data-size="reset" aria-label="Reset text size">A</button><button type="button" data-size="increase" aria-label="Increase text size">A+</button></div><button type="button" data-read-page><i class="bi bi-volume-up" aria-hidden="true"></i>Read page aloud</button><button type="button" data-stop-reading disabled><i class="bi bi-volume-mute" aria-hidden="true"></i>Stop reading</button><p class="ab-accessibility-status" aria-live="polite">Text size: normal</p></div>';

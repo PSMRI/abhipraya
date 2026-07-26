@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Abhipraya feedback trends and analysis">
+  <title>Trends &amp; Analytics | Abhipraya</title>
+  <link rel="stylesheet" href="/ui/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="/ui/assets/css/tokens-v2.css">
+  <link rel="stylesheet" href="/ui/assets/css/dashboard-home.css?v=20260725-density-ui">
+  <link rel="stylesheet" href="/ui/assets/css/analytics-home.css?v=20260726-highest-indicators">
+</head>
+<body>
+  <a class="ab-skip" href="#main">Skip to main content</a>
+
+  <header class="app-header">
+    <div class="header-primary">
+      <a class="brand" href="/admin/dashboard" aria-label="Abhipraya home">
+        <img src="/ui/assets/img/abhipraya-logo.png" alt="">
+        <span><strong>Abhipraya</strong><small>Healthcare experience intelligence</small></span>
+      </a>
+      <div class="header-actions">
+        <button class="icon-button" type="button" aria-label="Notifications"><i class="bi bi-bell" aria-hidden="true"></i></button>
+        <div class="profile">
+          <span class="avatar" data-avatar>A</span>
+          <span class="profile-copy"><strong data-user-name>Administrator</strong><small data-user-role>Loading role...</small></span>
+        </div>
+        <a class="profile-button" href="/admin/account"><i class="bi bi-person-gear" aria-hidden="true"></i><span>My Profile</span></a>
+        <button class="icon-button" type="button" data-logout aria-label="Sign out"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="mobile-menu-button" type="button" data-topnav-toggle aria-expanded="false" aria-controls="primary-navigation">
+        <i class="bi bi-list" aria-hidden="true"></i><span>Menu</span>
+      </button>
+      <nav id="primary-navigation" class="top-navigation" aria-label="Primary navigation">
+        <a href="/admin/dashboard"><i class="bi bi-house-door" aria-hidden="true"></i>Home</a>
+        <a href="/admin/qr"><i class="bi bi-qr-code" aria-hidden="true"></i>QR Center</a>
+        <a href="/admin/analytics" aria-current="page"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i>Analytics</a>
+        <a href="/admin/reports"><i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i>Reports</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page-content">
+    <section class="analytics-head" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Trends &amp; Analytics</p>
+        <h1 id="page-title">Understand beneficiary experience</h1>
+        <p>Compare performance, identify service gaps, and monitor changes within your permitted scope.</p>
+      </div>
+      <span id="data-updated" class="analysis-updated" aria-live="polite">Updating data...</span>
+    </section>
+
+    <section class="surface filter-panel" aria-labelledby="filter-title">
+      <div class="filter-title"><i class="bi bi-funnel" aria-hidden="true"></i><div><h2 id="filter-title">Filter analysis</h2><p>Results automatically respect your assigned access scope.</p></div></div>
+      <div class="analysis-filters">
+        <label><span>Facility</span><select id="facility-filter"><option value="">All permitted facilities</option></select></label>
+        <label><span>Department</span><select id="department-filter"><option value="">All departments</option></select></label>
+        <label><span>Survey version</span><select id="survey-version-filter"><option value="">All survey versions</option></select></label>
+        <label><span>Indicator</span><select id="indicator-filter" disabled><option value="">Select facility and department first</option></select></label>
+        <label><span>From</span><input id="from-filter" type="date"></label>
+        <label><span>To</span><input id="to-filter" type="date"></label>
+        <button class="primary-button" id="apply-filters" type="button"><i class="bi bi-search" aria-hidden="true"></i>Apply</button>
+        <button class="reset-button" id="reset-filters" type="button">Reset</button>
+      </div>
+    </section>
+
+    <div id="analytics-message" class="analysis-message" role="alert" hidden></div>
+
+    <section class="analysis-kpis" aria-label="Analytics summary">
+      <article class="surface analysis-kpi"><span><i class="bi bi-chat-left-text" aria-hidden="true"></i>Feedback</span><strong id="metric-feedback" class="skeleton">0000</strong><small>Responses in selected period</small></article>
+      <article class="surface analysis-kpi"><span><i class="bi bi-star" aria-hidden="true"></i>Average score</span><strong id="metric-score" class="skeleton">0.0/5</strong><small>Weighted service experience</small></article>
+      <article class="surface analysis-kpi"><span><i class="bi bi-hospital" aria-hidden="true"></i>Facilities</span><strong id="metric-facilities" class="skeleton">00</strong><small>Facilities with feedback</small></article>
+      <article class="surface analysis-kpi"><span><i class="bi bi-exclamation-triangle" aria-hidden="true"></i>Priority indicators</span><strong id="metric-priority" class="skeleton">00</strong><small>Scores below 3.0</small></article>
+    </section>
+
+    <div class="analysis-tabs" role="tablist" aria-label="Analytics views">
+      <button role="tab" aria-selected="true" aria-controls="panel-overview" id="tab-overview" data-tab="overview"><i class="bi bi-speedometer2" aria-hidden="true"></i>Overview</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-facilities" id="tab-facilities" data-tab="facilities"><i class="bi bi-hospital" aria-hidden="true"></i>Facilities</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-departments" id="tab-departments" data-tab="departments"><i class="bi bi-diagram-3" aria-hidden="true"></i>Departments</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-questions" id="tab-questions" data-tab="questions"><i class="bi bi-ui-checks" aria-hidden="true"></i>Indicators</button>
+    </div>
+
+    <section id="panel-overview" class="tab-panel" role="tabpanel" aria-labelledby="tab-overview">
+      <div class="overview-grid">
+        <article class="surface analysis-panel trend-panel">
+          <header class="panel-head"><div><p class="eyebrow">Last 12 months</p><h2 id="trend-title">Feedback trend</h2><p id="trend-description">Monthly response volume and reporting facilities for the selected scope.</p></div></header>
+          <div id="analytics-trend" class="analytics-chart">Loading trend...</div>
+        </article>
+        <article class="surface analysis-panel">
+          <header class="panel-head"><div><p class="eyebrow">What is working well</p><h2>Highest-scoring indicators</h2><p>Services with the strongest beneficiary experience in the selected scope.</p></div></header>
+          <div id="highest-indicators" class="highest-grid"><div class="empty">Loading high-performing indicators...</div></div>
+        </article>
+      </div>
+      <article class="surface analysis-panel">
+        <header class="panel-head"><div><p class="eyebrow">Indicator trend</p><h2 id="indicator-trend-title">Monthly indicator performance</h2><p id="indicator-trend-description">Select a facility, department, and indicator to compare valid responses with its average rating.</p></div></header>
+        <div id="indicator-trend" class="analytics-chart"><div class="empty">Select a facility and department, apply the filters, then choose an indicator.</div></div>
+      </article>
+      <article class="surface analysis-panel">
+        <header class="panel-head"><div><p class="eyebrow">Actionable insight</p><h2>Lowest-scoring indicators</h2><p>Start with services that have the weakest beneficiary experience.</p></div></header>
+        <div id="priority-indicators" class="priority-grid"><div class="empty">Loading indicator insights...</div></div>
+      </article>
+    </section>
+
+    <section id="panel-facilities" class="tab-panel" role="tabpanel" aria-labelledby="tab-facilities" hidden>
+      <article class="surface analysis-panel">
+        <header class="panel-head"><div><p class="eyebrow">Comparison</p><h2>Facility performance</h2><p>Response volume and average score by facility.</p></div></header>
+        <div class="analysis-table-wrap"><table><thead><tr><th>Facility</th><th>Responses</th><th>Average score</th><th>Performance</th></tr></thead><tbody id="facility-results"></tbody></table></div>
+      </article>
+    </section>
+
+    <section id="panel-departments" class="tab-panel" role="tabpanel" aria-labelledby="tab-departments" hidden>
+      <article class="surface analysis-panel">
+        <header class="panel-head"><div><p class="eyebrow">Comparison</p><h2>Department performance</h2><p>Compare experience scores across service departments.</p></div></header>
+        <div id="department-results" class="comparison-list"><div class="empty">Loading department analysis...</div></div>
+      </article>
+    </section>
+
+    <section id="panel-questions" class="tab-panel" role="tabpanel" aria-labelledby="tab-questions" hidden>
+      <article class="surface analysis-panel">
+        <header class="panel-head"><div><p class="eyebrow">Adaptive visualisation</p><h2>Indicator distributions</h2><p>Each indicator uses the visualisation configured by its question type.</p></div></header>
+        <div id="adaptive-indicators" class="adaptive-indicator-grid">
+          <div class="empty">Select a facility to view category, binary, availability, severity and demographic distributions.</div>
+        </div>
+      </article>
+      <article class="surface analysis-panel">
+        <header class="panel-head"><div><p class="eyebrow">Indicator analysis</p><h2>Detailed indicators</h2><p>Column-based scores calculated from department averages and valid responses.</p></div></header>
+        <div class="analysis-table-wrap"><table><thead><tr><th>Indicator</th><th>Type</th><th>Facilities</th><th>Departments</th><th>Valid responses</th><th>Average score</th></tr></thead><tbody id="question-results"></tbody></table></div>
+      </article>
+    </section>
+  </main>
+
+  <script src="/ui/assets/js/app-shell-v2.js"></script>
+  <script src="/ui/assets/js/analytics-home.js?v=20260726-binary-semantics"></script>
+</body>
+</html>

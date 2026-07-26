@@ -10,6 +10,7 @@
 
   let context = null;
   let questions = [];
+  let surveyIdentity = null;
   let language = 1;
   let currentIndex = 0;
   let buttonLabels = { 1: 'Start Survey', 2: 'Previous', 3: 'Next', 4: 'Submit' };
@@ -172,6 +173,11 @@
     try {
       const data = await request(apiUrl('questions.php', { ref: reference, lang: language }));
       questions = data.questions || [];
+      surveyIdentity = {
+        survey_code: data.survey_code || '',
+        survey_version: data.survey_version || '',
+        survey_schema_hash: data.survey_schema_hash || ''
+      };
       buttonLabels = { ...buttonLabels, ...(data.buttons || {}) };
       currentIndex = 0;
       if (!questions.length) {
@@ -209,7 +215,8 @@
       const radio = document.createElement('input');
       radio.type = 'radio';
       radio.name = `q_${question.qn}`;
-      radio.value = String(index + 1);
+      const configuredValue = Number(option.value);
+      radio.value = String(Number.isInteger(configuredValue) ? configuredValue : index + 1);
       radio.checked = String(answers[question.qn] || '') === radio.value;
       radio.addEventListener('change', () => { answers[question.qn] = radio.value; });
       const text = document.createElement('span');
@@ -272,6 +279,9 @@
         headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ref: reference,
+          survey_code: surveyIdentity?.survey_code || '',
+          survey_version: surveyIdentity?.survey_version || '',
+          survey_schema_hash: surveyIdentity?.survey_schema_hash || '',
           lang: language,
           device_id: deviceId(),
           latitude: verifiedLocation.latitude,

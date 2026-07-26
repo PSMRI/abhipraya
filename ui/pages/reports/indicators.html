@@ -1,4 +1,105 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Facility monthly indicator report"><title>Monthly reports | Abhipraya</title>
-<link rel="stylesheet" href="/ui/assets/css/reset.css"><link rel="stylesheet" href="/ui/assets/css/variables.css"><link rel="stylesheet" href="/ui/assets/css/global.css"><link rel="stylesheet" href="/ui/assets/css/abhipraya.css"><link rel="stylesheet" href="/ui/assets/css/app-shell.css"><link rel="stylesheet" href="/ui/assets/css/brand.css"><link rel="stylesheet" href="/ui/assets/css/compact.css"><link rel="stylesheet" href="/ui/assets/css/feedback.css"><link rel="stylesheet" href="/ui/assets/css/analytics.css?v=20260720-3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></head>
-<body class="ab-admin-body"><a class="ab-skip" href="#main-content">Skip to main content</a><div class="ab-app"><aside class="ab-sidebar" id="primary-navigation" aria-label="Primary navigation"><a class="ab-wordmark" href="/admin/dashboard"><img src="/ui/assets/img/abhipraya-logo.png" alt="Abhipraya — Apna Rai, Bina Pehchan"><span class="ab-product">Anonymous public feedback</span></a><nav class="ab-nav"><a href="/admin/dashboard" aria-label="Overview"><i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span></a><a href="/admin/qr" aria-label="QR codes"><i class="bi bi-qr-code" aria-hidden="true"></i><span>QR codes</span></a><a href="/admin/reports" aria-current="page" aria-label="Reports"><i class="bi bi-bar-chart-line" aria-hidden="true"></i><span>Reports</span></a></nav><div class="ab-sidebar-footer">Abhipraya v1.0<br>Accessible, configurable feedback.</div></aside><div class="ab-main"><header class="ab-topbar"><button class="ab-sidebar-toggle" type="button" data-sidebar-toggle aria-controls="primary-navigation" aria-pressed="false" title="Collapse sidebar"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i><span class="sr-only">Collapse sidebar</span></button><span class="ab-mobile-meta">Abhipraya</span><details class="ab-profile-menu"><summary><i class="bi bi-person-circle" aria-hidden="true"></i><span class="ab-user">Administrator</span><i class="bi bi-chevron-down" aria-hidden="true"></i></summary><div class="ab-profile-dropdown"><p class="ab-profile-name" data-profile-name>Administrator</p><a href="/admin/account"><i class="bi bi-person-gear" aria-hidden="true"></i>My account</a><button type="button" id="logout-button"><i class="bi bi-box-arrow-right" aria-hidden="true"></i>Sign out</button></div></details></header><main class="ab-page" id="main-content" tabindex="-1"><p class="ab-breadcrumb"><a href="/admin/dashboard">Overview</a> / Monthly reports</p><section class="ab-hero"><div><h1>Facility monthly report</h1><p>Review question-wise feedback ratings for a selected facility and month.</p></div></section><section class="ab-section"><form id="report-filter" class="ab-panel" novalidate><div class="ab-form-row"><div class="ab-field"><label for="report-facility-search">Facility</label><input class="ab-input" id="report-facility-search" type="search" autocomplete="off" placeholder="Search facility name or NIN" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="report-facility-results"><input id="report-facility" type="hidden"><div class="ab-facility-results" id="report-facility-results" role="listbox" hidden></div><p class="ab-hint">Type facility name or NIN number.</p></div><div class="ab-field"><label for="report-month">Month</label><input class="ab-input" id="report-month" type="month" required></div><div class="ab-field"><label for="report-department">Department <span class="muted">(optional)</span></label><select class="ab-select" id="report-department"><option value="">All departments</option></select></div></div><p class="ab-hint">Select a facility and month to see each feedback question’s average rating. The date range is calculated automatically.</p><button class="ab-primary" type="submit"><i class="bi bi-funnel" aria-hidden="true"></i> View report</button></form><header class="ab-section-heading ab-report-heading"><div><h2>Question-wise ratings</h2><p id="report-context" aria-live="polite">Select filters to load the report.</p></div></header><div id="indicator-cards" class="ab-indicator-grid" aria-live="polite" aria-busy="true"><p class="muted">Loading report…</p></div><h2 class="ab-subheading">Detailed indicator data</h2><div class="ab-table-wrap"><table class="ab-data-table"><caption class="sr-only">Monthly indicator feedback results</caption><thead><tr><th scope="col">Department</th><th scope="col">Indicator</th><th scope="col">Responses</th><th scope="col">Score</th></tr></thead><tbody id="indicator-results"><tr><td colspan="4" class="muted">Loading report…</td></tr></tbody></table></div></section></main></div></div><script src="/ui/assets/js/feedback.js"></script><script src="/ui/assets/js/session-keepalive.js"></script><script src="/ui/assets/js/reports-v1.js?v=20260720-3"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Generate scoped Abhipraya feedback reports">
+  <title>Reports | Abhipraya</title>
+  <link rel="stylesheet" href="/ui/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="/ui/assets/css/tokens-v2.css">
+  <link rel="stylesheet" href="/ui/assets/css/dashboard-home.css?v=20260725-density-ui">
+  <link rel="stylesheet" href="/ui/assets/css/reports-home.css?v=20260725-type-aware">
+</head>
+<body>
+  <a class="ab-skip" href="#main">Skip to main content</a>
+  <header class="app-header">
+    <div class="header-primary">
+      <a class="brand" href="/admin/dashboard" aria-label="Abhipraya home">
+        <img src="/ui/assets/img/abhipraya-logo.png" alt="">
+        <span><strong>Abhipraya</strong><small>Healthcare experience intelligence</small></span>
+      </a>
+      <div class="header-actions">
+        <button class="icon-button" type="button" aria-label="Notifications"><i class="bi bi-bell" aria-hidden="true"></i></button>
+        <div class="profile"><span class="avatar" data-avatar>A</span><span class="profile-copy"><strong data-user-name>Administrator</strong><small data-user-role>Loading role...</small></span></div>
+        <a class="profile-button" href="/admin/account"><i class="bi bi-person-gear" aria-hidden="true"></i><span>My Profile</span></a>
+        <button class="icon-button" type="button" data-logout aria-label="Sign out"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="mobile-menu-button" type="button" data-topnav-toggle aria-expanded="false" aria-controls="primary-navigation"><i class="bi bi-list" aria-hidden="true"></i><span>Menu</span></button>
+      <nav id="primary-navigation" class="top-navigation" aria-label="Primary navigation">
+        <a href="/admin/dashboard"><i class="bi bi-house-door" aria-hidden="true"></i>Home</a>
+        <a href="/admin/qr"><i class="bi bi-qr-code" aria-hidden="true"></i>QR Center</a>
+        <a href="/admin/analytics"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i>Analytics</a>
+        <a href="/admin/reports" aria-current="page"><i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i>Reports</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page-content">
+    <section class="reports-head" aria-labelledby="page-title">
+      <div><p class="eyebrow">Reports</p><h1 id="page-title">Generate feedback reports</h1><p>Select a report and period. Available data is automatically limited to your assigned scope.</p></div>
+    </section>
+
+    <section class="reports-layout">
+      <form id="report-form" class="surface report-builder" novalidate>
+        <header><span><i class="bi bi-sliders" aria-hidden="true"></i></span><div><h2>Report settings</h2><p>Choose what the report should contain.</p></div></header>
+        <label class="report-field"><span>Report type</span>
+          <select id="report-type">
+            <option value="summary">Summary report</option>
+            <option value="facilities">Facility comparison</option>
+            <option value="departments">Department performance</option>
+            <option value="questions">Indicator-wise report</option>
+            <option value="distributions">Indicator distributions</option>
+          </select>
+        </label>
+        <label class="report-field"><span>Facility</span><select id="report-facility"><option value="">All permitted facilities</option></select></label>
+        <label class="report-field"><span>Department</span><select id="report-department"><option value="">All departments</option></select></label>
+        <label class="report-field"><span>Survey version</span><select id="report-survey-version"><option value="">All survey versions</option></select></label>
+        <div class="date-fields">
+          <label class="report-field"><span>From</span><input id="report-from" type="date"></label>
+          <label class="report-field"><span>To</span><input id="report-to" type="date"></label>
+        </div>
+        <button class="generate-report" id="generate-report" type="submit"><i class="bi bi-file-earmark-text" aria-hidden="true"></i>Generate report</button>
+        <p class="scope-note"><i class="bi bi-shield-check" aria-hidden="true"></i>Report access is enforced by your login scope.</p>
+      </form>
+
+      <section class="surface report-output" aria-labelledby="preview-title">
+        <header class="report-output-head">
+          <div><p class="eyebrow">Preview</p><h2 id="preview-title">Report output</h2><p id="report-context">Choose settings and generate a report.</p></div>
+          <div class="report-actions">
+            <button id="download-csv" type="button" disabled><i class="bi bi-filetype-csv" aria-hidden="true"></i>Download CSV</button>
+            <button id="print-report" type="button" disabled><i class="bi bi-printer" aria-hidden="true"></i>Print / Save PDF</button>
+          </div>
+        </header>
+
+        <div id="report-empty" class="report-empty">
+          <span><i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i></span>
+          <h3>No report generated</h3>
+          <p>Your report summary and detailed table will appear here.</p>
+        </div>
+
+        <div id="report-result" hidden>
+          <div class="report-title-block">
+            <div><img src="/ui/assets/img/abhipraya-logo.png" alt=""><span><strong>Abhipraya</strong><small>Anonymous public feedback</small></span></div>
+            <div><h2 id="result-title">Feedback report</h2><p id="result-period"></p></div>
+          </div>
+          <div class="report-summary">
+            <article><span>Total feedback</span><strong id="report-total">0</strong></article>
+            <article><span>Average score</span><strong id="report-score">--</strong><small id="report-score-stars" class="report-stars" aria-label="No average score available"></small></article>
+            <article><span>Facilities</span><strong id="report-facility-count">0</strong></article>
+          </div>
+          <div class="report-table-wrap">
+            <table><thead id="report-table-head"></thead><tbody id="report-table-body"></tbody></table>
+          </div>
+          <footer class="report-footer"><span>Generated by Abhipraya</span><span id="report-generated-at"></span></footer>
+        </div>
+      </section>
+    </section>
+    <div id="report-message" class="report-message" role="alert" hidden></div>
+  </main>
+
+  <script src="/ui/assets/js/app-shell-v2.js"></script>
+  <script src="/ui/assets/js/reports-home.js?v=20260726-type-aware-complete"></script>
+</body>
+</html>

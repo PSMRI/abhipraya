@@ -1,58 +1,204 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Abhipraya administration dashboard">
-  <title>Overview | Abhipraya</title>
-  <link rel="stylesheet" href="/ui/assets/css/reset.css">
-  <link rel="stylesheet" href="/ui/assets/css/variables.css">
-  <link rel="stylesheet" href="/ui/assets/css/global.css">
-  <link rel="stylesheet" href="/ui/assets/css/abhipraya.css">
-  <link rel="stylesheet" href="/ui/assets/css/app-shell.css">
-  <link rel="stylesheet" href="/ui/assets/css/brand.css">
-  <link rel="stylesheet" href="/ui/assets/css/compact.css">
-  <link rel="stylesheet" href="/ui/assets/css/feedback.css">
-  <link rel="stylesheet" href="/ui/assets/css/analytics.css">
+  <meta name="description" content="Abhipraya healthcare experience intelligence dashboard">
+  <title>Home | Abhipraya</title>
   <link rel="stylesheet" href="/ui/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="/ui/assets/css/tokens-v2.css">
+  <link rel="stylesheet" href="/ui/assets/css/dashboard-home.css?v=20260725-type-aware">
 </head>
-<body class="ab-admin-body">
-  <a class="ab-skip" href="#main-content">Skip to main content</a>
-  <div class="ab-app">
-    <aside class="ab-sidebar" id="primary-navigation" aria-label="Primary navigation">
-      <a class="ab-wordmark" href="/admin/dashboard"><img src="/ui/assets/img/abhipraya-logo.png" alt="Abhipraya — Apna Rai, Bina Pehchan"><span class="ab-product">Anonymous public feedback</span></a>
-      <nav class="ab-nav">
-        <a href="/admin/dashboard" aria-current="page" aria-label="Overview"><i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span></a>
-        <a href="/admin/qr" aria-label="QR codes"><i class="bi bi-qr-code" aria-hidden="true"></i><span>QR codes</span></a>
-        <a href="/admin/reports" aria-label="Reports"><i class="bi bi-bar-chart-line" aria-hidden="true"></i><span>Reports</span></a>
-      </nav>
-      <div class="ab-sidebar-footer">Abhipraya v1.0<br>Accessible, configurable feedback.</div>
-    </aside>
-    <div class="ab-main">
-      <header class="ab-topbar">
-        <button class="ab-sidebar-toggle" type="button" data-sidebar-toggle aria-controls="primary-navigation" aria-expanded="false" title="Collapse sidebar"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i><span class="sr-only">Collapse sidebar</span></button>
-        <span class="ab-mobile-meta">Abhipraya</span>
-        <details class="ab-accessibility-menu"><summary title="Accessibility options"><i class="bi bi-universal-access" aria-hidden="true"></i><span class="sr-only">Open accessibility options</span></summary><div class="ab-accessibility-dropdown" aria-label="Accessibility options"><p>Text size</p><div class="ab-accessibility-actions"><button type="button" data-text-size="decrease" aria-label="Decrease text size">A−</button><button type="button" data-text-size="reset" aria-label="Reset text size">A</button><button type="button" data-text-size="increase" aria-label="Increase text size">A+</button></div><button type="button" data-read-page><i class="bi bi-volume-up" aria-hidden="true"></i>Read page aloud</button><button type="button" data-stop-reading disabled><i class="bi bi-volume-mute" aria-hidden="true"></i>Stop reading</button><p class="ab-accessibility-status" data-accessibility-status aria-live="polite">Text size: normal</p></div></details>
-        <details class="ab-profile-menu"><summary><i class="bi bi-person-circle" aria-hidden="true"></i><span class="ab-user">Administrator</span><i class="bi bi-chevron-down" aria-hidden="true"></i></summary><div class="ab-profile-dropdown"><p class="ab-profile-name" data-profile-name>Administrator</p><a href="/admin/account"><i class="bi bi-person-gear" aria-hidden="true"></i>My account</a><button type="button" id="logout-button"><i class="bi bi-box-arrow-right" aria-hidden="true"></i>Sign out</button></div></details>
-      </header>
-      <main class="ab-page" id="main-content" tabindex="-1" aria-labelledby="page-title">
-        <p class="ab-breadcrumb">Overview</p>
-        <section class="ab-hero" aria-labelledby="page-title"><div><h1 id="page-title">Welcome back</h1><p>Monitor public feedback collection and manage department QR codes.</p></div><a class="ab-primary" href="/admin/qr"><i class="bi bi-qr-code" aria-hidden="true"></i> Generate department QR</a></section>
-        <section class="ab-section" aria-labelledby="health-title">
-          <header class="ab-section-heading"><div><h2 id="health-title">Feedback overview</h2><p>Detailed facility, department and indicator analysis is available in Reports.</p></div><a class="ab-row-action" href="/admin/reports">Open reports</a></header>
-          <div class="ab-metric-grid" aria-label="Feedback summary"><article class="ab-metric-card"><span>Total responses</span><strong id="total-responses">—</strong></article><article class="ab-metric-card"><span>Facilities with feedback</span><strong id="facility-count">—</strong></article></div>
-          <section class="ab-dashboard-trend" aria-labelledby="trend-title">
-            <header><h3 id="trend-title">Monthly response trend</h3><p>Feedback submissions during the last six months.</p></header>
-            <div id="monthly-response-trend" class="ab-trend-chart" aria-live="polite" aria-busy="true">Loading trend…</div>
-          </section>
-        </section>
-      </main>
+<body>
+  <a class="ab-skip" href="#main">Skip to main content</a>
+
+  <header class="app-header">
+    <div class="header-primary">
+      <a class="brand" href="/admin/dashboard" aria-label="Abhipraya home">
+        <img src="/ui/assets/img/abhipraya-logo.png" alt="">
+        <span>
+          <strong>Abhipraya</strong>
+          <small>Healthcare experience intelligence</small>
+        </span>
+      </a>
+
+      <div class="header-actions">
+        <span id="data-updated" class="data-updated" aria-live="polite">Updating data...</span>
+        <button class="icon-button" type="button" aria-label="Notifications">
+          <i class="bi bi-bell" aria-hidden="true"></i>
+        </button>
+        <div class="profile">
+          <span class="avatar" data-avatar>A</span>
+          <span class="profile-copy">
+            <strong data-user-name>Administrator</strong>
+            <small data-user-role>Loading role...</small>
+          </span>
+        </div>
+        <a class="profile-button" href="/admin/account"><i class="bi bi-person-gear" aria-hidden="true"></i><span>My Profile</span></a>
+        <button class="icon-button" type="button" data-logout aria-label="Sign out">
+          <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
-  </div>
-  <script src="/ui/assets/js/feedback.js"></script>
-  <script src="/ui/assets/js/session-keepalive.js"></script>
-  <script src="/ui/assets/js/accessibility-tools.js"></script>
-  <script src="/ui/assets/js/header-controls.js"></script>
-  <script src="/ui/assets/js/dashboard-v2.js?v=20260721-2"></script>
+
+    <div class="nav-row">
+      <button class="mobile-menu-button" type="button" data-topnav-toggle aria-expanded="false" aria-controls="primary-navigation">
+        <i class="bi bi-list" aria-hidden="true"></i>
+        <span>Menu</span>
+      </button>
+      <nav id="primary-navigation" class="top-navigation" aria-label="Primary navigation">
+        <a href="/admin/dashboard" aria-current="page"><i class="bi bi-house-door" aria-hidden="true"></i>Home</a>
+        <a href="/admin/qr"><i class="bi bi-qr-code" aria-hidden="true"></i>QR Center</a>
+        <a href="/admin/analytics"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i>Analytics</a>
+        <a href="/admin/reports"><i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i>Reports</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="page-content">
+    <section class="home-hero" aria-labelledby="home-title">
+      <div>
+        <p class="eyebrow">Home</p>
+        <h1 id="home-title">Good <span id="greeting-period">day</span>, <span data-user-first-name>Administrator</span>.</h1>
+        <p>See what needs attention and how beneficiary experience is changing.</p>
+      </div>
+      <form class="dashboard-filters" id="dashboard-filter-form" aria-label="Dashboard filters">
+        <label>
+          <span>Facility</span>
+          <select id="facility-filter">
+            <option value="">All permitted facilities</option>
+          </select>
+        </label>
+        <label>
+          <span>Department</span>
+          <select id="department-filter">
+            <option value="">All departments</option>
+          </select>
+        </label>
+        <label>
+          <span>Survey version</span>
+          <select id="survey-version-filter">
+            <option value="">All survey versions</option>
+          </select>
+        </label>
+        <label>
+          <span>From date</span>
+          <input id="from-filter" name="from" type="date">
+        </label>
+        <label>
+          <span>To date</span>
+          <input id="to-filter" name="to" type="date">
+        </label>
+        <button class="primary-button" id="apply-filters" type="submit">
+          <i class="bi bi-funnel" aria-hidden="true"></i>Apply
+        </button>
+      </form>
+    </section>
+
+    <section class="kpi-grid" aria-label="Summary metrics">
+      <article class="surface kpi">
+        <div class="kpi-head"><span>Feedback received</span><i class="bi bi-chat-left-text" aria-hidden="true"></i></div>
+        <strong id="kpi-responses" class="skeleton">0000</strong>
+        <small>In the selected period</small>
+      </article>
+      <article class="surface kpi">
+        <div class="kpi-head"><span>Average rating</span><i class="bi bi-star" aria-hidden="true"></i></div>
+        <strong id="kpi-rating" class="skeleton">0.0/5</strong>
+        <small>Across rated indicators</small>
+      </article>
+      <article class="surface kpi">
+        <div class="kpi-head"><span>Facilities reporting</span><i class="bi bi-hospital" aria-hidden="true"></i></div>
+        <strong id="kpi-facilities" class="skeleton">00/00</strong>
+        <small>Coverage in selected period</small>
+      </article>
+      <article class="surface kpi">
+        <div class="kpi-head"><span>Priority issues</span><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></div>
+        <strong id="kpi-priority" class="skeleton">00</strong>
+        <small>Indicators below 3.0</small>
+      </article>
+    </section>
+
+    <section class="dashboard-grid">
+      <article class="surface panel">
+        <header class="panel-head">
+          <div>
+            <p class="eyebrow">Six-month view</p>
+            <h2>Feedback trend</h2>
+            <p>Responses received over time.</p>
+          </div>
+          <a href="/admin/reports">View report <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        </header>
+        <div id="trend-chart" class="chart" aria-live="polite">Loading trend...</div>
+      </article>
+
+      <article class="surface panel">
+        <header class="panel-head">
+          <div>
+            <p class="eyebrow">Needs attention</p>
+            <h2>Priority alerts</h2>
+            <p>Lowest-scoring service indicators.</p>
+          </div>
+          <a href="/admin/analytics">Open analytics <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        </header>
+        <div id="alert-list" class="alert-list"><div class="empty">Loading alerts...</div></div>
+      </article>
+    </section>
+
+    <section aria-labelledby="quick-actions-title">
+      <div class="section-title">
+        <div><p class="eyebrow">Shortcuts</p><h2 id="quick-actions-title">Quick actions</h2></div>
+      </div>
+      <div class="quick-actions">
+        <a class="quick-action" href="/admin/qr">
+          <i class="bi bi-qr-code" aria-hidden="true"></i>
+          <span><strong>QR Center</strong><small>Generate, print or manage feedback QR codes</small></span>
+          <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="quick-action" href="/admin/analytics">
+          <i class="bi bi-bar-chart-line" aria-hidden="true"></i>
+          <span><strong>Explore analytics</strong><small>Compare facility, department and question performance</small></span>
+          <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="quick-action" href="/admin/reports">
+          <i class="bi bi-file-earmark-arrow-down" aria-hidden="true"></i>
+          <span><strong>Download reports</strong><small>Prepare facility, department and survey reports</small></span>
+          <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </section>
+
+    <section class="lower-grid">
+      <article class="surface panel">
+        <header class="panel-head">
+          <div>
+            <p class="eyebrow">Service experience</p>
+            <h2>Department performance</h2>
+            <p>Average experience score by department.</p>
+          </div>
+        </header>
+        <div id="department-list" class="indicator-list"><div class="empty">Loading departments...</div></div>
+      </article>
+
+      <article class="surface panel">
+        <header class="panel-head">
+          <div>
+            <p class="eyebrow">Anonymous submissions</p>
+            <h2>Recent feedback</h2>
+            <p>Latest feedback in your permitted scope.</p>
+          </div>
+          <a href="/admin/feedback">Open explorer <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        </header>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Facility</th><th>Department</th><th>Rating</th><th>Status</th></tr></thead>
+            <tbody id="recent-feedback"><tr><td colspan="5" class="empty">Loading recent feedback...</td></tr></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script src="/ui/assets/js/app-shell-v2.js"></script>
+  <script src="/ui/assets/js/dashboard-home.js?v=20260726-facility-scope"></script>
 </body>
 </html>
