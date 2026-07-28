@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__, 3) . '/public_api.php';
 require_once dirname(__DIR__, 3) . '/assets/conn/db.php';
 require_once dirname(__DIR__, 3) . '/helpers/SurveyConfig.php';
+require_once dirname(__DIR__, 3) . '/core/PersisterService.php';
 
 SessionManager::requireLogin();
 Security::requireAnyMethod(['GET', 'POST']);
@@ -190,27 +191,36 @@ try {
             remarks = VALUES(remarks)'
     );
 
-    $con->begin_transaction();
-    foreach ($validated as $action) {
-        $statement->bind_param(
-            'ssssssssisss',
-            $facilityNin,
-            $month,
-            $action['question_key'],
-            $action['root_cause'],
-            $action['action_plan'],
-            $action['responsible'],
-            $action['timeline'],
-            $action['remarks'],
-            $department,
-            $surveyCode,
-            $surveyVersion,
-            $surveySchemaHash
-        );
-        $statement->execute();
-    }
+    PersisterService::transaction($con, function () use (
+        $statement,
+        $validated,
+        $facilityNin,
+        $month,
+        $department,
+        $surveyCode,
+        $surveyVersion,
+        $surveySchemaHash
+    ): void {
+        foreach ($validated as $action) {
+            $statement->bind_param(
+                'ssssssssisss',
+                $facilityNin,
+                $month,
+                $action['question_key'],
+                $action['root_cause'],
+                $action['action_plan'],
+                $action['responsible'],
+                $action['timeline'],
+                $action['remarks'],
+                $department,
+                $surveyCode,
+                $surveyVersion,
+                $surveySchemaHash
+            );
+            $statement->execute();
+        }
+    });
     $statement->close();
-    $con->commit();
 
     Response::success('CAPA action saved.', [
         'actions' => capaLoad($con, $facilityNin, $department, $month, $surveyVersion),

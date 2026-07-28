@@ -27,7 +27,7 @@ Validated service and repository operation
 | Route allow-list | Every API request | Only paths and HTTP methods registered in `api/routes.php` can run. |
 | Authentication | Administrative APIs | Establishes and verifies a protected server-side administrator session. |
 | Role authorisation | Protected feature APIs | Confirms that the assigned role is allowed to use a capability such as QR, analytics, responses, or CAPA. |
-| Facility/data scope | Protected data APIs | Limits facilities and records to the scope assigned to the signed-in user. |
+| Service-location/data scope | Protected data APIs | Limits service locations and records to the scope assigned to the signed-in user. |
 | CSRF protection | Authenticated write APIs | Prevents another site from causing a browser with an active session to perform a state-changing request. |
 | Input and business validation | Every accepting endpoint | Rejects malformed, unauthorised, or invalid requests before database changes. |
 
@@ -54,9 +54,9 @@ Feature modules enforce allowed role identifiers before operating. For example, 
 
 Do not rely on hiding a button, route, or filter in the user interface as access control. A user can modify browser requests. The API must reject unauthorised requests with `403 Forbidden`.
 
-## Facility and data scope
+## Service-location and data scope
 
-Facility scope is a core data-security boundary:
+Service-location scope is a core data-security boundary. In the current healthcare configuration, the technical identifier remains `facilityNIN`:
 
 - A facility-scoped user is bound to the facility assigned at sign-in.
 - The API applies that facility to permitted QR, response, analytics, report, and CAPA operations.

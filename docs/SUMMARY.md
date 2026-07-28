@@ -10,6 +10,7 @@
 - [Technology architecture and open-source tools](architecture/technology_architecture.md)
 - [Infrastructure architecture](architecture/infrastructure_architecture.md)
 - [Deployment architecture](architecture/deployment_architecture.md)
+- [Master data management](architecture/master_data_management.md)
 - [Use cases](architecture/use_cases.md)
 - [Service architecture and map](architecture/service_map.md)
 - [Configuration JSON formats](architecture/configuration_formats.md)
@@ -30,6 +31,7 @@
 - [API developer documentation](api/README.md)
 - [API specifications](api/api_specifications.md)
 - [API access control](api/access_control.md)
+- [Encryption and cryptographic protection](api/encryption.md)
 - [Boundary and administrative scope](api/boundary.md)
 - [Endpoint inventory](api/endpoint_inventory.md)
 

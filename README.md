@@ -1,6 +1,6 @@
 # Abhipraya
 
-Abhipraya is an open-source, multilingual public-feedback platform for health facilities. It supports QR-led surveys, location-aware submissions, department reporting, and administrative management.
+Abhipraya is an open-source, multilingual public-feedback platform for public-service locations and operating units. The current implementation is configured for healthcare facilities; it supports QR-led surveys, location-aware submissions, service-area reporting, and administrative management.
 
 ## Documentation
 

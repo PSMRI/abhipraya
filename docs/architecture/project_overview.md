@@ -2,9 +2,11 @@
 
 ## Anonymous feedback that leads to better services
 
-**Abhipraya** is an open-source, QR-based public-feedback platform for healthcare facilities. It gives beneficiaries a quick and anonymous way to share their experience, and gives authorised health officials clear evidence to identify and improve service gaps.
+**Abhipraya** is an open-source, QR-based public-feedback platform for public-service locations and operating units. It gives people a quick and anonymous way to share their experience, and gives authorised officials clear evidence to identify and improve service gaps. Healthcare facilities are the current implementation context.
 
 The first implementation focuses on healthcare facilities, departments, and patient experience. The core design is configuration-driven so that survey packages can evolve without changing the application code or rewriting historical responses.
+
+Although the current implementation uses healthcare terminology such as `facilityNIN` and departments, the platform can be adapted for other public-service locations or operating units. Existing technical identifiers remain stable for compatibility; future configurations can present the appropriate domain terminology to users.
 
 > **Mission:** Turn protected beneficiary feedback into practical service improvement.
 
@@ -44,13 +46,13 @@ Service improvement can be monitored over time
 
 | User | What they do |
 | --- | --- |
-| Beneficiary / public respondent | Scans a QR code, selects a language, answers a short survey, and submits anonymous feedback. |
-| Facility Administrator | Views only the assigned facility, generates department QR posters, reviews analysis and reports, and records CAPA actions. |
-| Super Administrator / Main Administrator | Views permitted cross-facility information, manages operational use, and monitors trends. |
+| Public respondent | Scans a QR code, selects a language, answers a short survey, and submits anonymous feedback. |
+| Service Location Administrator | Views only the assigned service location, generates service-area QR posters, reviews analysis and reports, and records CAPA actions. |
+| Super Administrator / Main Administrator | Views permitted cross-location information, manages operational use, and monitors trends. |
 | Survey Manager | Prepares, validates, and publishes new survey versions. |
 | Data Analyst / Viewer | Reviews permitted analytics and reports without changing survey configuration. |
 
-Administrative access is enforced on the server. A facility-scoped account cannot obtain another facility's data merely by changing a browser filter.
+Administrative access is enforced on the server. A service-location-scoped account cannot obtain another location's data merely by changing a browser filter.
 
 ## What the product includes
 

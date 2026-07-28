@@ -32,11 +32,13 @@ corresponding public form controls and storage validation are implemented.
 
 ## 2. Run a dry run
 
+Run the command from the Abhipraya project root:
+
 ```powershell
-php D:\RAM_sir_app\abhipraya\tools\publish_survey_version.php `
+php tools\publish_survey_version.php `
   --department=4 `
   --version=1.1 `
-  --source=D:\survey-work\department-4-v1.1.json
+  --source=<candidate-survey.json>
 ```
 
 The dry run validates the file, compares it with the active version, displays
@@ -48,10 +50,10 @@ nothing.
 After reviewing the dry-run output:
 
 ```powershell
-php D:\RAM_sir_app\abhipraya\tools\publish_survey_version.php `
+php tools\publish_survey_version.php `
   --department=4 `
   --version=1.1 `
-  --source=D:\survey-work\department-4-v1.1.json `
+  --source=<candidate-survey.json> `
   --publish
 ```
 

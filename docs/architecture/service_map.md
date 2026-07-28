@@ -2,6 +2,12 @@
 
 ## Service architecture at a glance
 
+### Shared Persister Service
+
+The active API includes a shared `PersisterService` for workflows that contain more than one database write. It commits only after every operation succeeds and rolls back all related changes on error. Modules and repositories still own their prepared SQL and validation rules.
+
+Current adopters are secure-profile updates (encrypted profile data plus removal of legacy clear-text fields) and CAPA action saves. New multi-step write workflows should use `PersisterService::transaction($con, fn () => ...)` to prevent partial records.
+
 ![Abhipraya service architecture diagram](/ui/assets/img/docs/abhipraya-service-architecture.svg)
 
 The service architecture separates public feedback functions from authenticated administrative operations. Every request enters through an allow-listed route, passes security and scope controls, and uses shared configuration or transactional data only through server-side services and repositories.
@@ -21,6 +27,7 @@ The service architecture separates public feedback functions from authenticated 
 | Response service | `api/modules/responses/v1/` | Permitted response list, detail, and export. |
 | CAPA service | `api/modules/capa/v1/` | Corrective and preventive action records. |
 | Configuration loader | `api/core/ConfigLoader.php` | JSON master and versioned survey package loading. |
+| Persister service | `api/core/PersisterService.php` | Atomic transaction boundary for related database writes. |
 | Database repositories | `api/repositories/` | Prepared access to transactional data. |
 
 ## Request lifecycle

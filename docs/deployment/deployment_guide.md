@@ -1,12 +1,22 @@
 # Deployment guide
 
+## Runtime verification
+
+Before deploying, confirm that the selected PHP runtime has OpenSSL enabled. Abhipraya uses OpenSSL-backed AES-256-GCM encryption for sensitive administrator-profile fields.
+
+```text
+php -m | findstr openssl
+```
+
+Expected output is `openssl`. On Linux or macOS, use `php -m | grep -i openssl`. If the extension is missing, enable it in the active PHP configuration and reload the PHP/web-server process before continuing. See [Encryption and cryptographic protection](../api/encryption.md) for the full key-management and verification guidance.
+
 ## Supported deployment shape
 
-The current application is designed for IIS, PHP, and MySQL.
+Abhipraya requires PHP and MySQL/MariaDB behind a compatible web server or reverse proxy. The repository includes IIS reference rules, but Apache, Nginx, or another compatible deployment stack can be used with equivalent routing and HTTPS controls.
 
 ```text
 HTTPS browser
-  → IIS site and rewrite rules
+  → web server or reverse-proxy route rules
   → PHP UI router and versioned API front controller
   → MySQL database
   → protected JSON configuration and storage
@@ -14,8 +24,8 @@ HTTPS browser
 
 ## Prerequisites
 
-- Windows Server with IIS and URL Rewrite support.
-- Supported PHP runtime configured for IIS/FastCGI.
+- A compatible web server or reverse proxy with HTTPS and route-rewrite support.
+- Supported PHP runtime configured for the selected web-server integration.
 - MySQL instance reachable from the application server.
 - HTTPS certificate and DNS name.
 - Least-privilege database account.

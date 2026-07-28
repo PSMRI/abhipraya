@@ -135,6 +135,7 @@ See the [endpoint inventory](endpoint_inventory.md) for the complete method-by-m
 
 - [API developer documentation](README.md)
 - [API access control](access_control.md)
+- [Encryption and cryptographic protection](encryption.md)
 - [Endpoint inventory](endpoint_inventory.md)
 - [Service architecture and map](../architecture/service_map.md)
 - [Security guide](../security.md)

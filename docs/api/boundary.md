@@ -2,7 +2,7 @@
 
 ## Current implementation
 
-Abhipraya currently uses a **facility-centred boundary model**. Each configured facility has a stable `facilityNIN` and includes administrative-location attributes in `api/masters/facilityCodes.json`:
+Abhipraya currently uses a **service-location boundary model**. Each configured location is a healthcare facility in the current implementation, has a stable `facilityNIN`, and includes administrative-location attributes in `api/masters/facilityCodes.json`:
 
 | Attribute | Current purpose |
 | --- | --- |

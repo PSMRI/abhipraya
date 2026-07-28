@@ -2,7 +2,11 @@
 
 ## Anonymous feedback for better healthcare services
 
-Abhipraya is an open-source, QR-based public-feedback platform for healthcare facilities. It helps beneficiaries share feedback anonymously and helps authorised officials identify gaps, monitor trends, and document improvement actions.
+Abhipraya is an open-source, QR-based public-feedback platform for public-service locations and operating units. The current implementation is configured for healthcare facilities. It helps beneficiaries share feedback anonymously and helps authorised officials identify gaps, monitor trends, and document improvement actions.
+
+## Terminology used across this documentation
+
+Abhipraya can be configured for many public-service domains. In general documentation, **service location** or **operating unit** means the place where feedback is collected and acted on. A healthcare **facility** is the current configuration example. Existing technical fields, APIs, file names, database columns, QR references, and current user-interface labels such as `facilityNIN`, `facility_nin`, and `facilityCodes.json` remain unchanged for compatibility.
 
 ## Start here
 
@@ -12,10 +16,12 @@ Abhipraya is an open-source, QR-based public-feedback platform for healthcare fa
 | Developers and implementers | [Abhipraya overview](architecture/project_overview.md) |
 | API integrators | [API specifications](api/api_specifications.md) |
 | API security reviewers | [API access control](api/access_control.md) |
+| Security and privacy teams | [Encryption and cryptographic protection](api/encryption.md) |
 | Programme data and scope owners | [Boundary and administrative scope](api/boundary.md) |
 | Programme sponsors and partners | [Why Abhipraya](architecture/why_abhipraya.md) |
 | Solution architects and technical reviewers | [Technical architecture overview](architecture/technical_architecture.md) |
 | Technology and deployment teams | [Technology architecture and open-source tools](architecture/technology_architecture.md) |
+| Master-data owners and survey managers | [Master data management](architecture/master_data_management.md) |
 | Infrastructure and operations teams | [Infrastructure architecture](architecture/infrastructure_architecture.md) |
 | Release and DevOps teams | [Deployment architecture](architecture/deployment_architecture.md) |
 | Survey authors | [Survey version publishing](survey-version-publishing.md) |

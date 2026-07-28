@@ -27,7 +27,7 @@ JSON configuration files and MySQL/MariaDB data storage
 | Dependency management | Composer | Installs and manages PHP libraries | MIT licensed |
 | QR-code library | `chillerlan/php-qrcode` 6.0 | Server-side QR code generation | MIT or Apache-2.0 licensed |
 | Database | MySQL 8+ or MariaDB | Users, sessions, responses, QR records, CAPA actions, and audit data | Open-source database options |
-| Configuration format | JSON | Facilities, departments, roles, labels, survey packages, and survey versions | Open standard |
+| Configuration format | JSON | Service locations (currently: facilities), service areas, roles, labels, survey packages, and survey versions | Open standard |
 | Data access | PHP MySQLi prepared statements and repository layer | Parameterised transactional data access | PHP extension and application code |
 | Security controls | PHP sessions, CSRF tokens, password hashing, CSP, and HTTP headers | Authentication, authorisation, request protection, and browser hardening | PHP and web standards |
 | Testing and maintenance tools | PHP CLI and project scripts | Linting, survey publishing, and DPG/open-source readiness checks | PHP tooling and project code |

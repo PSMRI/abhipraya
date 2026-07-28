@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__, 3) . '/public_api.php';
 require_once dirname(__DIR__, 3) . '/assets/conn/db.php';
 require_once dirname(__DIR__, 3) . '/core/Crypto.php';
+require_once dirname(__DIR__, 3) . '/core/PersisterService.php';
 
 SessionManager::requireLogin();
 
@@ -71,6 +72,7 @@ try {
         Response::validation(['mobile' => 'Enter a valid mobile number.']);
     }
 
+    PersisterService::transaction($con, function () use ($con, $userId, $profile): void {
     $statement = $con->prepare(
         'INSERT INTO user_profile_secure
             (user_id, first_name_encrypted, middle_name_encrypted, last_name_encrypted,
@@ -105,6 +107,7 @@ try {
     $clearLegacy->bind_param('i', $userId);
     $clearLegacy->execute();
     $clearLegacy->close();
+    });
 
     Response::success('Profile saved securely.', ['profile' => $profile]);
 } catch (Throwable $exception) {
