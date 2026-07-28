@@ -4,8 +4,12 @@
 
 ## Product and architecture
 
+- [Why Abhipraya](architecture/why_abhipraya.md)
 - [Abhipraya overview](architecture/project_overview.md)
 - [Technical architecture overview](architecture/technical_architecture.md)
+- [Technology architecture and open-source tools](architecture/technology_architecture.md)
+- [Infrastructure architecture](architecture/infrastructure_architecture.md)
+- [Deployment architecture](architecture/deployment_architecture.md)
 - [Use cases](architecture/use_cases.md)
 - [Service architecture and map](architecture/service_map.md)
 - [Configuration JSON formats](architecture/configuration_formats.md)
@@ -24,6 +28,9 @@
 - [Data dictionary and ER overview](database/data_dictionary_erd.md)
 - [Database setup and migration](database/database_setup_and_migration.md)
 - [API developer documentation](api/README.md)
+- [API specifications](api/api_specifications.md)
+- [API access control](api/access_control.md)
+- [Boundary and administrative scope](api/boundary.md)
 - [Endpoint inventory](api/endpoint_inventory.md)
 
 ## Security and operations
@@ -40,6 +47,7 @@
 - [Digital Public Good readiness](dpg-readiness.md)
 - [DPG evidence register](compliance/dpg_evidence_register.md)
 - [SDG mapping](compliance/sdg_mapping.md)
+- [SDG relevance and public-benefit evidence](sdg-mapping.md)
 - [Privacy and data protection](compliance/privacy_data_protection.md)
 - [Legal and privacy confirmation](compliance/legal_privacy_confirmation.md)
 - [Governance and ownership](compliance/governance_and_ownership.md)
@@ -48,6 +56,7 @@
 - [Open standards mapping](compliance/open_standards_mapping.md)
 - [Open-source and DPG release checklist](compliance/release_checklist.md)
 - [Open-source readiness checklist](compliance/open_source_readiness_checklist.md)
+- [Open-source release status and automated check](open-source-dpg.md)
 - [Licence consistency and attribution](compliance/license_consistency.md)
 - [Third-party notices](../THIRD_PARTY_NOTICES.md)
 - [Public data audit](compliance/public_data_audit.md)

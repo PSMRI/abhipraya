@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="900" viewBox="0 0 1536 900" role="img" aria-labelledby="title description">
+  <title id="title">Abhipraya service architecture</title>
+  <desc id="description">Service architecture diagram for Abhipraya, showing public survey and administrator services routed through shared security, configuration, and repository layers to JSON configuration and MySQL data.</desc>
+  <defs>
+    <linearGradient id="blue" x1="0" x2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#edf4ff"/></linearGradient>
+    <linearGradient id="green" x1="0" x2="1"><stop stop-color="#f7fffa"/><stop offset="1" stop-color="#eaf8ef"/></linearGradient>
+    <linearGradient id="violet" x1="0" x2="1"><stop stop-color="#fcfaff"/><stop offset="1" stop-color="#f3edff"/></linearGradient>
+    <linearGradient id="red" x1="0" x2="1"><stop stop-color="#fffafa"/><stop offset="1" stop-color="#fff0f1"/></linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L9 5L0 10Z" fill="#1c2938"/></marker>
+    <style>.title{font:700 39px Arial,sans-serif;fill:#08275e;letter-spacing:1px}.heading{font:700 22px Arial,sans-serif;fill:#10213e}.sub{font:400 16px Arial,sans-serif;fill:#203149}.small{font:400 14px Arial,sans-serif;fill:#203149}.label{font:700 17px Arial,sans-serif;fill:#1050a2}.box{stroke-width:1.5}.line{stroke:#1c2938;stroke-width:2;fill:none;marker-end:url(#arrow)}.divider{stroke:#8aa4d3;stroke-width:1.2}</style>
+  </defs>
+  <rect width="1536" height="900" fill="#fff"/>
+  <text x="768" y="53" text-anchor="middle" class="title">ABHIPRAYA - SERVICE ARCHITECTURE</text>
+
+  <rect x="205" y="86" width="1125" height="82" rx="10" fill="url(#blue)" stroke="#1768de" class="box"/>
+  <text x="370" y="119" text-anchor="middle" class="heading">Public beneficiary</text><text x="370" y="145" text-anchor="middle" class="sub">QR survey journey</text>
+  <text x="768" y="132" text-anchor="middle" class="sub">and</text>
+  <text x="1135" y="119" text-anchor="middle" class="heading">Authorised official</text><text x="1135" y="145" text-anchor="middle" class="sub">Administrative workspace</text>
+  <text x="1355" y="133" class="label">CALLERS</text>
+  <path d="M768 168V205" class="line"/>
+
+  <rect x="205" y="205" width="1125" height="76" rx="9" fill="url(#green)" stroke="#187443" class="box"/>
+  <text x="768" y="237" text-anchor="middle" class="heading">Web-server route layer and application entry points</text><text x="768" y="263" text-anchor="middle" class="sub">UI router for browser routes | API router for registered /api/v1/ endpoints</text>
+  <path d="M768 281V318" class="line"/>
+
+  <rect x="125" y="318" width="1286" height="260" rx="10" fill="url(#blue)" stroke="#164da6" class="box"/>
+  <text x="768" y="353" text-anchor="middle" class="heading" fill="#082d77">Application services</text>
+  <line x1="411" y1="378" x2="411" y2="548" class="divider"/><line x1="625" y1="378" x2="625" y2="548" class="divider"/><line x1="839" y1="378" x2="839" y2="548" class="divider"/><line x1="1053" y1="378" x2="1053" y2="548" class="divider"/>
+  <text x="268" y="416" text-anchor="middle" class="heading">Authentication</text><text x="268" y="445" text-anchor="middle" class="small">Login and CAPTCHA</text><text x="268" y="468" text-anchor="middle" class="small">Sessions, CSRF, profile</text>
+  <text x="518" y="416" text-anchor="middle" class="heading">Public survey</text><text x="518" y="445" text-anchor="middle" class="small">QR context and questions</text><text x="518" y="468" text-anchor="middle" class="small">Validation and submission</text>
+  <text x="732" y="416" text-anchor="middle" class="heading">QR and responses</text><text x="732" y="445" text-anchor="middle" class="small">Generate and validate QR</text><text x="732" y="468" text-anchor="middle" class="small">Permitted list and export</text>
+  <text x="946" y="416" text-anchor="middle" class="heading">Analytics</text><text x="946" y="445" text-anchor="middle" class="small">Scoped trends and results</text><text x="946" y="468" text-anchor="middle" class="small">Indicator interpretation</text>
+  <text x="1232" y="416" text-anchor="middle" class="heading">CAPA</text><text x="1232" y="445" text-anchor="middle" class="small">Corrective and preventive</text><text x="1232" y="468" text-anchor="middle" class="small">action management</text>
+  <text x="768" y="525" text-anchor="middle" class="sub">Shared controls: authentication, authorisation, facility scope, validation, standard JSON responses, audit and error handling</text>
+  <text x="1436" y="454" class="label">SERVICES</text>
+  <path d="M768 578V616" class="line"/>
+
+  <rect x="205" y="616" width="1125" height="94" rx="10" fill="url(#violet)" stroke="#7346be" class="box"/>
+  <text x="768" y="652" text-anchor="middle" class="heading">Configuration and repository layer</text><text x="768" y="680" text-anchor="middle" class="sub">JSON configuration loader, survey-version controls, prepared database repositories, and audit helpers</text>
+  <path d="M620 710V754H410V783" class="line"/><path d="M916 710V754H1126V783" class="line"/>
+
+  <rect x="172" y="783" width="476" height="83" rx="10" fill="url(#green)" stroke="#17816a" class="box"/>
+  <text x="410" y="818" text-anchor="middle" class="heading">JSON configuration</text><text x="410" y="845" text-anchor="middle" class="sub">Facilities, departments, roles, labels, surveys</text>
+  <rect x="888" y="783" width="476" height="83" rx="10" fill="url(#red)" stroke="#dd4051" class="box"/>
+  <text x="1126" y="818" text-anchor="middle" class="heading">MySQL transactional data</text><text x="1126" y="845" text-anchor="middle" class="sub">Users, responses, QR records, CAPA, audit events</text>
+  <text x="1390" y="827" class="label">DATA</text>
+</svg>

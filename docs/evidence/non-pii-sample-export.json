@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "reporting_period": {"from": "2026-01-01", "to": "2026-06-30"},
+  "scope": {"geography": "District A", "facility_count": 12},
+  "generated_at": "2026-07-27T00:00:00Z",
+  "records": [
+    {"facility_code": "FAC-001", "month": "2026-06", "indicator_code": "Q04", "response_count": 184, "average_score": 3.8},
+    {"facility_code": "FAC-002", "month": "2026-06", "indicator_code": "Q04", "response_count": 96, "average_score": 3.4}
+  ],
+  "redaction": {"identity_fields": "excluded", "ip_addresses": "excluded", "exact_coordinates": "excluded", "free_text": "excluded"}
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 $documents = [
     'README' => 'README.md',
     'SUMMARY' => 'SUMMARY.md',
+    'why-abhipraya' => 'architecture/why_abhipraya.md',
     'project-overview' => 'architecture/project_overview.md',
     'technical-architecture' => 'architecture/technical_architecture.md',
     'use-cases' => 'architecture/use_cases.md',
@@ -28,7 +29,7 @@ $documents = [
     'governance' => 'compliance/governance_and_ownership.md',
     'open-source-dpg' => 'compliance/open_source_dpg_release_status.md',
     'dpg-evidence' => 'compliance/dpg_evidence_register.md',
-    'sdg-mapping' => 'compliance/sdg_mapping.md',
+    'sdg-mapping' => 'sdg-mapping.md',
     'non-pii-data' => 'compliance/non_pii_data_export_import.md',
     'open-standards' => 'compliance/open_standards_mapping.md',
     'release-checklist' => 'compliance/release_checklist.md',
@@ -44,6 +45,19 @@ $documents = [
     'gitbook' => 'gitbook.md',
     'dpg-readiness' => 'dpg-readiness.md',
 ];
+
+/* GitBook navigation source of truth. Every page listed in SUMMARY.md is an
+ * allowed documentation route and is shown in the HTML sidebar. */
+$summaryPath = dirname(__DIR__) . '/docs/SUMMARY.md';
+$summaryMarkdown = (string) file_get_contents($summaryPath);
+preg_match_all('/^-\s+\[[^\]]+\]\(([^)#]+)\.md\)/m', $summaryMarkdown, $summaryLinks);
+foreach ($summaryLinks[1] as $summaryTarget) {
+    $summaryTarget = str_replace('\\', '/', trim($summaryTarget));
+    if ($summaryTarget === '' || str_starts_with($summaryTarget, '../') || str_contains($summaryTarget, '..')) {
+        continue;
+    }
+    $documents[$summaryTarget] = $summaryTarget . '.md';
+}
 $key = (string) ($_GET['document'] ?? 'README');
 if (!isset($documents[$key])) {
     http_response_code(404);
@@ -55,10 +69,10 @@ $markdown = (string) file_get_contents($source);
 /* Keep the public documentation sidebar in step with the DPG evidence pack.
  * The page template is intentionally compact; this server-side output hook adds
  * the evidence links without adding a client-side dependency. */
-ob_start(static function (string $html) use ($key): string {
+ob_start(static function (string $html) use ($key, $summaryMarkdown): string {
     $dpgLinks = [
         'dpg-evidence' => 'DPG evidence register',
-        'sdg-mapping' => 'SDG mapping',
+        'sdg-mapping' => 'SDG relevance and public-benefit evidence',
         'non-pii-data' => 'Non-PII export and import',
         'open-standards' => 'Open standards',
         'release-checklist' => 'Release checklist',
@@ -96,6 +110,40 @@ ob_start(static function (string $html) use ($key): string {
         1
     ) ?? $html;
 
+    $html = str_replace(
+        '<a class="' . ($key === 'project-overview' ? 'is-active' : '') . '" href="/docs/project-overview.md">Abhipraya overview</a>',
+        '<a class="' . ($key === 'why-abhipraya' ? 'is-active' : '') . '" href="/docs/why-abhipraya.md">Why Abhipraya</a><a class="' . ($key === 'project-overview' ? 'is-active' : '') . '" href="/docs/project-overview.md">Abhipraya overview</a>',
+        $html
+    );
+    $html = str_replace(
+        '<header class="docs-head">',
+        '<header class="docs-head"><button class="docs-menu-toggle" type="button" aria-label="Open documentation menu" aria-controls="docs-sidebar" aria-expanded="false"><span></span><span></span><span></span></button>',
+        $html
+    );
+    $html = str_replace(
+        '<div class="docs-layout">',
+        '<div class="docs-menu-backdrop" data-docs-menu-close aria-hidden="true"></div><div class="docs-layout">',
+        $html
+    );
+    $html = str_replace(
+        '<aside class="docs-sidebar" aria-label="Documentation index">',
+        '<aside id="docs-sidebar" class="docs-sidebar" aria-label="Documentation index"><button class="docs-menu-close" type="button" aria-label="Close documentation menu">×</button>',
+        $html
+    );
+    $html = str_replace(
+        '</body>',
+        '<script src="/ui/assets/js/docs-mobile-nav.js?v=20260726-3" defer></script></body>',
+        $html
+    );
+    $html = str_replace(
+        '/ui/assets/css/docs.css',
+        '/ui/assets/css/docs.css?v=20260728-4',
+        $html
+    );
+
+    $sidebar = docsSidebar($summaryMarkdown, $key);
+    $html = preg_replace('#<aside id="docs-sidebar" class="docs-sidebar" aria-label="Documentation index">.*?</aside>#s', $sidebar, $html, 1) ?? $html;
+
     return $html;
 });
 
@@ -125,6 +173,7 @@ function docsInline(string $value): string
         }
         $target = preg_replace('/\.md$/', '', $match[2]);
         $routes = [
+            'architecture/why_abhipraya' => 'why-abhipraya',
             'architecture/project_overview' => 'project-overview',
             'architecture/technical_architecture' => 'technical-architecture',
             'architecture/use_cases' => 'use-cases',
@@ -178,7 +227,38 @@ function docsInline(string $value): string
         $target = $routes[$target] ?? basename((string) $target);
         return '<a href="/docs/' . rawurlencode($target) . '.md">' . $match[1] . '</a>';
     }, $value) ?? $value;
-    return preg_replace('/\*\*([^*]+)\*\*/', '<strong>$1</strong>', $value) ?? $value;
+    $value = preg_replace('/\*\*([^*]+)\*\*/', '<strong>$1</strong>', $value) ?? $value;
+    return preg_replace('/`([^`]+)`/', '<code>$1</code>', $value) ?? $value;
+}
+
+function docsSidebar(string $summaryMarkdown, string $key): string
+{
+    $html = '<aside id="docs-sidebar" class="docs-sidebar" aria-label="Documentation index"><button class="docs-menu-close" type="button" aria-label="Close documentation menu">×</button><p class="docs-sidebar-title">Documentation</p>';
+    $groupOpen = false;
+    foreach (preg_split('/\R/', $summaryMarkdown) as $line) {
+        if (preg_match('/^##\s+(.+)$/', trim($line), $heading)) {
+            if ($groupOpen) {
+                $html .= '</details>';
+            }
+            $html .= '<details class="docs-nav-group"><summary>' . htmlspecialchars($heading[1], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</summary>';
+            $groupOpen = true;
+            continue;
+        }
+        if (!preg_match('/^-\s+\[([^\]]+)\]\(([^)#]+)\.md(?:#[^)]+)?\)$/', trim($line), $link)) {
+            continue;
+        }
+        $target = str_replace('\\', '/', trim($link[2]));
+        if ($target === '' || str_starts_with($target, '../') || str_contains($target, '..')) {
+            continue;
+        }
+        $active = $key === $target ? ' class="is-active"' : '';
+        $urlPath = implode('/', array_map('rawurlencode', explode('/', $target)));
+        $html .= '<a' . $active . ' href="/docs/' . $urlPath . '.md">' . htmlspecialchars($link[1], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</a>';
+    }
+    if ($groupOpen) {
+        $html .= '</details>';
+    }
+    return $html . '</aside>';
 }
 
 function docsRender(string $markdown): string

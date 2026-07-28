@@ -1,5 +1,11 @@
 # Service architecture and map
 
+## Service architecture at a glance
+
+![Abhipraya service architecture diagram](/ui/assets/img/docs/abhipraya-service-architecture.svg)
+
+The service architecture separates public feedback functions from authenticated administrative operations. Every request enters through an allow-listed route, passes security and scope controls, and uses shared configuration or transactional data only through server-side services and repositories.
+
 ## Components
 
 | Component | Location | Responsibility |
@@ -21,7 +27,7 @@
 
 ```text
 Browser request
-  → IIS rewrite rule
+  → Web-server or reverse-proxy route rule
   → UI router or API front controller
   → session / CSRF / scope checks
   → module handler
@@ -36,3 +42,35 @@ Browser request
 - **Administrator session:** accesses only routes permitted by its authenticated role and scope.
 - **JSON configuration:** is server-side trusted configuration; it is not editable through public input.
 - **Database:** stores operational records; browser code must never connect directly.
+
+## Adding a new service
+
+New services can be added without changing the overall architecture. A service must be registered deliberately; browser code must never call an arbitrary PHP file or connect directly to the database.
+
+```text
+New feature requirement
+        ↓
+Register an allow-listed API route in api/routes.php
+        ↓
+Create the versioned module handler under api/modules/<service>/v1/
+        ↓
+Apply authentication, CSRF, and role/facility scope checks
+        ↓
+Implement business rules in a service class
+        ↓
+Use a repository for prepared MySQL access and ConfigLoader for JSON data
+        ↓
+Return the standard JSON response and record required audit events
+        ↓
+Add UI integration, tests, and documentation
+```
+
+### Service implementation rules
+
+- Use a descriptive, versioned endpoint group such as `/api/v1/notifications` or `/api/v1/facility-settings`.
+- Register every endpoint in the API allow-list. Do not expose a new file merely by placing it beneath `api/`.
+- Enforce authentication, CSRF protection for state-changing administrator requests, and role/facility scope before retrieving or changing data.
+- Keep request handling thin: validate input and delegate business logic to a service; use repositories for all database queries.
+- Put stable configuration in JSON only when it belongs to the configuration model; store operational, user-generated, or auditable records in MySQL.
+- Reuse standard error responses, logging, and audit helpers so that new services behave consistently with existing modules.
+- Add the service to the component table above, update the diagram if it introduces a distinct service category, and add automated tests before release.

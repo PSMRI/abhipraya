@@ -26,10 +26,10 @@ The HTML renderer uses a safe allow-list of documents. Documentation files remai
 ## Authoring rules
 
 1. Add the Markdown page beneath `docs/`.
-2. Add it to `docs/SUMMARY.md` and link it from `docs/README.md` when it is a main section.
-3. Add a safe document mapping and friendly route in `ui/docs.php` and `web.config` if it needs an HTML route.
+2. Add it to `docs/SUMMARY.md` and link it from `docs/README.md` when it is a main section. `SUMMARY.md` is the navigation source of truth: every listed page appears in the HTML documentation sidebar automatically.
+3. Use the Markdown file's path below `docs/` as its HTML route; for example, `architecture/new-page.md` opens at `/docs/architecture/new-page.md`.
 4. Use relative Markdown links for repository/GitBook readers.
-5. Test the HTML page after recycling IIS when PHP or routing files change.
+5. Test the HTML page after reloading the selected web-server/PHP process when PHP or routing files change; recycle the IIS application pool only when using the supplied IIS reference deployment.
 
 ## Publishing check
 

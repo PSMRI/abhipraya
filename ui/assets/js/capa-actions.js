@@ -14,6 +14,7 @@
   const report = byId('capa-report');
   const resultHost = byId('capa-results');
   const downloadButton = byId('download-capa');
+  const printButton = byId('print-capa');
   let facilities = [];
   let selectedFacility = null;
   let currentRows = [];
@@ -355,8 +356,14 @@
       selectedFacility ||= facilities.find((item) => String(item.facilityNIN) === String(facilityInput.value));
       byId('capa-context').textContent = `${selectedFacility?.facilityName || facilitySearch.value} · ${department.selectedOptions[0]?.textContent || ''}`;
       byId('capa-period').textContent = `${range.label} · Survey version ${surveyVersion.value} · Facility NIN ${facilityInput.value}`;
+      try {
+        const monthData = await requestJson(`/api/v1/capa/actions?facility_nin=${encodeURIComponent(facilityInput.value)}&dept_id=${encodeURIComponent(department.value)}&months=1`);
+        const labels = (monthData.data?.months || []).map((value) => new Date(`${value}-01T00:00:00`).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }));
+        showPreparedMonths();
+      } catch (_) { byId('capa-prepared-months').textContent = ''; }
       report.hidden = false;
       downloadButton.disabled = currentRows.length === 0;
+      if (printButton) printButton.disabled = currentRows.length === 0;
       if (!currentRows.length) {
         resultHost.innerHTML = '<div class="surface capa-report-header">No rated indicators are available for this facility, department and month.</div>';
         return;
@@ -370,7 +377,10 @@
 
   function downloadCsv() {
     if (!currentRows.length) return;
-    const headers = ['Rank', 'Survey version', 'Question key', 'Indicator', 'Score', 'Root cause', 'Action plan', 'Responsible', 'Timeline', 'Remarks', 'CAPA status'];
+    const facilityName = document.querySelector('#capa-context')?.textContent || facilitySearch.value || '';
+    const reportMonth = month.value || '';
+    const metadata = [['Facility name', facilityName], ['Facility NIN', facilityInput.value], ['Report type', 'CAPA'], ['Report month', reportMonth], []];
+    const headers = ['Sl. No.', 'Survey version', 'Question key', 'Lowest indicator', 'Average score', 'Root cause', 'Action plan', 'Responsible', 'Timeline', 'Remarks', 'CAPA status'];
     const rows = currentRows.map((item, index) => [
       index + 1,
       surveyVersion.value,
@@ -384,17 +394,38 @@
       item.action?.remarks || '',
       item.action?.id ? 'Saved' : 'Not entered'
     ]);
-    const csv = '\ufeff' + [headers, ...rows].map((row) =>
+    const csv = '\ufeff' + [...metadata, headers, ...rows].map((row) =>
       row.map((value) => `"${String(value ?? '').replace(/"/g, '""')}"`).join(',')
     ).join('\r\n');
-    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const url = URL.createObjectURL(new Blob([csv], { type: 'application/vnd.ms-excel;charset=utf-8' }));
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = `abhipraya-capa-${facilityInput.value}-${department.value}-v${surveyVersion.value}-${month.value}.csv`;
+    anchor.download = `abhipraya-capa-${facilityInput.value}-${department.value}-${month.value}.xls`;
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
+  }
+
+  function printPdf() {
+    if (!currentRows.length) return;
+    const heading = document.getElementById('capa-context')?.textContent || 'CAPA report';
+    const period = document.getElementById('capa-period')?.textContent || month.value;
+    const rows = currentRows.map((item, index) => `<tr><td>${index + 1}</td><td>${escapeHtml(item.indicator_name)}</td><td>${Number(item.score).toFixed(1)}/5</td><td>${escapeHtml(item.action?.root_cause || '')}</td><td>${escapeHtml(item.action?.action_plan || '')}</td><td>${item.action?.id ? 'Saved' : 'Not entered'}</td></tr>`).join('');
+    const win = window.open('', '_blank', 'noopener');
+    if (!win) return;
+    win.document.write(`<title>Abhipraya CAPA</title><style>body{font:14px Arial;color:#123}h1{font-size:22px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #9aa;padding:7px;text-align:left}th{background:#e9b01b}</style><h1>Abhipraya CAPA report</h1><p><b>${escapeHtml(heading)}</b><br>${escapeHtml(period)}<br>Report type: CAPA</p><table><thead><tr><th>Sl. No.</th><th>Lowest indicator</th><th>Average score</th><th>Root cause</th><th>Action plan</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`);
+    win.document.close(); win.focus(); win.print();
+  }
+  async function showPreparedMonths() {
+    const host = byId('capa-prepared-months');
+    if (!host || !facilityInput.value || !department.value) return;
+    try {
+      const data = await requestJson(`/api/v1/capa/actions?facility_nin=${encodeURIComponent(facilityInput.value)}&dept_id=${encodeURIComponent(department.value)}&months=1`);
+      const labels = (data.data?.months || []).map((value) => new Date(`${value}-01T00:00:00`).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }));
+      if (!labels.length) { host.textContent = 'No CAPA prepared for this facility and department yet.'; return; }
+      host.innerHTML = `CAPA prepared for ${labels.length} month(s): ` + labels.map((label, index) => `<a href="#" class="capa-month-link" data-capa-month="${data.data.months[index]}">${label}</a>`).join(' · ');
+    } catch (_) { host.textContent = ''; }
   }
 
   async function initialise() {
@@ -428,6 +459,15 @@
     surveyVersion.replaceChildren(new Option('Select version', ''));
     surveyVersion.disabled = true;
     refreshSurveyVersions();
+    showPreparedMonths();
+  });
+  byId('capa-prepared-months')?.addEventListener('click', (event) => {
+    const link = event.target.closest('[data-capa-month]');
+    if (!link) return;
+    event.preventDefault();
+    month.value = link.dataset.capaMonth;
+    refreshSurveyVersions();
+    loadCapa();
   });
   month.addEventListener('change', refreshSurveyVersions);
   facilitySearch.addEventListener('keydown', (event) => {
@@ -443,6 +483,7 @@
     }
   });
   downloadButton.addEventListener('click', downloadCsv);
+  printButton?.addEventListener('click', printPdf);
   document.querySelector('[data-topnav-toggle]')?.addEventListener('click', (event) => {
     const navigation = byId(event.currentTarget.getAttribute('aria-controls'));
     const open = navigation?.classList.toggle('is-open') || false;

@@ -21,6 +21,8 @@ return [
         '/v1/responses/export' => $module('responses', 'export'),
         '/v1/public-survey/questions' => $module('public-survey', 'questions'),
         '/v1/public-survey/resolve' => $module('public-survey', 'resolve'),
+        '/v1/boundaries' => $module('boundaries', 'list'),
+        '/v1/boundaries/{code}' => $module('boundaries', 'get'),
     ],
     'POST' => [
         '/v1/auth/login' => $module('auth', 'login'),

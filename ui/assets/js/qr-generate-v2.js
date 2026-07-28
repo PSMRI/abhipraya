@@ -252,16 +252,31 @@
       showMessage('Unable to copy the survey link. Please try again.', true);
     }
   });
-  document.getElementById('download-qr-poster').addEventListener('click', function () {
+  document.getElementById('download-qr-poster').addEventListener('click', async function () {
     if (!posterDataUrl) { showMessage('Generate a QR poster before downloading it.', true); return; }
     const fileName = [document.getElementById('qr-reference').textContent || 'feedback', 'qr-poster']
       .join('-').replace(/[^a-z0-9_-]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() + '.png';
     const download = document.createElement('a');
-    download.href = posterDataUrl;
-    download.download = fileName;
-    document.body.appendChild(download);
-    download.click();
-    download.remove();
+    let objectUrl = '';
+    try {
+      if (/^data:image\//i.test(posterDataUrl)) {
+        download.href = posterDataUrl;
+      } else {
+        const response = await fetch(posterDataUrl, { credentials: 'same-origin', cache: 'no-store' });
+        if (!response.ok) throw new Error('Download request failed.');
+        const blob = await response.blob();
+        objectUrl = URL.createObjectURL(blob);
+        download.href = objectUrl;
+      }
+      download.download = fileName;
+      document.body.appendChild(download);
+      download.click();
+    } catch (_) {
+      showMessage('Couldn\'t download - Something went wrong. Try again, or contact your organization.', true);
+    } finally {
+      download.remove();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    }
   });
   document.querySelector('[data-menu-toggle]')?.addEventListener('click', function () { const sidebar = document.getElementById('primary-navigation'); const open = sidebar.classList.toggle('is-open'); this.setAttribute('aria-expanded', String(open)); });
   document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => { document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; });

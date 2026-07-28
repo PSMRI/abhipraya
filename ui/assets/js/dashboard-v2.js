@@ -55,7 +55,22 @@
       const gapValue = Number.isFinite(configuredFacilities) ? Math.max(0, configuredFacilities - reportingFacilities) : 0;
       document.querySelector('#facilities-without-feedback strong')?.replaceChildren(String(gapValue));
       const indicators = (detailPayload.data?.indicators || []).filter((item) => Number.isFinite(Number(item.score)));
-      const ranked = [...indicators].sort((a, b) => Number(b.score) - Number(a.score));
+      /* The API may return one row per facility/department. Aggregate by the
+         indicator question before ranking so the same question is not shown
+         repeatedly in both highest- and lowest-scoring lists. */
+      const indicatorGroups = new Map();
+      indicators.forEach((item) => {
+        const name = String(item.indicator_name || item.ques || '').trim();
+        if (!name) return;
+        const responses = Math.max(1, Number(item.responses || item.response_count || 1));
+        const group = indicatorGroups.get(name) || { ...item, indicator_name: name, _sum: 0, _responses: 0 };
+        group._sum += Number(item.score) * responses;
+        group._responses += responses;
+        indicatorGroups.set(name, group);
+      });
+      const ranked = [...indicatorGroups.values()]
+        .map((item) => ({ ...item, score: item._responses ? item._sum / item._responses : Number(item.score) }))
+        .sort((a, b) => Number(b.score) - Number(a.score) || a.indicator_name.localeCompare(b.indicator_name));
       const cards = document.querySelectorAll('.ab-overview-card strong');
       if (cards[0]) cards[0].textContent = summary.score == null ? '—' : `${summary.score} / 5`;
       if (cards[1]) cards[1].textContent = ranked[0] ? ranked[0].indicator_name : '—';
@@ -98,7 +113,7 @@
       const healthCard = document.querySelector('.ab-analysis-card:first-child');
       if (healthCard) {
         healthCard.querySelectorAll('p').forEach((row) => row.remove());
-        [...indicators].sort((a, b) => Number(a.score) - Number(b.score)).slice(0, 3).forEach((match) => {
+        [...ranked].reverse().slice(0, 3).forEach((match) => {
           const score = Number(match.score);
           const status = score >= 4 ? 'good' : (score >= 3 ? 'watch' : 'priority');
           const row = document.createElement('p');

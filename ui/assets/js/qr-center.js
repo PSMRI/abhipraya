@@ -202,7 +202,7 @@
       posterDataUrl = qrSource;
       poster.hidden = true;
       qrImage.hidden = true;
-      throw new Error('The QR link was created, but the poster template could not be prepared. You can still download the QR code.');
+      showMessage('QR link created. The poster template is unavailable, so the QR image download remains available.', true);
     }
   }
 
@@ -266,7 +266,7 @@
     }
   }
 
-  function downloadPoster() {
+  async function downloadPoster() {
     if (!posterDataUrl) {
       showMessage('Generate a QR poster before downloading it.', true);
       return;
@@ -274,11 +274,21 @@
     const reference = document.getElementById('qr-reference').textContent || 'feedback';
     const fileName = `${reference}-qr-poster`.replace(/[^a-z0-9_-]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase();
     const link = document.createElement('a');
-    link.href = posterDataUrl;
-    link.download = `${fileName}.png`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    let objectUrl = '';
+    try {
+      if (/^data:image\//i.test(posterDataUrl)) link.href = posterDataUrl;
+      else {
+        const response = await fetch(posterDataUrl, { credentials: 'same-origin', cache: 'no-store' });
+        if (!response.ok) throw new Error('QR image request failed.');
+        objectUrl = URL.createObjectURL(await response.blob());
+        link.href = objectUrl;
+      }
+      link.download = `${fileName}.png`;
+      document.body.appendChild(link);
+      link.click();
+    } catch (_) {
+      showMessage('Couldn\'t download - Something went wrong. Try again, or contact your organization.', true);
+    } finally { link.remove(); if (objectUrl) URL.revokeObjectURL(objectUrl); }
   }
 
   search.addEventListener('input', () => {

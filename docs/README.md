@@ -10,7 +10,14 @@ Abhipraya is an open-source, QR-based public-feedback platform for healthcare fa
 | --- | --- |
 | Health officials and facility teams | [User guide](user/user_guide.md) |
 | Developers and implementers | [Abhipraya overview](architecture/project_overview.md) |
+| API integrators | [API specifications](api/api_specifications.md) |
+| API security reviewers | [API access control](api/access_control.md) |
+| Programme data and scope owners | [Boundary and administrative scope](api/boundary.md) |
+| Programme sponsors and partners | [Why Abhipraya](architecture/why_abhipraya.md) |
 | Solution architects and technical reviewers | [Technical architecture overview](architecture/technical_architecture.md) |
+| Technology and deployment teams | [Technology architecture and open-source tools](architecture/technology_architecture.md) |
+| Infrastructure and operations teams | [Infrastructure architecture](architecture/infrastructure_architecture.md) |
+| Release and DevOps teams | [Deployment architecture](architecture/deployment_architecture.md) |
 | Survey authors | [Survey version publishing](survey-version-publishing.md) |
 | Security and operations teams | [Security guide](security.md) |
 
@@ -21,11 +28,20 @@ Abhipraya is an open-source, QR-based public-feedback platform for healthcare fa
 - **Developer guide** — [database](database/data_dictionary_erd.md), [API](api/README.md), and [developer guide](developer-guide.md).
 - **Security and operations** — [security](security.md), [deployment](deployment/deployment_guide.md), [backup and restore](deployment/backup_restore_guide.md), [troubleshooting](deployment/troubleshooting_faq.md), [testing](testing/test_plan.md), and [accessibility](testing/wcag_web_platform_compliance.md).
 - **Open source and DPG** — [privacy](compliance/privacy_data_protection.md), [governance](compliance/governance_and_ownership.md), and [open-source/DPG readiness](compliance/open_source_dpg_release_status.md).
+- **Release readiness** — [open-source readiness checklist](compliance/open_source_readiness_checklist.md), [open-source/DPG release status](open-source-dpg.md), and [DPG readiness](dpg-readiness.md).
 
 
 ## DPG readiness evidence
 
 The [DPG readiness](dpg-readiness.md) page links the evidence required for a public release: [SDG mapping](compliance/sdg_mapping.md), [evidence register](compliance/dpg_evidence_register.md), [non-PII export](compliance/non_pii_data_export_import.md), [open standards](compliance/open_standards_mapping.md), [privacy confirmation](compliance/legal_privacy_confirmation.md), and the [release checklist](compliance/release_checklist.md).
+
+### SDG relevance and public-benefit evidence
+
+Read the full [SDG relevance and public-benefit evidence](sdg-mapping.md) record. It explains why Abhipraya maps primarily to SDG 3, supports SDG 10, and treats SDG 16/17 as candidate mappings requiring additional evidence.
+
+Run `php tools/dpg_readiness_check.php` to verify the evidence set and report declared SDG categories plus heuristic SDG candidates. Candidate mappings require human review and deployment evidence.
+
+Run `php tools/open_source_readiness_check.php` to verify the open-source release documentation baseline. The result is a maintainer review aid, not release approval.
 
 ## Licence and open-source governance
 
@@ -33,7 +49,7 @@ Abhipraya is licensed under [GPL-3.0-or-later](../LICENSE). Public releases must
 
 ## Mobile documentation access
 
-The documentation site is designed for phone and tablet use. On small screens, the navigation remains at the top of the page in its own scrollable area; select a section to expand it and open a document. Tables can scroll horizontally so that no evidence or report column is hidden.
+The documentation site is designed for phone and tablet use. On small screens, use the menu button in the header to open the slide-out documentation sidebar; select a section to expand it and open a document. Tables can scroll horizontally so that no evidence or report column is hidden.
 
 For the best experience on a phone, open the documentation home page first, choose the required section from the navigation, and then read the selected page below it.
 

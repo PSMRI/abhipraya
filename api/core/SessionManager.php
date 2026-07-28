@@ -59,6 +59,26 @@ class SessionManager
         ini_set('session.use_strict_mode', '1');
         ini_set('session.use_only_cookies', '1');
         ini_set('session.cookie_httponly', '1');
+        /* Do not inherit an unavailable Redis session handler from the
+           production PHP configuration. Abhipraya stores sessions locally
+           and remains functional when Redis is not installed/running. */
+        ini_set('session.save_handler', 'files');
+
+        /* Use an application-owned session directory so PHP upgrades do not
+           break authentication when the global session path loses ACLs. */
+        $sessionPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'sessions';
+        if (!is_dir($sessionPath)) @mkdir($sessionPath, 0700, true);
+        if (is_dir($sessionPath) && is_writable($sessionPath)) {
+            /* PHP on Windows can misinterpret backslash-prefixed paths under
+               IIS/FastCGI as a network host. Use a normalised drive path. */
+            $sessionPath = realpath($sessionPath) ?: $sessionPath;
+            $sessionPath = str_replace('\\', '/', $sessionPath);
+            /* session_save_path() is more reliable than ini_set() when the
+               PHP-FPM/FastCGI configuration marks session.save_path as
+               changeable at runtime. */
+            @session_save_path($sessionPath);
+            ini_set('session.save_path', $sessionPath);
+        }
 
         session_start();
 

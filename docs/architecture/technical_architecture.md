@@ -2,14 +2,14 @@
 
 ## Architecture at a glance
 
-Abhipraya is a PHP and MySQL web application with a static browser interface, versioned REST APIs, JSON-driven survey packages, and IIS routing. It separates public survey functions from authenticated administrator functions.
+Abhipraya is a PHP and MySQL web application with a static browser interface, versioned REST APIs, JSON-driven survey packages, and web-server routing. It separates public survey functions from authenticated administrator functions.
 
 ![Abhipraya technical architecture diagram](/ui/assets/img/docs/abhipraya-technical-architecture.svg)
 
 ```text
 Public respondent or administrator browser
                  ↓
-        IIS routes and UI front controller
+        Web-server routes and UI front controller
                  ↓
         Static UI pages and JavaScript
                  ↓
@@ -158,19 +158,19 @@ Deployment administrators must configure HTTPS, secure database credentials, bac
 
 ## Deployment model
 
-The current deployment is designed for IIS with PHP and MySQL:
+Abhipraya can be deployed behind any web server or reverse proxy that can serve PHP, enforce HTTPS, and apply the documented route and security rules. The repository includes an IIS reference configuration; Apache and Nginx are supported deployment choices when those rules are translated.
 
 ```text
 HTTPS client
     ↓
-IIS / web.config rewrite rules
+Web-server / reverse-proxy rewrite rules
     ↓
 PHP UI router and API front controller
     ↓
 MySQL and protected configuration/storage
 ```
 
-The `.env` file holds environment-specific database values and must never be committed or exposed beneath the public web root. Production deployment should use HTTPS only and recycle the IIS application pool after configuration or code changes.
+The `.env` file holds environment-specific database values and must never be committed or exposed beneath the public web root. Production deployment should use HTTPS only and reload the selected application process or PHP runtime after configuration or code changes.
 
 ## Extension rules
 

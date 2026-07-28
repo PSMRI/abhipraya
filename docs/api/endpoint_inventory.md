@@ -20,5 +20,7 @@
 | GET | `/api/v1/public-survey/questions` | Public | Load validated active survey questions. |
 | POST | `/api/v1/public-survey/location` | Public | Validate location where configured. |
 | POST | `/api/v1/public-survey/submit` | Public | Submit anonymous validated feedback. |
+| GET | `/api/v1/boundaries` | Public | Search configured state, district, block, and facility boundary records. |
+| GET | `/api/v1/boundaries/{code}` | Public | Read one configured boundary record and direct children. |
 
 All administrator endpoints must enforce facility scope on the server. A browser-supplied facility NIN is never sufficient authority.

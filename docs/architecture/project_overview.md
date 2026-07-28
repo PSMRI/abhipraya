@@ -8,6 +8,8 @@ The first implementation focuses on healthcare facilities, departments, and pati
 
 > **Mission:** Turn protected beneficiary feedback into practical service improvement.
 
+For the underlying need, public-benefit rationale, and intended improvement loop, see [Why Abhipraya](why_abhipraya.md).
+
 ## The problem it addresses
 
 A beneficiary may experience a problem—such as medicine being unavailable, a long wait, poor cleanliness, or staff unavailability—and leave the facility without a safe, simple channel to report it. Administrators then have limited timely evidence of where service gaps occur.

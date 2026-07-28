@@ -29,3 +29,5 @@ Routes are registered in `api/routes.php`. Do not add an endpoint by exposing a 
 - CAPA actions.
 
 See [Endpoint inventory](endpoint_inventory.md).
+
+For API conventions, standard request/response envelopes, authentication, HTTP status codes, and API extension rules, see [API specifications](api_specifications.md).

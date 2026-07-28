@@ -95,3 +95,4 @@
   .capa-card { break-inside: avoid; box-shadow: none; }
   .capa-field input, .capa-field textarea { border: 0; padding: 0; background: #fff; }
 }
+.capa-month-link{display:inline-block;margin-left:4px;padding:2px 7px;border-radius:5px;background:#eaf3ff;color:#075a91;font-weight:800;text-decoration:none}.capa-month-link:hover,.capa-month-link:focus{background:#d4e9ff;color:#043b61;text-decoration:underline}.capa-export-actions{display:flex;gap:8px;flex-wrap:wrap}

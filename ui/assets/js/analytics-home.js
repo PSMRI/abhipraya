@@ -699,11 +699,12 @@
   function renderHighest(indicators) {
     const host = byId('highest-indicators');
     const items = indicators
-      .filter((item) => Number.isFinite(Number(item.score)))
+      .filter((item) => Number.isFinite(Number(item.score)) && Number(item.score) > 4)
       .sort((left, right) => Number(right.score) - Number(left.score))
       .slice(0, 6);
+    window.__abhiprayaHighestIndicatorKeys = new Set(items.map((item) => String(item.indicator_id ?? item.indicator_name)));
     if (!items.length) {
-      host.innerHTML = '<div class="empty">No rated indicators are available for this selection.</div>';
+      host.innerHTML = '<div class="empty">No indicators are rated above 4.0/5 in this selection.</div>';
       return;
     }
     host.innerHTML = items.map((item) => {
@@ -766,14 +767,27 @@
 
   function renderPriority(indicators, categories = []) {
     const host = byId('priority-indicators');
+    const highestKeys = window.__abhiprayaHighestIndicatorKeys || new Set();
     const ratingItems = indicators
       .filter((item) => Number.isFinite(Number(item.score)) && Number(item.score) < 3)
+      .filter((item) => !highestKeys.has(String(item.indicator_id ?? item.indicator_name)))
       .sort((left, right) => Number(left.score) - Number(right.score))
       .map((item) => ({ ...item, kind: 'rating', severity: Number(item.score) < 2 ? 'critical' : 'priority' }));
     const distributionItems = categoryRiskItems(categories)
       .map((item) => ({ ...item, kind: 'distribution' }));
-    const items = [...distributionItems, ...ratingItems].slice(0, 6);
+    const relativeLowest = ratingItems.length ? ratingItems : indicators
+      .filter((item) => Number.isFinite(Number(item.score)))
+      .filter((item) => !highestKeys.has(String(item.indicator_id ?? item.indicator_name)))
+      .sort((left, right) => Number(left.score) - Number(right.score))
+      .slice(0, 3)
+      .map((item) => ({ ...item, kind: 'rating', severity: 'priority' }));
+    const items = [...distributionItems, ...relativeLowest].slice(0, 6);
     if (!items.length) {
+      const validScores = indicators.map((item) => Number(item.score)).filter(Number.isFinite);
+      if (validScores.length && Math.max(...validScores) === Math.min(...validScores)) {
+        host.innerHTML = `<div class="empty">All rated indicators are tied at ${Math.min(...validScores).toFixed(1)}/5; there is no distinct lowest-scoring indicator.</div>`;
+        return;
+      }
       host.innerHTML = '<div class="empty">No priority indicators are available for this selection.</div>';
       return;
     }

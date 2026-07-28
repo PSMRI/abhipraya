@@ -71,6 +71,11 @@ function capaText(array $action, string $field, int $maximum, bool $required = f
     if (mb_strlen($value) > $maximum || preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', $value)) {
         Response::validation([$field => 'Enter a valid value within ' . $maximum . ' characters.']);
     }
+    if ($field === 'responsible') {
+        if (!preg_match('/\p{L}/u', $value) || !preg_match('/^[\p{L}\p{M}0-9 .,&()\/-]+$/u', $value)) {
+            Response::validation([$field => 'Enter a valid name or designation. Only letters, numbers, spaces, and basic punctuation are allowed.']);
+        }
+    }
     return $value;
 }
 
@@ -112,6 +117,13 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $facilityNin = capaScopeValue($_GET['facility_nin'] ?? '', 'facility_nin');
         $department = capaDepartment($_GET['dept_id'] ?? '');
+        if (isset($_GET['months']) && $_GET['months'] === '1') {
+            capaEnforceScope($facilityNin);
+            $stmt = $con->prepare('SELECT DISTINCT month FROM capa_actions WHERE hospital_nin = ? AND dept_id = ? ORDER BY month DESC');
+            $stmt->bind_param('si', $facilityNin, $department); $stmt->execute();
+            $months = array_column($stmt->get_result()->fetch_all(MYSQLI_ASSOC), 'month'); $stmt->close();
+            Response::success('CAPA months loaded.', ['months' => $months]);
+        }
         $month = capaScopeValue($_GET['month'] ?? '', 'month');
         $surveyVersion = capaVersion($_GET['survey_version'] ?? '');
         capaEnforceScope($facilityNin);

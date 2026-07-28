@@ -1,4 +1,6 @@
-# SDG mapping
+# SDG relevance and public-benefit evidence
+
+This record explains how Abhipraya contributes to the Sustainable Development Goals. It is an evidence mapping, not an SDG certification.
 
 ## Purpose
 
