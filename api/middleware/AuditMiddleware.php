@@ -6,17 +6,23 @@ namespace App\Middleware;
 use App\Core\Database;
 use App\Core\Logger;
 use App\Core\Request;
+use Closure;
 use PDO;
 use Throwable;
 
 final class AuditMiddleware
 {
+    private readonly ?Closure $entityIdResolver;
+    private readonly ?Closure $valueResolver;
+
     public function __construct(
         private readonly string $actionCode,
         private readonly ?string $entityType = null,
-        private readonly ?callable $entityIdResolver = null,
-        private readonly ?callable $valueResolver = null
+        ?callable $entityIdResolver = null,
+        ?callable $valueResolver = null
     ) {
+        $this->entityIdResolver = $entityIdResolver === null ? null : Closure::fromCallable($entityIdResolver);
+        $this->valueResolver = $valueResolver === null ? null : Closure::fromCallable($valueResolver);
     }
 
     public function handle(

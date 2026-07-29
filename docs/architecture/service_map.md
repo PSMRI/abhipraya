@@ -28,6 +28,7 @@ The service architecture separates public feedback functions from authenticated 
 | CAPA service | `api/modules/capa/v1/` | Corrective and preventive action records. |
 | Configuration loader | `api/core/ConfigLoader.php` | JSON master and versioned survey package loading. |
 | Persister service | `api/core/PersisterService.php` | Atomic transaction boundary for related database writes. |
+| Event layer | `api/core/Event.php` | Local event log/listeners and optional Kafka publishing. |
 | Database repositories | `api/repositories/` | Prepared access to transactional data. |
 
 ## Request lifecycle

@@ -2,36 +2,18 @@
 
 ## Current position
 
-Abhipraya has an open-source release foundation: a GPL-3.0-or-later licence, public documentation, versioned configuration guidance and a security/deployment baseline. This is a **self-assessed readiness position**, not DPGA recognition.
+Abhipraya has documented open-source and Digital Public Good release readiness: GPL-3.0-or-later licensing, named ownership, public documentation, versioned configuration guidance, privacy controls, security evidence, open standards and deployment guidance. The detailed evidence is maintained in the [DPG evidence register](dpg_evidence_register.md).
 
 ## Release evidence status
 
 | Area | Position | Release requirement |
 | --- | --- | --- |
-| Open licence | Foundation available | Retain GPL-3.0-or-later, copyright notices and third-party attribution. |
-| Documentation | Foundation available | Publish the README, user, developer, API, deployment, privacy, security and DPG evidence pages with every release. |
-| Privacy | Partial | Deployment owner completes the jurisdiction-specific notice, retention schedule and contact route. |
-| Security | Partial | Complete current security testing, track findings and publish an incident-response contact. |
-| Governance | Partial | Publish named maintainers, owner and release process. |
-| Interoperability | Partial | Publish API and configuration schemas, supported export formats and compatibility commitments. |
-| DPG evidence | Partial | Close the items in the [DPG evidence register](dpg_evidence_register.md). |
-
-## Required public release artefacts
-
-1. Source archive or repository tag, release notes and version number.
-2. [GPL-3.0-or-later licence](../../LICENSE), [NOTICE](../../NOTICE), and [third-party notices](../../THIRD_PARTY_NOTICES.md).
-3. [Code of Conduct](../../CODE_OF_CONDUCT.md), [Contributing guide](../../CONTRIBUTING.md), [Security policy](../../SECURITY.md), and [maintainer/release-contact template](../../MAINTAINERS.md).
-4. Deployment-safe sample configuration with no credentials or production data, verified using the [public data audit](public_data_audit.md).
-5. Public documentation and a working, scrollable documentation index.
-6. [Licence consistency and attribution](license_consistency.md), [data privacy policy baseline](data_privacy_policy.md), and [open-source readiness checklist](open_source_readiness_checklist.md).
-7. A completed [DPG release checklist](release_checklist.md).
-
-## Licence boundary
-
-GPL-3.0-or-later applies to the Abhipraya core source. Third-party components keep their own licences and attribution requirements. The release owner must verify that every bundled dependency is present in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) and that its licence is compatible with the distributed release.
-
-The GPL does not grant trademark rights to the Abhipraya name or logos. Publish the appropriate trademark owner/contact before a public branded release.
-
-## SDG relevance
-
-The first healthcare package is intended to support **SDG 3: Good Health and Well-being** by helping authorised officials identify service gaps from aggregated feedback and follow corrective actions. It can also support transparent and accountable public service delivery under SDG 16. See the [SDG mapping](sdg_mapping.md) for limitations and evidence requirements.
+| Open licence | Pass | GPL-3.0-or-later, copyright notice and third-party attribution are present in the repository. |
+| Documentation | Pass | The README, user, developer, API, deployment, privacy, security, DPG evidence, VAPT and performance-report pages are published in the repository. |
+| Privacy | Pass | Published Bihar privacy controls specify data minimisation, retention schedule, moderation responsibility and the public privacy/grievance contact. |
+| Security | Pass | Completed development-environment evidence is recorded in the [passed-test evidence register](../testing/test_evidence_register.md) and [VAPT test report](../testing/vapt_test_report.md): protected-file checks, dependency audit, authorization, CSRF, SQL-injection input handling, encryption, session-store, Kafka, database backup/restore and index verification. The public incident-response contact is published in [SECURITY.md](../../SECURITY.md). The formal VAPT record remains the production-release assessment artefact. |
+| Performance | Partial | The [performance test results](../testing/performance_test_results.md) record development baseline and load-smoke evidence. Approve targets and repeat in a representative environment before release. |
+| Governance | Pass | PSMRI, India is the legal and trademark owner; the Abhipraya Team, public contacts and backup responsibilities are published in the [governance record](governance_and_ownership.md) and [maintainer record](../../MAINTAINERS.md). |
+| Platform independence | Pass | The deployment guide supports Apache, Nginx, IIS and compatible reverse proxies; the repository includes a Linux/Nginx PHP-FPM bootstrap script and uses portable PHP and MySQL/MariaDB runtime requirements. |
+| Interoperability | Pass | Published OpenAPI and Postman artefacts, versioned JSON configuration, standard CSV/XLSX exports and documented compatibility commitments provide the interoperable core path. |
+| DPG evidence | Pass | All indicators in the [DPG evidence register](dpg_evidence_register.md) are recorded as Pass with linked supporting documentation. |

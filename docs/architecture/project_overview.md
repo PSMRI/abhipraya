@@ -2,7 +2,7 @@
 
 ## Anonymous feedback that leads to better services
 
-**Abhipraya** is an open-source, QR-based public-feedback platform for public-service locations and operating units. It gives people a quick and anonymous way to share their experience, and gives authorised officials clear evidence to identify and improve service gaps. Healthcare facilities are the current implementation context.
+**Abhipraya** is a QR-based public-feedback platform for public-service locations and operating units. It gives people a quick and anonymous way to share their experience, and gives authorised officials clear evidence to identify and improve service gaps. Healthcare facilities are the current implementation context.
 
 The first implementation focuses on healthcare facilities, departments, and patient experience. The core design is configuration-driven so that survey packages can evolve without changing the application code or rewriting historical responses.
 
@@ -40,7 +40,7 @@ Service improvement can be monitored over time
 - Preserve respondent privacy while using configured location validation and duplicate-submission controls.
 - Present clear, role-scoped dashboards, analysis, reports, and CAPA actions to health officials.
 - Keep historical feedback interpretable when questions or survey versions change.
-- Provide an open-source foundation that can be adopted and configured by other health programmes.
+- Provide a configurable foundation that can be adopted by other health programmes.
 
 ## Who uses Abhipraya
 
@@ -157,4 +157,3 @@ Features such as mobile offline synchronisation, notifications, voice recording,
 - [Survey version publishing](../survey-version-publishing.md)
 - [Survey question types](../survey-question-types-reference.md)
 - [Security guide](../security.md)
-- [Digital Public Good readiness](../dpg-readiness.md)

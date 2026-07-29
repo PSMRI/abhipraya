@@ -12,10 +12,12 @@ use RuntimeException;
 
 final class PublicSurveyService
 {
+    private readonly PublicSurveyRepository $repository;
+
     public function __construct(
-        private readonly PublicSurveyRepository $repository =
-            new PublicSurveyRepository(Database::connection())
+        ?PublicSurveyRepository $repository = null
     ) {
+        $this->repository = $repository ?? new PublicSurveyRepository(Database::connection());
     }
 
     public function resolveToken(

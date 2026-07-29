@@ -34,7 +34,7 @@ The first deployment can use one application host and one protected database hos
 
 ## Related documentation
 
-- [Technology architecture and open-source tools](technology_architecture.md)
+- [Technology architecture and tools](technology_architecture.md)
 - [Technical architecture overview](technical_architecture.md)
 - [Service architecture and map](service_map.md)
 - [Deployment guide](../deployment/deployment_guide.md)

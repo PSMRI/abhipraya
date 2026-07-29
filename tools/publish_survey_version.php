@@ -8,6 +8,9 @@ if (PHP_SAPI !== 'cli') {
 
 const SUPPORTED_REPORT_TYPES = [
     'rating',
+    'duration',
+    'numeric',
+    'text',
     'binary',
     'category',
     'availability',
@@ -96,8 +99,9 @@ function normalizeQuestions(array $questions, string $version, array &$warnings)
         $seenLanguageQuestion[$languageQuestionKey] = true;
 
         $options = $question['options'] ?? null;
-        if (!is_array($options) || count($options) < 2) {
-            fail('Question ' . $number . ' requires at least two options.');
+        $minimumOptions = $type === 'numeric' ? 1 : 2;
+        if (!is_array($options) || count($options) < $minimumOptions) {
+            fail('Question ' . $number . ' requires at least ' . $minimumOptions . ' option(s).');
         }
 
         $optionValues = [];

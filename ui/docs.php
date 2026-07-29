@@ -26,6 +26,8 @@ $documents = [
     'backup-restore' => 'deployment/backup_restore_guide.md',
     'troubleshooting' => 'deployment/troubleshooting_faq.md',
     'test-plan' => 'testing/test_plan.md',
+    'test_results' => 'testing/test_results.md',
+    'dpg_open_source_test_evidence_matrix' => 'testing/dpg_open_source_test_matrix.md',
     'accessibility' => 'testing/wcag_web_platform_compliance.md',
     'privacy' => 'compliance/privacy_data_protection.md',
     'governance' => 'compliance/governance_and_ownership.md',
@@ -46,6 +48,13 @@ $documents = [
     'data_privacy_policy' => 'compliance/data_privacy_policy.md',
     'gitbook' => 'gitbook.md',
     'dpg-readiness' => 'dpg-readiness.md',
+    'openapi-reference' => 'api/openapi.yaml',
+    'openapi.yaml' => 'api/openapi.yaml',
+    'postman-collection-reference' => 'api/postman_collection.json',
+    'web.config' => '../web.config',
+    'composer.json' => '../composer.json',
+    'composer.lock' => '../composer.lock',
+    'publish_survey_version.php' => '../tools/publish_survey_version.php',
 ];
 
 /* GitBook navigation source of truth. Every page listed in SUMMARY.md is an
@@ -60,6 +69,8 @@ foreach ($summaryLinks[1] as $summaryTarget) {
     }
     $documents[$summaryTarget] = $summaryTarget . '.md';
 }
+$documents['openapi-reference'] = 'api/openapi.yaml';
+$documents['postman-collection-reference'] = 'api/postman_collection.json';
 $key = (string) ($_GET['document'] ?? 'README');
 if (!isset($documents[$key])) {
     http_response_code(404);
@@ -67,6 +78,20 @@ if (!isset($documents[$key])) {
 }
 $source = dirname(__DIR__) . '/docs/' . $documents[$key];
 $markdown = (string) file_get_contents($source);
+$docsCurrentPath = $documents[$key];
+$docsAllowedPaths = array_values($documents);
+$renderedDocuments = [
+    'openapi-reference' => ['OpenAPI 3.1 specification', '/docs/api/openapi.yaml', 'Download or open the raw YAML file'],
+    'openapi.yaml' => ['OpenAPI 3.1 specification', '/docs/api/openapi.yaml', 'Download or open the raw YAML file'],
+    'postman-collection-reference' => ['Postman collection', '/docs/api/postman_collection.json', 'Download or import the raw JSON collection'],
+    'web.config' => ['IIS web configuration', '', ''],
+    'composer.json' => ['Composer manifest', '', ''],
+    'composer.lock' => ['Composer dependency lock file', '', ''],
+    'publish_survey_version.php' => ['Survey publishing validation script', '', ''],
+];
+$contentHtml = isset($renderedDocuments[$key])
+    ? '<h1>' . $renderedDocuments[$key][0] . '</h1><p>Rendered source for review.' . ($renderedDocuments[$key][1] !== '' ? ' <a href="' . $renderedDocuments[$key][1] . '">' . $renderedDocuments[$key][2] . '</a>.' : '') . '</p><pre><code>' . htmlspecialchars($markdown, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</code></pre>'
+    : docsRender($markdown);
 
 /* Keep the public documentation sidebar in step with the DPG evidence pack.
  * The page template is intentionally compact; this server-side output hook adds
@@ -151,29 +176,75 @@ ob_start(static function (string $html) use ($key, $summaryMarkdown): string {
 
 function docsInline(string $value): string
 {
+    global $docsAllowedPaths, $docsCurrentPath;
+
     $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     $value = preg_replace_callback('/\[([^\]]+)\]\(([^\)]+)\)/', static function (array $match): string {
+        global $docsAllowedPaths, $docsCurrentPath;
+
         if (preg_match('#^https?://#i', $match[2])) {
             return '<a href="' . $match[2] . '" rel="noopener noreferrer" target="_blank">' . $match[1] . '</a>';
         }
         $rootDocuments = [
-            '../LICENSE' => '/LICENSE',
-            '../NOTICE' => '/NOTICE',
-            '../THIRD_PARTY_NOTICES.md' => '/THIRD_PARTY_NOTICES.md',
-            '../CODE_OF_CONDUCT.md' => '/CODE_OF_CONDUCT.md',
-            '../MAINTAINERS.md' => '/MAINTAINERS.md',
-            '../../CONTRIBUTING.md' => '/CONTRIBUTING.md',
-            '../../SECURITY.md' => '/SECURITY.md',
-            '../../LICENSE' => '/LICENSE',
-            '../../NOTICE' => '/NOTICE',
-            '../../THIRD_PARTY_NOTICES.md' => '/THIRD_PARTY_NOTICES.md',
-            '../../CODE_OF_CONDUCT.md' => '/CODE_OF_CONDUCT.md',
-            '../../MAINTAINERS.md' => '/MAINTAINERS.md',
+            '../LICENSE' => '/docs/compliance/license.md',
+            '../NOTICE' => '/docs/compliance/notice.md',
+            '../THIRD_PARTY_NOTICES.md' => '/docs/compliance/third-party-notices.md',
+            '../CODE_OF_CONDUCT.md' => '/docs/compliance/code-of-conduct.md',
+            '../MAINTAINERS.md' => '/docs/compliance/maintainers.md',
+            '../../CONTRIBUTING.md' => '/docs/compliance/contributing.md',
+            '../../SECURITY.md' => '/docs/compliance/security-policy.md',
+            '../../LICENSE' => '/docs/compliance/license.md',
+            '../../NOTICE' => '/docs/compliance/notice.md',
+            '../../THIRD_PARTY_NOTICES.md' => '/docs/compliance/third-party-notices.md',
+            '../../CODE_OF_CONDUCT.md' => '/docs/compliance/code-of-conduct.md',
+            '../../MAINTAINERS.md' => '/docs/compliance/maintainers.md',
+            '../../api/database/schema/abhipraya_core_schema.sql' => '/api/database/schema/abhipraya_core_schema.sql',
+            '../api/database/schema/abhipraya_core_schema.sql' => '/api/database/schema/abhipraya_core_schema.sql',
+            '../../web.config' => '/docs/web.config.md',
+            '../../composer.json' => '/docs/composer.json.md',
+            '../../composer.lock' => '/docs/composer.lock.md',
+            '../../tools/publish_survey_version.php' => '/docs/publish_survey_version.php.md',
+            'openapi.yaml' => '/docs/api/openapi.yaml',
+            '../api/openapi.yaml' => '/docs/openapi.yaml.md',
+            'postman_collection.json' => '/docs/api/postman_collection.json',
+            '../test_results.md' => '/docs/test_results.md',
+            'test_evidence_register.md' => '/docs/testing/test_evidence_register.md',
+            'vapt_test_report.md' => '/docs/testing/vapt_test_report.md',
+            'performance_test_results.md' => '/docs/testing/performance_test_results.md',
+            '../dpg_open_source_test_evidence_matrix.md' => '/docs/dpg_open_source_test_evidence_matrix.md',
         ];
         if (isset($rootDocuments[$match[2]])) {
             return '<a href="' . $rootDocuments[$match[2]] . '">' . $match[1] . '</a>';
         }
-        $target = preg_replace('/\.md$/', '', $match[2]);
+        [$linkPath, $fragment] = array_pad(explode('#', $match[2], 2), 2, '');
+
+        $pathParts = [];
+        foreach (array_merge(explode('/', dirname($docsCurrentPath)), explode('/', $linkPath)) as $part) {
+            if ($part === '' || $part === '.') {
+                continue;
+            }
+            if ($part === '..') {
+                array_pop($pathParts);
+                continue;
+            }
+            $pathParts[] = $part;
+        }
+        $resolvedPath = implode('/', $pathParts);
+        if (in_array($resolvedPath, $docsAllowedPaths, true)) {
+            $href = '/docs/' . implode('/', array_map('rawurlencode', explode('/', $resolvedPath)));
+            if ($fragment !== '') {
+                $href .= '#' . rawurlencode($fragment);
+            }
+            return '<a href="' . $href . '">' . $match[1] . '</a>';
+        }
+
+        /* Application source/configuration references are evidence labels, not
+         * public documentation routes. Do not render a link that would lead to
+         * a 404 page or expose an executable PHP source path. */
+        if (str_contains($linkPath, '/') || preg_match('/\.(?:php|json|yaml|yml|config|css)$/i', $linkPath)) {
+            return '<span class="docs-source-reference" title="' . htmlspecialchars($linkPath, ENT_QUOTES, 'UTF-8') . '">' . $match[1] . '</span>';
+        }
+        $target = preg_replace('/\.md$/', '', $linkPath);
         $routes = [
             'architecture/why_abhipraya' => 'why-abhipraya',
             'architecture/project_overview' => 'project-overview',
@@ -222,12 +293,17 @@ function docsInline(string $value): string
             '../api/README' => 'api-reference',
             '../architecture/configuration_formats' => 'configuration-formats',
             '../architecture/technical_architecture' => 'technical-architecture',
+            '../architecture/event_driven_architecture' => 'architecture/event_driven_architecture',
             '../security' => 'security',
             '../testing/test_plan' => 'test-plan',
             'gitbook' => 'gitbook',
         ];
         $target = $routes[$target] ?? basename((string) $target);
-        return '<a href="/docs/' . rawurlencode($target) . '.md">' . $match[1] . '</a>';
+        $href = '/docs/' . rawurlencode($target) . '.md';
+        if ($fragment !== '') {
+            $href .= '#' . rawurlencode($fragment);
+        }
+        return '<a href="' . $href . '">' . $match[1] . '</a>';
     }, $value) ?? $value;
     $value = preg_replace('/\*\*([^*]+)\*\*/', '<strong>$1</strong>', $value) ?? $value;
     return preg_replace('/`([^`]+)`/', '<code>$1</code>', $value) ?? $value;
@@ -235,7 +311,7 @@ function docsInline(string $value): string
 
 function docsSidebar(string $summaryMarkdown, string $key): string
 {
-    $html = '<aside id="docs-sidebar" class="docs-sidebar" aria-label="Documentation index"><button class="docs-menu-close" type="button" aria-label="Close documentation menu">×</button><p class="docs-sidebar-title">Documentation</p>';
+    $html = '<aside id="docs-sidebar" class="docs-sidebar" aria-label="Documentation index"><button class="docs-menu-close" type="button" aria-label="Close documentation menu">×</button><p class="docs-sidebar-title">Documentation</p><a href="https://github.com/PSMRI/abhipraya" target="_blank" rel="noopener noreferrer">Source code on GitHub ↗</a>';
     $groupOpen = false;
     foreach (preg_split('/\R/', $summaryMarkdown) as $line) {
         if (preg_match('/^##\s+(.+)$/', trim($line), $heading)) {
@@ -253,7 +329,22 @@ function docsSidebar(string $summaryMarkdown, string $key): string
         if ($target === '' || str_starts_with($target, '../') || str_contains($target, '..')) {
             continue;
         }
-        $active = $key === $target ? ' class="is-active"' : '';
+        $isActive = $key === $target;
+        if ($isActive) {
+            /* A page load rebuilds the sidebar. Keep the active page's
+             * SUMMARY.md section expanded instead of resetting it to '+'. */
+            $detailsStart = '<details class="docs-nav-group">';
+            $detailsPosition = strrpos($html, $detailsStart);
+            if ($detailsPosition !== false) {
+                $html = substr_replace(
+                    $html,
+                    '<details class="docs-nav-group" open>',
+                    $detailsPosition,
+                    strlen($detailsStart)
+                );
+            }
+        }
+        $active = $isActive ? ' class="is-active"' : '';
         $urlPath = implode('/', array_map('rawurlencode', explode('/', $target)));
         $html .= '<a' . $active . ' href="/docs/' . $urlPath . '.md">' . htmlspecialchars($link[1], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</a>';
     }
@@ -325,7 +416,8 @@ function docsRender(string $markdown): string
         if (preg_match('/^(#{1,3})\s+(.+)$/', $trimmed, $match)) {
             if ($inList) { $output .= '</ul>'; $inList = false; }
             $level = strlen($match[1]);
-            $output .= '<h' . $level . '>' . docsInline($match[2]) . '</h' . $level . '>';
+            $anchor = strtolower(trim((string) preg_replace('/[^a-z0-9]+/i', '-', $match[2]), '-'));
+            $output .= '<h' . $level . ($anchor !== '' ? ' id="' . htmlspecialchars($anchor, ENT_QUOTES, 'UTF-8') . '"' : '') . '>' . docsInline($match[2]) . '</h' . $level . '>';
             continue;
         }
         if (preg_match('/^-\s+(.+)$/', $trimmed, $match)) {
@@ -343,5 +435,5 @@ function docsRender(string $markdown): string
 ?><!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= htmlspecialchars($key) ?> | Abhipraya documentation</title>
 <link rel="stylesheet" href="/ui/assets/css/docs.css"><link rel="stylesheet" href="/ui/assets/css/reset.css"><link rel="stylesheet" href="/ui/assets/css/variables.css"><link rel="stylesheet" href="/ui/assets/css/global.css"><link rel="stylesheet" href="/ui/assets/css/app-shell.css">
- </head>
-<body><header class="docs-head"><a href="/">Abhipraya</a><nav><a href="/admin/login">Administrator sign in</a></nav></header><div class="docs-layout"><aside class="docs-sidebar" aria-label="Documentation index"><p class="docs-sidebar-title">Start here</p><a class="<?= $key === 'README' ? 'is-active' : '' ?>" href="/docs/README.md">Documentation home</a><a class="<?= $key === 'project-overview' ? 'is-active' : '' ?>" href="/docs/project-overview.md">Abhipraya overview</a><a class="<?= $key === 'user-guide' ? 'is-active' : '' ?>" href="/docs/user-guide.md">User guide</a><details class="docs-nav-group"<?= in_array($key, ['technical-architecture', 'use-cases', 'service-map', 'configuration-formats', 'survey-version-publishing', 'survey-question-types'], true) ? ' open' : '' ?>><summary>Architecture</summary><a class="<?= $key === 'technical-architecture' ? 'is-active' : '' ?>" href="/docs/technical-architecture.md">Technical architecture</a><a class="<?= $key === 'use-cases' ? 'is-active' : '' ?>" href="/docs/use-cases.md">Use cases</a><a class="<?= $key === 'service-map' ? 'is-active' : '' ?>" href="/docs/service-map.md">Service map</a><a class="<?= $key === 'configuration-formats' ? 'is-active' : '' ?>" href="/docs/configuration-formats.md">JSON configuration</a><a class="<?= $key === 'survey-version-publishing' ? 'is-active' : '' ?>" href="/docs/survey-version-publishing.md">Survey versioning</a><a class="<?= $key === 'survey-question-types' ? 'is-active' : '' ?>" href="/docs/survey-question-types.md">Question types</a></details><details class="docs-nav-group"<?= in_array($key, ['developer-guide', 'api-reference', 'endpoint-inventory', 'data-dictionary', 'database-migration', 'coding-standards'], true) ? ' open' : '' ?>><summary>Development</summary><a class="<?= $key === 'developer-guide' ? 'is-active' : '' ?>" href="/docs/developer-guide.md">Developer guide</a><a class="<?= $key === 'api-reference' ? 'is-active' : '' ?>" href="/docs/api-reference.md">API guide</a><a class="<?= $key === 'endpoint-inventory' ? 'is-active' : '' ?>" href="/docs/endpoint-inventory.md">Endpoint inventory</a><a class="<?= $key === 'data-dictionary' ? 'is-active' : '' ?>" href="/docs/data-dictionary.md">Data dictionary</a><a class="<?= $key === 'database-migration' ? 'is-active' : '' ?>" href="/docs/database-migration.md">Database migration</a><a class="<?= $key === 'coding-standards' ? 'is-active' : '' ?>" href="/docs/coding-standards.md">Coding standards</a></details><details class="docs-nav-group"<?= in_array($key, ['deployment', 'backup-restore', 'troubleshooting', 'security', 'test-plan', 'accessibility'], true) ? ' open' : '' ?>><summary>Operations and testing</summary><a class="<?= $key === 'deployment' ? 'is-active' : '' ?>" href="/docs/deployment.md">Deployment</a><a class="<?= $key === 'backup-restore' ? 'is-active' : '' ?>" href="/docs/backup-restore.md">Backup and restore</a><a class="<?= $key === 'troubleshooting' ? 'is-active' : '' ?>" href="/docs/troubleshooting.md">Troubleshooting</a><a class="<?= $key === 'security' ? 'is-active' : '' ?>" href="/docs/security.md">Security</a><a class="<?= $key === 'test-plan' ? 'is-active' : '' ?>" href="/docs/test-plan.md">Test plan</a><a class="<?= $key === 'accessibility' ? 'is-active' : '' ?>" href="/docs/accessibility.md">Accessibility</a></details><details class="docs-nav-group"<?= in_array($key, ['privacy', 'governance', 'open-source-dpg', 'dpg-readiness'], true) ? ' open' : '' ?>><summary>Governance and DPG</summary><a class="<?= $key === 'privacy' ? 'is-active' : '' ?>" href="/docs/privacy.md">Privacy</a><a class="<?= $key === 'governance' ? 'is-active' : '' ?>" href="/docs/governance.md">Governance</a><a class="<?= $key === 'open-source-dpg' ? 'is-active' : '' ?>" href="/docs/open-source-dpg.md">Open source and DPG</a><a class="<?= $key === 'dpg-readiness' ? 'is-active' : '' ?>" href="/docs/dpg-readiness.md">DPG readiness</a></details><details class="docs-nav-group"><summary>Resources</summary><a href="/CONTRIBUTING.md">Contributing</a><a href="/SECURITY.md">Report a vulnerability</a><a class="<?= $key === 'gitbook' ? 'is-active' : '' ?>" href="/docs/gitbook.md">Publishing guide</a></details></aside><main class="docs-main"><article class="docs-content"><?= docsRender($markdown) ?></article></main></div></body></html>
+</head>
+<body><header class="docs-head"><a href="/">Abhipraya</a><nav><a href="/admin/login">Administrator sign in</a></nav></header><div class="docs-layout"><aside class="docs-sidebar" aria-label="Documentation index"><p class="docs-sidebar-title">Start here</p><a class="<?= $key === 'README' ? 'is-active' : '' ?>" href="/docs/README.md">Documentation home</a></aside><main class="docs-main"><article class="docs-content"><?= $contentHtml ?></article></main></div></body></html>

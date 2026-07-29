@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="920" viewBox="0 0 1400 920" role="img" aria-labelledby="title desc">
+  <title id="title">Abhipraya user session management</title>
+  <desc id="desc">A sequence diagram showing secure browser login, session storage in Memurai, protected requests, timeout, and logout.</desc>
+  <defs>
+    <linearGradient id="head" x1="0" x2="1"><stop stop-color="#0a3161"/><stop offset="1" stop-color="#1559a8"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity=".14"/></filter>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8Z" fill="#1559a8"/></marker>
+    <marker id="darkArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8Z" fill="#1d334d"/></marker>
+    <style>.t{font-family:Arial,sans-serif;fill:#132238}.small{font:16px Arial,sans-serif;fill:#33465c}.label{font:700 17px Arial,sans-serif;fill:#132238}.box{fill:#fff;stroke:#b9cbe0;stroke-width:2}.lane{stroke:#9fb6cc;stroke-width:2;stroke-dasharray:7 7}.blue{stroke:#1559a8;stroke-width:3;marker-end:url(#arrow)}.dark{stroke:#1d334d;stroke-width:3;marker-end:url(#darkArrow)}.note{fill:#f3f8ff;stroke:#78a8dd;stroke-width:1.5}.secure{fill:#edf9f3;stroke:#55a778;stroke-width:1.5}.warn{fill:#fff8e9;stroke:#d69a2d;stroke-width:1.5}</style>
+  </defs>
+  <rect width="1400" height="920" fill="#f7faff"/>
+  <rect x="0" y="0" width="1400" height="94" fill="url(#head)"/>
+  <text x="700" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" font-weight="700" fill="#fff">ABHIPRAYA — USER SESSION MANAGEMENT</text>
+  <text x="700" y="70" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" fill="#dcecff">Secure server-side sessions with Redis-compatible Memurai storage</text>
+
+  <g filter="url(#shadow)"><rect class="box" x="95" y="125" width="240" height="72" rx="10"/><rect class="box" x="580" y="125" width="240" height="72" rx="10"/><rect class="box" x="1065" y="125" width="240" height="72" rx="10"/></g>
+  <text class="t" x="215" y="157" text-anchor="middle" font-size="22" font-weight="700">Administrator browser</text><text class="small" x="215" y="181" text-anchor="middle">Client</text>
+  <text class="t" x="700" y="157" text-anchor="middle" font-size="22" font-weight="700">Abhipraya API</text><text class="small" x="700" y="181" text-anchor="middle">PHP application server</text>
+  <text class="t" x="1185" y="157" text-anchor="middle" font-size="22" font-weight="700">Memurai</text><text class="small" x="1185" y="181" text-anchor="middle">Redis-compatible session store</text>
+  <path class="lane" d="M215 198V850 M700 198V850 M1185 198V850"/>
+
+  <text class="label" x="55" y="245">1. Sign in</text>
+  <path class="blue" d="M215 278H695"/><text class="small" x="455" y="265" text-anchor="middle">POST /api/v1/auth/login — credentials + CAPTCHA</text>
+  <rect class="note" x="748" y="232" width="360" height="72" rx="8"/><text class="label" x="768" y="260">Validate account and sign-in controls</text><text class="small" x="768" y="284">Password, CAPTCHA, rate limit, active status</text>
+
+  <text class="label" x="55" y="350">2. Create session</text>
+  <path class="blue" d="M705 382H1180"/><text class="small" x="942" y="369" text-anchor="middle">Store session ID, identity, role, scope and CSRF token</text>
+  <rect class="secure" x="1035" y="405" width="300" height="68" rx="8"/><text class="label" x="1055" y="433">Shared session storage</text><text class="small" x="1055" y="457">Configured through PHP Redis handler</text>
+  <path class="blue" d="M695 500H220"/><text class="small" x="458" y="487" text-anchor="middle">200 response + HttpOnly, Secure, SameSite cookie</text>
+  <rect class="secure" x="70" y="520" width="290" height="50" rx="8"/><text class="small" x="90" y="551">Browser keeps only the session cookie</text>
+
+  <text class="label" x="55" y="625">3. Use protected API</text>
+  <path class="blue" d="M215 658H695"/><text class="small" x="455" y="645" text-anchor="middle">GET/POST protected endpoint — session cookie (+ CSRF for writes)</text>
+  <path class="dark" d="M705 692H1180"/><text class="small" x="942" y="680" text-anchor="middle">Load and validate active session</text>
+  <rect class="note" x="748" y="710" width="360" height="76" rx="8"/><text class="label" x="768" y="738">Authorize request</text><text class="small" x="768" y="762">Timeout, IP/browser check, role and scope validation</text>
+  <path class="blue" d="M695 815H220"/><text class="small" x="458" y="802" text-anchor="middle">Permitted JSON response or 401 / 403</text>
+
+  <rect class="warn" x="80" y="860" width="1240" height="42" rx="8"/><text class="small" x="700" y="887" text-anchor="middle">Session ends on POST /api/v1/auth/logout or after 30 minutes of inactivity; the server deletes the session and expires the cookie.</text>
+</svg>

@@ -18,7 +18,16 @@ Administrator accounts require credentials and may hold protected profile detail
 
 ## Retention and exports
 
-The implementing programme must set and publish an approved retention schedule, access process, export approval process, and incident contact. Before sharing an export, remove or aggregate data that could reasonably identify a respondent.
+The Bihar deployment uses the following approved retention schedule:
+
+| Record type | Retention period | End-of-period handling |
+| --- | --- | --- |
+| Feedback responses | 2 years | Archive or securely dispose of under the approved operational procedure. |
+| Audit logs | 90 days | Securely dispose of under the approved operational procedure. |
+| Export files | 2 years | Archive after the retention period. |
+| Backups | 30 days | Rotate out through the approved backup process. |
+
+Privacy and grievance contact: [abhipraya@piramalswasthya.org](mailto:abhipraya@piramalswasthya.org). Before sharing an export, remove or aggregate data that could reasonably identify a respondent.
 
 ## Incident response
 

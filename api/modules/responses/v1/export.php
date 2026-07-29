@@ -7,10 +7,22 @@ try {
     $facilityNin = trim((string) ($_GET['facility_nin'] ?? $_GET['facility_id'] ?? ''));
     $departmentId = trim((string) ($_GET['department_id'] ?? ''));
     $from = trim((string) ($_GET['from'] ?? $_GET['date_from'] ?? ''));
+    $to = trim((string) ($_GET['to'] ?? $_GET['date_to'] ?? ''));
+    if (SessionManager::roleId() === 2) {
+        $assignedFacilityNin = (string) SessionManager::facilityId();
+        if ($assignedFacilityNin === '') {
+            Response::forbidden('Your account does not have an assigned facility.');
+        }
+        if ($facilityNin !== '' && !hash_equals($assignedFacilityNin, $facilityNin)) {
+            Response::forbidden('You can export feedback only for your assigned facility.');
+        }
+        $facilityNin = $assignedFacilityNin;
+    }
     $where = ['1=1']; $types = ''; $values = [];
     if ($facilityNin !== '') { $where[] = 'hospital_nin = ?'; $types .= 's'; $values[] = $facilityNin; }
     if ($departmentId !== '') { $where[] = 'department_id = ?'; $types .= 's'; $values[] = $departmentId; }
     if ($from !== '') { $where[] = 'DATE(srvy_rpl_dt) >= ?'; $types .= 's'; $values[] = $from; }
+    if ($to !== '') { $where[] = 'DATE(srvy_rpl_dt) <= ?'; $types .= 's'; $values[] = $to; }
 
     $stmt = $con->prepare('SELECT * FROM srvy_responses WHERE ' . implode(' AND ', $where) . ' ORDER BY srvy_rpl_dt DESC, id DESC LIMIT 10000');
     if ($types !== '') $stmt->bind_param($types, ...$values);
@@ -23,10 +35,10 @@ try {
     }
     $out = fopen('php://output', 'wb');
     fwrite($out, "\xEF\xBB\xBF");
-    fputcsv($out, ['Submission ID', 'Submitted At', 'Facility NIN', 'Facility', 'Department', 'Rating / 5', 'Sentiment', 'Location Verified']);
+    fputcsv($out, ['Submission ID', 'Submitted At', 'Facility NIN', 'Facility', 'Department', 'Rating / 5', 'Sentiment', 'Location Verified'], ',', '"', '');
     foreach ($rows as $row) {
         $item = feedbackPublicRow($row, $facilityMap, $departmentMap);
-        fputcsv($out, [$item['submission_id'], $item['submitted_at'], $item['facility_nin'], $item['facility_name'], $item['department_name'], $item['rating'], $item['sentiment'], $item['location_verified'] ? 'Yes' : 'No']);
+        fputcsv($out, [$item['submission_id'], $item['submitted_at'], $item['facility_nin'], $item['facility_name'], $item['department_name'], $item['rating'], $item['sentiment'], $item['location_verified'] ? 'Yes' : 'No'], ',', '"', '');
     }
     fclose($out); exit;
 } catch (Throwable $exception) {

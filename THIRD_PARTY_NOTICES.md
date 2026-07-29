@@ -5,6 +5,8 @@ This file records third-party software distributed with, or loaded by, the Abhip
 | Component | Use in Abhipraya | Licence | Notice/action |
 | --- | --- | --- | --- |
 | Bootstrap Icons | Bundled icon font and CSS under `ui/assets/vendor/bootstrap-icons/` | MIT | Full MIT text is included in `LICENSES/BOOTSTRAP_ICONS-MIT.txt`; retain it with the distributed files. |
+| `chillerlan/php-qrcode` 6.0.0 | Composer dependency for server-side QR-code generation | MIT or Apache-2.0 | Source: `https://github.com/chillerlan/php-qrcode`; retain the selected upstream licence and attribution with each release. |
+| `chillerlan/php-settings-container` 3.3.0 | Transitive Composer dependency used by the QR-code package | MIT | Source: `https://github.com/chillerlan/php-settings-container`; retain its upstream attribution with each release. |
 | PHP | Server runtime | PHP License | Runtime supplied by the deployment environment; not redistributed as Abhipraya source. |
 | MySQL/MariaDB | Optional data store | Deployment-provided | Confirm the selected server's licence and notices separately. |
 

@@ -1,4 +1,7 @@
 {
+    "name": "psmri/abhipraya",
+    "description": "Open-source public-feedback platform for public-service locations and operating units.",
+    "license": "GPL-3.0-or-later",
     "require": {
         "chillerlan/php-qrcode": "6.0"
     }

@@ -59,28 +59,45 @@ class SessionManager
         ini_set('session.use_strict_mode', '1');
         ini_set('session.use_only_cookies', '1');
         ini_set('session.cookie_httponly', '1');
-        /* Do not inherit an unavailable Redis session handler from the
-           production PHP configuration. Abhipraya stores sessions locally
-           and remains functional when Redis is not installed/running. */
-        ini_set('session.save_handler', 'files');
+        self::configureStorage();
 
-        /* Use an application-owned session directory so PHP upgrades do not
-           break authentication when the global session path loses ACLs. */
-        $sessionPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'sessions';
-        if (!is_dir($sessionPath)) @mkdir($sessionPath, 0700, true);
-        if (is_dir($sessionPath) && is_writable($sessionPath)) {
-            /* PHP on Windows can misinterpret backslash-prefixed paths under
-               IIS/FastCGI as a network host. Use a normalised drive path. */
-            $sessionPath = realpath($sessionPath) ?: $sessionPath;
-            $sessionPath = str_replace('\\', '/', $sessionPath);
-            /* session_save_path() is more reliable than ini_set() when the
-               PHP-FPM/FastCGI configuration marks session.save_path as
-               changeable at runtime. */
-            @session_save_path($sessionPath);
-            ini_set('session.save_path', $sessionPath);
+        if (
+            strtolower((string) ini_get('session.save_handler')) === 'redis'
+            && !self::redisSessionStoreAvailable()
+        ) {
+            self::jsonError('Session service is temporarily unavailable. Please try again.', 503);
         }
 
-        session_start();
+        try {
+            $sessionStarted = self::startSessionQuietly();
+        } catch (Throwable $exception) {
+            error_log('Abhipraya session storage: Redis/Memurai start failed: ' . $exception->getMessage());
+            $sessionStarted = false;
+        }
+
+        if (!$sessionStarted) {
+            if (strtolower((string) ini_get('session.save_handler')) !== 'redis') {
+                self::jsonError('Session storage is temporarily unavailable. Please try again.', 503);
+            }
+
+            error_log('Abhipraya session storage: Redis/Memurai is unavailable; using file sessions for this request.');
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                @session_abort();
+            }
+            @ini_set('session.save_handler', 'files');
+            self::configureFileStorage();
+
+            try {
+                $fallbackStarted = self::startSessionQuietly();
+            } catch (Throwable $exception) {
+                error_log('Abhipraya session storage: file-session fallback failed: ' . $exception->getMessage());
+                $fallbackStarted = false;
+            }
+
+            if (!$fallbackStarted) {
+                self::jsonError('Session storage is temporarily unavailable. Please try again.', 503);
+            }
+        }
 
         self::checkTimeout();
         self::regeneratePeriodically();
@@ -249,6 +266,86 @@ class SessionManager
             'block_id'    => (int)($_SESSION['block_id'] ?? 0),
             'division_id' => (int)($_SESSION['division_id'] ?? 0)
         ];
+    }
+
+    /**
+     * Use the PHP Redis session handler when it is configured for Memurai.
+     * `session.save_path` is deliberately left untouched: the deployer owns
+     * the Memurai endpoint, credentials and TLS configuration in PHP.
+     *
+     * Set ABHIPRAYA_SESSION_HANDLER=files only for a single-server/local
+     * deployment. Without that setting, the configured PHP handler is used.
+     */
+    private static function configureStorage(): void
+    {
+        $configured = class_exists('Env')
+            ? Env::get('ABHIPRAYA_SESSION_HANDLER', (string) ini_get('session.save_handler'))
+            : (string) ini_get('session.save_handler');
+        $handler = strtolower(trim((string) $configured));
+
+        if ($handler === 'redis' && extension_loaded('redis')) {
+            ini_set('session.save_handler', 'redis');
+            return;
+        }
+
+        if ($handler === 'redis') {
+            error_log('Abhipraya session storage: Redis/Memurai is configured but the PHP redis extension is unavailable; using file sessions.');
+        }
+
+        @ini_set('session.save_handler', 'files');
+        self::configureFileStorage();
+    }
+
+    /** Use an application-owned directory for file-session fallback. */
+    private static function configureFileStorage(): void
+    {
+        $sessionPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'sessions';
+        if (!is_dir($sessionPath)) {
+            @mkdir($sessionPath, 0700, true);
+        }
+        if (is_dir($sessionPath) && is_writable($sessionPath)) {
+            $sessionPath = realpath($sessionPath) ?: $sessionPath;
+            $sessionPath = str_replace('\\', '/', $sessionPath);
+            @session_save_path($sessionPath);
+            @ini_set('session.save_path', $sessionPath);
+        }
+    }
+
+    /** Start a session without letting a transient storage warning escape. */
+    private static function startSessionQuietly(): bool
+    {
+        set_error_handler(static fn(): bool => true);
+        try {
+            return session_start();
+        } finally {
+            restore_error_handler();
+        }
+    }
+
+    /** Check the configured TCP Redis/Memurai session store before opening a session. */
+    private static function redisSessionStoreAvailable(): bool
+    {
+        $savePath = (string) ini_get('session.save_path');
+        if (!preg_match('#^tcp://([^:/?]+)(?::(\d+))?#', $savePath, $matches)) {
+            return true;
+        }
+
+        try {
+            $redis = new Redis();
+            $connected = $redis->connect(
+                $matches[1],
+                isset($matches[2]) ? (int) $matches[2] : 6379,
+                1.0
+            );
+            if (!$connected) {
+                return false;
+            }
+            $redis->ping();
+            $redis->close();
+            return true;
+        } catch (Throwable) {
+            return false;
+        }
     }
 
     public static function updateProfile(array $user): void

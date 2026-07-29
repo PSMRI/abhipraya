@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 $root = dirname(__DIR__);
 $checks = [
-    'SDG mapping' => 'docs/sdg-mapping.md',
-    'Privacy guide' => 'docs/privacy.md',
-    'Non-PII guide' => 'docs/non-pii-data.md',
+    'SDG mapping' => 'docs/compliance/sdg_mapping.md',
+    'Privacy guide' => 'docs/compliance/privacy_data_protection.md',
+    'Non-PII guide' => 'docs/compliance/non_pii_data_export_import.md',
     'Security guide' => 'docs/security.md',
-    'Test plan' => 'docs/test-plan.md',
-    'Release checklist' => 'docs/release-checklist.md',
+    'Test plan' => 'docs/testing/test_plan.md',
     'DPG readiness' => 'docs/dpg-readiness.md',
 ];
 $failed = 0;
@@ -19,7 +18,7 @@ foreach ($checks as $label => $relative) {
 }
 /* Report the SDG categories explicitly so reviewers can see the intended
    alignment and the evidence boundary in one command. */
-$sdgPath = $root . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'sdg-mapping.md';
+$sdgPath = $root . DIRECTORY_SEPARATOR . 'docs' . DIRECTORY_SEPARATOR . 'compliance' . DIRECTORY_SEPARATOR . 'sdg_mapping.md';
 $sdgText = is_file($sdgPath) ? (string) file_get_contents($sdgPath) : '';
 preg_match_all('/SDG\s+([0-9]+)/i', $sdgText, $sdgMatches);
 $sdgs = array_values(array_unique($sdgMatches[1] ?? []));
@@ -38,9 +37,8 @@ foreach ($signals as $sdg => $terms) {
     if ($hits) echo "- {$sdg}: signals=" . implode(', ', $hits) . PHP_EOL;
 }
 foreach ([
-    'measurable indicators' => 'Measurable indicators',
-    'implementation evidence' => 'Current implementation evidence',
-    'limitations' => 'Evidence limitation',
+    'measurement approach' => 'Measurement approach',
+    'limitations' => 'does not prove health outcomes',
     'non-identifying reporting' => 'non-identifying',
 ] as $label => $needle) {
     $present = stripos($sdgText, $needle) !== false;

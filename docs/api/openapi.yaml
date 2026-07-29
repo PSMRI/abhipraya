@@ -1,0 +1,158 @@
+openapi: 3.1.0
+info:
+  title: Abhipraya API
+  version: 1.0.0
+  description: Versioned API for Abhipraya public feedback and administrator operations.
+servers:
+  - url: '{baseUrl}/api'
+    variables:
+      baseUrl:
+        default: http://localhost
+paths:
+  /v1/auth/captcha:
+    get:
+      summary: Get login CAPTCHA
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+  /v1/auth/login:
+    post:
+      summary: Establish administrator session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password, captcha]
+              properties:
+                username: { type: string }
+                password: { type: string, format: password }
+                captcha: { type: string }
+      responses: { '200': { $ref: '#/components/responses/Success' }, '401': { $ref: '#/components/responses/Error' }, '429': { $ref: '#/components/responses/Error' } }
+  /v1/auth/logout:
+    post:
+      summary: End administrator session
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { $ref: '#/components/responses/Success' }, '401': { $ref: '#/components/responses/Error' } }
+  /v1/auth/me:
+    get:
+      summary: Read current session context
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { $ref: '#/components/responses/Success' }, '401': { $ref: '#/components/responses/Error' } }
+  /v1/auth/csrf:
+    get:
+      summary: Get CSRF token for authenticated writes
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+  /v1/auth/profile:
+    get:
+      summary: Read protected profile
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+    post:
+      summary: Update protected profile
+      security: [{ sessionCookie: [] }]
+      parameters: [{ $ref: '#/components/parameters/CsrfToken' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object } } } }
+      responses: { '200': { $ref: '#/components/responses/Success' }, '403': { $ref: '#/components/responses/Error' } }
+  /v1/auth/change-password:
+    post:
+      summary: Change current password
+      security: [{ sessionCookie: [] }]
+      parameters: [{ $ref: '#/components/parameters/CsrfToken' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [current_password, new_password, confirm_password] } } } }
+      responses: { '200': { $ref: '#/components/responses/Success' }, '422': { $ref: '#/components/responses/Error' } }
+  /v1/public-survey/resolve:
+    get:
+      summary: Resolve public survey reference
+      parameters: [{ name: ref, in: query, required: true, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/Success' }, '404': { $ref: '#/components/responses/Error' } }
+  /v1/public-survey/questions:
+    get:
+      summary: Get active public survey questions
+      parameters: [{ name: ref, in: query, required: true, schema: { type: string } }, { name: lang, in: query, schema: { type: integer, enum: [1, 2] } }]
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+  /v1/public-survey/location:
+    post:
+      summary: Validate public-survey location
+      requestBody: { required: true, content: { application/json: { schema: { type: object } } } }
+      responses: { '200': { $ref: '#/components/responses/Success' }, '422': { $ref: '#/components/responses/Error' } }
+  /v1/public-survey/submit:
+    post:
+      summary: Submit anonymous feedback
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [ref, lang, device_id, latitude, longitude, answers] } } } }
+      responses: { '201': { $ref: '#/components/responses/Success' }, '409': { $ref: '#/components/responses/Error' }, '422': { $ref: '#/components/responses/Error' } }
+  /v1/boundaries:
+    get:
+      summary: Search approved boundary records
+      parameters: [{ name: level, in: query, schema: { type: string, enum: [state, district, block, facility] } }, { name: parent, in: query, schema: { type: string } }, { name: search, in: query, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+  /v1/boundaries/{code}:
+    get:
+      summary: Read one boundary record
+      parameters: [{ name: code, in: path, required: true, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/Success' }, '404': { $ref: '#/components/responses/Error' } }
+  /v1/qr:
+    get:
+      summary: List permitted QR configuration
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { $ref: '#/components/responses/Success' }, '403': { $ref: '#/components/responses/Error' } }
+  /v1/qr/generate:
+    post:
+      summary: Generate QR survey URL
+      security: [{ sessionCookie: [] }]
+      parameters: [{ $ref: '#/components/parameters/CsrfToken' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object } } } }
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+  /v1/analytics/summary:
+    get:
+      summary: Read scoped analytics summary
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { $ref: '#/components/responses/Success' }, '403': { $ref: '#/components/responses/Error' } }
+  /v1/responses:
+    get:
+      summary: List permitted feedback responses
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+  /v1/responses/view:
+    get:
+      summary: Read one permitted feedback response
+      security: [{ sessionCookie: [] }]
+      parameters: [{ name: id, in: query, schema: { type: string } }]
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+  /v1/responses/export:
+    get:
+      summary: Export permitted feedback responses
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { description: Export file } }
+  /v1/capa/actions:
+    get:
+      summary: Read CAPA actions
+      security: [{ sessionCookie: [] }]
+      responses: { '200': { $ref: '#/components/responses/Success' } }
+    post:
+      summary: Create or update CAPA actions
+      security: [{ sessionCookie: [] }]
+      parameters: [{ $ref: '#/components/parameters/CsrfToken' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [facility_nin, dept_id, month, survey_version, actions] } } } }
+      responses: { '200': { $ref: '#/components/responses/Success' }, '403': { $ref: '#/components/responses/Error' }, '422': { $ref: '#/components/responses/Error' } }
+components:
+  securitySchemes:
+    sessionCookie: { type: apiKey, in: cookie, name: ABHIPRAYA_SESSION }
+  parameters:
+    CsrfToken: { name: X-CSRF-TOKEN, in: header, required: true, schema: { type: string } }
+  responses:
+    Success:
+      description: Standard success response
+      content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } }
+    Error:
+      description: Standard error response
+      content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } }
+  schemas:
+    Envelope:
+      type: object
+      required: [status, message, data, errors]
+      properties:
+        status: { type: string, enum: [success, error] }
+        message: { type: string }
+        data: {}
+        errors: {}

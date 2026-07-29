@@ -1,0 +1,27 @@
+{
+  "info": { "name": "Abhipraya API", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost" },
+    { "key": "username", "value": "" },
+    { "key": "password", "value": "", "type": "secret" },
+    { "key": "captcha", "value": "" },
+    { "key": "csrfToken", "value": "" },
+    { "key": "surveyRef", "value": "" }
+  ],
+  "item": [
+    { "name": "Authentication", "item": [
+      { "name": "Get CAPTCHA", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/auth/captcha" } },
+      { "name": "Login", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\",\n  \"captcha\": \"{{captcha}}\"\n}" }, "url": "{{baseUrl}}/api/v1/auth/login" } },
+      { "name": "Get CSRF token", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/auth/csrf" } },
+      { "name": "Current session", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/auth/me" } },
+      { "name": "Logout", "request": { "method": "POST", "url": "{{baseUrl}}/api/v1/auth/logout" } }
+    ] },
+    { "name": "Public survey", "item": [
+      { "name": "Resolve survey", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/public-survey/resolve?ref={{surveyRef}}" } },
+      { "name": "Get questions", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/public-survey/questions?ref={{surveyRef}}&lang=1" } }
+    ] },
+    { "name": "Boundaries", "item": [
+      { "name": "List boundary records", "request": { "method": "GET", "url": "{{baseUrl}}/api/v1/boundaries?level=facility" } }
+    ] }
+  ]
+}

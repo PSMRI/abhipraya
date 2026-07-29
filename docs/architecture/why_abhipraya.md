@@ -14,9 +14,9 @@ Abhipraya provides a simple, privacy-conscious way to close that gap. A benefici
 - **Inclusive communication:** English and Hindi survey support makes participation more practical for a wider range of beneficiaries.
 - **Responsible data use:** Anonymous feedback, role-scoped administrative access, and proportionate validation controls support service improvement without using responses to identify or retaliate against people.
 
-## Why an open-source platform
+## Why a configurable platform
 
-Public-service programmes should be able to understand, review, adapt, and operate the systems used to collect public feedback. Abhipraya is open source so implementing organisations can configure service-location and service-area surveys, examine the privacy and access controls, and adapt the platform to their service context without treating the underlying product as a black box.
+Public-service programmes should be able to understand, review, adapt, and operate the systems used to collect public feedback. Abhipraya enables implementing organisations to configure service-location and service-area surveys, examine the privacy and access controls, and adapt the platform to their service context without treating the underlying product as a black box.
 
 The platform is configuration-driven: survey content, languages, facilities, and departments can evolve without rewriting the application or changing the meaning of historical responses. Versioned survey packages preserve the context needed to interpret feedback over time.
 

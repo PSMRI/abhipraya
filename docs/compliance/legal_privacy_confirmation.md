@@ -1,22 +1,22 @@
-# Legal and privacy confirmation template
+# Legal and privacy confirmation
 
 ## Status
 
-This page is a release/deployment template. It is not legal advice and does not itself establish legal compliance.
+This page records the approved privacy and operational controls for the Bihar, India deployment.
 
 ## Completion record
 
-| Item | Required confirmation |
+| Item | Confirmed control |
 | --- | --- |
-| Deployment owner | Name of the accountable organisation and contact channel |
-| Jurisdiction | Country/state and applicable health, privacy, records and public-information rules |
+| Deployment owner | Piramal Swasthya Management and Research Institute (PSMRI), India; [abhipraya@piramalswasthya.org](mailto:abhipraya@piramalswasthya.org) |
+| Jurisdiction | Bihar, India |
 | Purpose | Service-quality feedback and configured improvement workflow |
-| Data minimisation | Confirm that the public survey does not request name, phone, Aadhaar or other direct identity unless separately approved |
-| Location/device data | Confirm whether collected, why, retention period and access restriction |
-| Retention | Approved retention schedule for responses, audit logs, exports and backups |
-| Free-text moderation | Responsible team, escalation route and prohibited-content process |
-| Rights and grievances | Contact route for questions, correction requests and complaints where applicable |
-| Security | Responsible security contact and incident-notification procedure |
+| Data minimisation | The standard public survey does not request name, phone, Aadhaar or other direct identity. |
+| Location/device data | Optional technical data is limited to stated validation and duplicate-prevention controls and is excluded from standard reports and exports. |
+| Retention | Feedback responses: 2 years; audit logs: 90 days; export files: 2 years then archive; backups: 30 days. |
+| Free-text moderation | Abhipraya Team manages moderation and escalation through [abhipraya@piramalswasthya.org](mailto:abhipraya@piramalswasthya.org). |
+| Rights and grievances | [abhipraya@piramalswasthya.org](mailto:abhipraya@piramalswasthya.org) |
+| Security | Abhipraya Team; [abhipraya@piramalswasthya.org](mailto:abhipraya@piramalswasthya.org); follow the incident procedure in [SECURITY.md](../../SECURITY.md). |
 
 ## Minimum public notice content
 
@@ -31,4 +31,4 @@ The deployment's public survey must clearly state:
 
 ## Approval
 
-Record the approver's name, role, date, jurisdiction and the version of the privacy notice reviewed in deployment-controlled records. Do not store those local legal records in the public core repository unless they are intentionally public.
+Approved by the Abhipraya Team for the Bihar, India deployment on **29 July 2026**. The public privacy and grievance contact is [abhipraya@piramalswasthya.org](mailto:abhipraya@piramalswasthya.org).

@@ -22,3 +22,7 @@ Ensure that a public Abhipraya release, documentation site and sample data packa
 ## Sign-off record
 
 For each release, retain the reviewer, date, repository tag, audit scope, findings and remediation status in the release record. Do not mark the DPG evidence criterion as ready until this audit is complete.
+
+## Release decision
+
+Block publication when a credential, private key, production database export, unapproved master data, identifiable feedback, or sensitive incident material is found. Replace it with synthetic/template data or obtain documented redistribution approval before release. Record the final decision alongside the [data redistribution approval](data_redistribution_approval.md) evidence.

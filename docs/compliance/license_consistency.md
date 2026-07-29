@@ -15,6 +15,16 @@ The Abhipraya core source release is licensed under **GNU GPL-3.0-or-later**. Th
 | Third-party components | Keep [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) current and retain upstream notices. |
 | Logos and name | Treat trademarks separately from copyright and code licensing. |
 
+## Third-party component links
+
+| Component | Version | Licence | Documentation and source |
+| --- | --- | --- | --- |
+| Bootstrap Icons | Bundled release asset | MIT | [Local attribution and MIT text](../../THIRD_PARTY_NOTICES.md#bootstrap-icons-licence); [upstream project](https://github.com/twbs/icons) |
+| `chillerlan/php-qrcode` | 6.0.0 | MIT or Apache-2.0 | [Local attribution](../../THIRD_PARTY_NOTICES.md); [upstream project and licence](https://github.com/chillerlan/php-qrcode) |
+| `chillerlan/php-settings-container` | 3.3.0 | MIT | [Local attribution](../../THIRD_PARTY_NOTICES.md); [upstream project and licence](https://github.com/chillerlan/php-settings-container) |
+
+The full inventory and release-handling instructions are in [third-party notices](../../THIRD_PARTY_NOTICES.md).
+
 ## Verification
 
 Before release, confirm that every copied, bundled or modified third-party component is recorded and that its licence is compatible with the release distribution. GPL compliance does not remove third-party attribution obligations.

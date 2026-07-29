@@ -6,11 +6,11 @@ Replace this template with the current, public contact details for the organisat
 
 | Responsibility | Named person or team | Public contact | Backup |
 | --- | --- | --- | --- |
-| Product owner | To be published | To be published | To be published |
-| Release maintainer | To be published | To be published | To be published |
-| Security contact | To be published | To be published | To be published |
-| Privacy contact | To be published | To be published | To be published |
-| Community/contribution contact | To be published | To be published | To be published |
+| Product owner | Abhipraya Team | abhipraya@piramalswasthya.org | Abhipraya Team |
+| Release maintainer | Abhipraya Team | abhipraya@piramalswasthya.org | Abhipraya Team |
+| Security contact | Abhipraya Team | abhipraya@piramalswasthya.org | Abhipraya Team |
+| Privacy contact | Abhipraya Team | abhipraya@piramalswasthya.org | Abhipraya Team |
+| Community/contribution contact | Abhipraya Team | abhipraya@piramalswasthya.org | Abhipraya Team |
 
 ## Responsibilities
 

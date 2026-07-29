@@ -15,6 +15,7 @@ class Event
     private static array $listeners = [];
     private static bool $requestTraceStarted = false;
     private static float $requestStartedAt = 0.0;
+    private static bool $kafkaUnavailableLogged = false;
 
     /**
      * Register a local listener for an event name.
@@ -40,10 +41,7 @@ class Event
      * Current implementation:
      * - appends JSON lines to api/storage/events/events-YYYY-MM-DD.log
      * - executes local PHP listeners registered with Event::listen()
-     *
-     * Future Kafka migration:
-     * - replace or extend this method to publish $event to Kafka
-     * - callers keep using Event::dispatch("event.name", $payload)
+     * - optionally publishes the same envelope to Kafka when configured
      */
     public static function dispatch(string $eventName, array $payload = [], array $meta = []): void
     {
@@ -61,6 +59,7 @@ class Event
         ];
 
         self::writeLog($event);
+        self::publishKafka($event);
 
         foreach (self::$listeners[$eventName] ?? [] as $listener) {
             try {
@@ -68,6 +67,60 @@ class Event
             } catch (Throwable $e) {
                 error_log('SaQshi event listener failed [' . $eventName . ']: ' . $e->getMessage());
             }
+        }
+    }
+
+    /**
+     * Optional Kafka transport. It is deliberately best-effort: an event
+     * broker outage must not fail a completed public submission or API call.
+     * Configure ABHIPRAYA_EVENT_DRIVER=kafka and install php-rdkafka to use it.
+     */
+    private static function publishKafka(array $event): void
+    {
+        $driver = strtolower((string) (class_exists('Env') ? Env::get('ABHIPRAYA_EVENT_DRIVER', 'local') : 'local'));
+        if ($driver !== 'kafka') {
+            return;
+        }
+
+        if (!class_exists('RdKafka\\Producer') || !class_exists('RdKafka\\Conf')) {
+            if (!self::$kafkaUnavailableLogged) {
+                error_log('Abhipraya events: Kafka is configured but php-rdkafka is not installed; local event logging remains active.');
+                self::$kafkaUnavailableLogged = true;
+            }
+            return;
+        }
+
+        $brokers = trim((string) Env::get('ABHIPRAYA_KAFKA_BROKERS', ''));
+        if ($brokers === '') {
+            error_log('Abhipraya events: Kafka is configured without ABHIPRAYA_KAFKA_BROKERS.');
+            return;
+        }
+
+        try {
+            $configuration = new RdKafka\Conf();
+            $configuration->set('bootstrap.servers', $brokers);
+            $configuration->set('acks', (string) Env::get('ABHIPRAYA_KAFKA_ACKS', 'all'));
+            self::setKafkaOption($configuration, 'security.protocol', 'ABHIPRAYA_KAFKA_SECURITY_PROTOCOL');
+            self::setKafkaOption($configuration, 'sasl.mechanisms', 'ABHIPRAYA_KAFKA_SASL_MECHANISMS');
+            self::setKafkaOption($configuration, 'sasl.username', 'ABHIPRAYA_KAFKA_SASL_USERNAME');
+            self::setKafkaOption($configuration, 'sasl.password', 'ABHIPRAYA_KAFKA_SASL_PASSWORD');
+
+            $producer = new RdKafka\Producer($configuration);
+            $prefix = trim((string) Env::get('ABHIPRAYA_KAFKA_TOPIC_PREFIX', 'abhipraya'), '.');
+            $topic = $producer->newTopic(($prefix !== '' ? $prefix . '.' : '') . $event['event']);
+            $topic->produce(RD_KAFKA_PARTITION_UA, 0, json_encode($event, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), (string) ($event['meta']['request_id'] ?? ''));
+            $producer->poll(0);
+            $producer->flush(1000);
+        } catch (Throwable $exception) {
+            error_log('Abhipraya Kafka publish failed [' . $event['event'] . ']: ' . $exception->getMessage());
+        }
+    }
+
+    private static function setKafkaOption(RdKafka\Conf $configuration, string $option, string $environmentKey): void
+    {
+        $value = Env::get($environmentKey, '');
+        if ($value !== '') {
+            $configuration->set($option, $value);
         }
     }
 

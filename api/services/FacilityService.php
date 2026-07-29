@@ -17,10 +17,15 @@ use Throwable;
 
 final class FacilityService
 {
+    private readonly FacilityRepository $facilityRepository;
+    private readonly AuthRepository $authRepository;
+
     public function __construct(
-        private readonly FacilityRepository $facilityRepository = new FacilityRepository(Database::connection()),
-        private readonly AuthRepository $authRepository = new AuthRepository(Database::connection())
+        ?FacilityRepository $facilityRepository = null,
+        ?AuthRepository $authRepository = null
     ) {
+        $this->facilityRepository = $facilityRepository ?? new FacilityRepository(Database::connection());
+        $this->authRepository = $authRepository ?? new AuthRepository(Database::connection());
     }
 
     public function listFacilities(array $query): array

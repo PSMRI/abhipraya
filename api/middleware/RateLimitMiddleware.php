@@ -7,17 +7,21 @@ use App\Core\Database;
 use App\Core\Logger;
 use App\Core\Request;
 use App\Core\Response;
+use Closure;
 use PDO;
 use Throwable;
 
 final class RateLimitMiddleware
 {
+    private readonly ?Closure $identityResolver;
+
     public function __construct(
         private readonly string $bucket,
         private readonly int $maxAttempts,
         private readonly int $windowSeconds,
-        private readonly ?callable $identityResolver = null
+        ?callable $identityResolver = null
     ) {
+        $this->identityResolver = $identityResolver === null ? null : Closure::fromCallable($identityResolver);
     }
 
     public function handle(

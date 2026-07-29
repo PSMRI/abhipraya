@@ -42,3 +42,13 @@ indicator_key,analytics_type,answer_value,score
 - Scan an export for direct identifiers, IP addresses, device IDs and coordinates.
 - Open the CSV in a spreadsheet and confirm Unicode labels are preserved.
 - Confirm the corresponding audit-log event exists.
+
+## Verified report-export evidence
+
+On **29 July 2026**, the following downloaded report exports for the Bihar deployment were reviewed:
+
+- `abhipraya-summary-report-2025-04-02-2026-07-29.csv`
+- `abhipraya-facilities-report-2025-04-02-2026-07-29.csv`
+- `abhipraya-questions-report-2025-04-02-2026-07-29.csv`
+
+The exports contain aggregate reporting fields only: department or facility label, response count, average score, indicator metadata, reporting-facility count and valid-response count. They contain no respondent name, phone number, Aadhaar number, email address, IP address, device identifier, precise location, free-text feedback, session data or credential. This verifies the standard report-export path provides reusable non-PII CSV data.

@@ -21,9 +21,10 @@ Abhipraya uses open, widely implemented web and data formats so an implementatio
 3. Survey question IDs and indicator keys are stable within a published survey version.
 4. A new survey version must not reinterpret old response data; reports retain the response's survey version.
 
-## Gaps to close before nomination
+## Verified standards evidence
 
-- Publish an OpenAPI description for public and administrator endpoints.
-- Publish a formal JSON Schema file with the release.
-- Record accessibility test results for the supported browsers and languages.
-- Document any optional proprietary integration separately and provide a functional core path without it.
+- All 20 registered versioned API routes have a corresponding path in the published [OpenAPI definition](../openapi.yaml.md); see the [test results](../testing/test_results.md).
+- The published OpenAPI definition, Postman collection and 36 JSON configuration files parsed successfully; see the [passed-test evidence register](../testing/test_evidence_register.md).
+- The report-export path produces standard CSV and XLSX files; the reviewed Bihar exports verify reusable aggregate CSV data without direct identifiers. See the [non-PII export guide](non_pii_data_export_import.md).
+- The [WCAG and web-platform compliance record](../testing/wcag_web_platform_compliance.md) documents semantic, responsive, contrast, focus and NVDA screen-reader checks.
+- The core platform has a functional path using open web formats and does not require a proprietary desktop application or proprietary analytics tool.

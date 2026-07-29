@@ -114,6 +114,14 @@ try {
     $insert->execute();
     $insert->close();
 
+    Event::dispatch('survey.response.submitted', [
+        'submission_id' => $submissionId,
+        'service_location_id' => $nin,
+        'service_area_id' => $departmentId,
+        'survey_code' => (string) $context['survey_code'],
+        'survey_version' => (string) $context['survey_version'],
+    ]);
+
     Response::success('Feedback submitted successfully.', [
         'submission_id' => $submissionId,
         'survey_code' => $context['survey_code'],

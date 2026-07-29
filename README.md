@@ -8,4 +8,4 @@ The GitBook-ready documentation is in [docs](docs/README.md). It includes user a
 
 ## License
 
-Abhipraya is licensed under the [GNU GPL v3.0](LICENSE).
+Abhipraya is licensed under the [GNU GPL-3.0-or-later](LICENSE). Every redistributed release must also retain the [NOTICE](NOTICE) and [third-party notices](THIRD_PARTY_NOTICES.md).
