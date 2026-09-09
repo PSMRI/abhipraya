@@ -21,7 +21,10 @@ class Security
      */
     public static function headers(): void
     {
-        header('Content-Type: application/json; charset=utf-8');
+        $path = (string) parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+        header(str_starts_with($path, '/api/')
+            ? 'Content-Type: application/json; charset=utf-8'
+            : 'Content-Type: text/html; charset=utf-8');
 
         header('X-Frame-Options: DENY');
         header('X-Content-Type-Options: nosniff');

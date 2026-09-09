@@ -33,7 +33,7 @@ Source code: [PSMRI/abhipraya](https://github.com/PSMRI/abhipraya)
 ## Documentation sections
 
 - **Product and architecture** — [overview](architecture/project_overview.md), [use cases](architecture/use_cases.md), [technical architecture](architecture/technical_architecture.md), [service map](architecture/service_map.md), [configuration formats](architecture/configuration_formats.md), and [coding standards](architecture/coding_standards.md).
-- **User guide** — [administrator and public feedback guide](user/user_guide.md).
+- **User guide** — [administrator and public feedback guide](user/user_guide.md) and [Social Audit QR survey guide](user/social_audit.md).
 - **Developer guide** — [database](database/data_dictionary_erd.md), [API](api/README.md), and [developer guide](developer-guide.md).
 - **Security and operations** — [security](security.md), [deployment](deployment/deployment_guide.md), [backup and restore](deployment/backup_restore_guide.md), [troubleshooting](deployment/troubleshooting_faq.md), [testing](testing/test_plan.md), and [accessibility](testing/wcag_web_platform_compliance.md).
 - **Open source and DPG** — [privacy](compliance/privacy_data_protection.md), [governance](compliance/governance_and_ownership.md), and [open-source/DPG readiness](compliance/open_source_dpg_release_status.md).

@@ -6,16 +6,16 @@
   display: grid;
   grid-template-columns: minmax(220px, 1.45fr) minmax(150px, 1fr) minmax(125px, .72fr) 150px auto;
   align-items: end;
-  gap: 9px;
-  padding: 14px;
-  margin-bottom: 17px;
+  gap: 7px;
+  padding: 10px 12px 12px;
+  margin-bottom: 12px;
 }
-.capa-filter-title { grid-column: 1 / -1; display: flex; align-items: center; gap: 9px; padding-bottom: 9px; border-bottom: 1px solid var(--ab-border); }
-.capa-filter-title > span { display: grid; width: 39px; height: 39px; place-items: center; border-radius: 9px; color: var(--icon-facility); background: var(--icon-facility-bg); }
-.capa-filter-title h2 { margin: 0; color: var(--home-navy); font-size: .92rem; }
-.capa-filter-title p { margin: 4px 0 0; color: var(--ab-muted); font-size: .68rem; }
-.capa-filter label { position: relative; display: grid; gap: 6px; color: var(--ab-muted); font-size: .68rem; font-weight: 800; }
-.capa-filter input:not([type="hidden"]), .capa-filter select { width: 100%; height: 40px; padding: 0 10px; border: 1px solid var(--ab-border); border-radius: 9px; color: var(--ab-text); background: #fff; }
+.capa-filter-title { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; padding-bottom: 7px; border-bottom: 1px solid var(--ab-border); }
+.capa-filter-title > span { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 8px; color: var(--icon-facility); background: var(--icon-facility-bg); font-size: .82rem; }
+.capa-filter-title h2 { margin: 0; color: var(--home-navy); font-size: .82rem; }
+.capa-filter-title p { margin: 1px 0 0; color: var(--ab-muted); font-size: .62rem; }
+.capa-filter label { position: relative; display: grid; gap: 3px; color: var(--ab-muted); font-size: .62rem; font-weight: 800; }
+.capa-filter input:not([type="hidden"]), .capa-filter select { width: 100%; height: 36px; padding: 0 9px; border: 1px solid var(--ab-border); border-radius: 8px; color: var(--ab-text); background: #fff; }
 .capa-filter select:disabled { color: #8a969f; background: #f3f6f8; }
 .capa-facility-results { position: absolute; top: 69px; right: 0; left: 0; z-index: 30; max-height: 280px; overflow-y: auto; padding: 6px; border: 1px solid var(--ab-border); border-radius: 10px; background: #fff; box-shadow: 0 14px 36px rgba(23,33,43,.16); }
 .capa-facility-results button { display: grid; width: 100%; gap: 3px; padding: 10px 11px; border: 0; border-radius: 7px; color: var(--ab-text); background: transparent; text-align: left; cursor: pointer; }

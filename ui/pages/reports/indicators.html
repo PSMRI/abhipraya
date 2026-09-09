@@ -31,6 +31,7 @@
         <a href="/admin/dashboard"><i class="bi bi-house-door" aria-hidden="true"></i>Home</a>
         <a href="/admin/qr"><i class="bi bi-qr-code" aria-hidden="true"></i>QR Center</a>
         <a href="/admin/analytics"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i>Analytics</a>
+        <a href="/admin/social-audit"><i class="bi bi-people" aria-hidden="true"></i>Social Audit</a>
         <a href="/admin/reports" aria-current="page"><i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i>Reports</a>
       </nav>
     </div>
@@ -48,12 +49,21 @@
           <select id="report-type">
             <option value="summary">Summary report</option>
             <option value="facilities">Facility comparison</option>
+            <option value="districts">District-wise report</option>
             <option value="departments">Department performance</option>
             <option value="questions">Indicator-wise report</option>
             <option value="distributions">Indicator distributions</option>
           </select>
         </label>
-        <label class="report-field"><span>Facility</span><select id="report-facility"><option value="">All permitted facilities</option></select></label>
+        <label class="report-field" id="report-district-field" hidden><span>District</span><select id="report-district"><option value="">All districts</option></select></label>
+        <label class="report-field"><span>Facility</span>
+          <div class="report-facility-search">
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <input id="report-facility-search" type="search" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="report-facility-results" placeholder="Search facility name or NIN">
+            <div id="report-facility-results" class="report-facility-results" role="listbox" hidden></div>
+          </div>
+          <select id="report-facility" data-search-disabled><option value="">All permitted facilities</option></select>
+        </label>
         <label class="report-field"><span>Department</span><select id="report-department"><option value="">All departments</option></select></label>
         <label class="report-field"><span>Survey version</span><select id="report-survey-version"><option value="">All survey versions</option></select></label>
         <div class="date-fields">
@@ -99,7 +109,8 @@
     <div id="report-message" class="report-message" role="alert" hidden></div>
   </main>
 
+  <script src="/ui/assets/js/admin-language.js?v=20260907-reports-hindi"></script>
   <script src="/ui/assets/js/app-shell-v2.js"></script>
-  <script src="/ui/assets/js/reports-home.js?v=20260726-type-aware-complete"></script>
+  <script src="/ui/assets/js/reports-home.js?v=20260907-facility-search"></script>
 </body>
 </html>

@@ -19,12 +19,20 @@ try {
         $facilityNin = $assignedFacilityNin;
     }
     $where = ['1=1']; $types = ''; $values = [];
+    $allowedNins = AccessScope::facilityNins();
+    if ($allowedNins !== null) {
+        if ($allowedNins === []) $where[] = '1 = 0';
+        else { $where[] = 'hospital_nin IN (' . implode(',', array_fill(0, count($allowedNins), '?')) . ')'; $types .= str_repeat('s', count($allowedNins)); array_push($values, ...$allowedNins); }
+    }
     if ($facilityNin !== '') { $where[] = 'hospital_nin = ?'; $types .= 's'; $values[] = $facilityNin; }
     if ($departmentId !== '') { $where[] = 'department_id = ?'; $types .= 's'; $values[] = $departmentId; }
-    if ($from !== '') { $where[] = 'DATE(srvy_rpl_dt) >= ?'; $types .= 's'; $values[] = $from; }
-    if ($to !== '') { $where[] = 'DATE(srvy_rpl_dt) <= ?'; $types .= 's'; $values[] = $to; }
+    if ($from !== '') { $where[] = 'srvy_rpl_dt >= ?'; $types .= 's'; $values[] = $from . ' 00:00:00'; }
+    if ($to !== '') { $where[] = 'srvy_rpl_dt < DATE_ADD(?, INTERVAL 1 DAY)'; $types .= 's'; $values[] = $to; }
 
-    $stmt = $con->prepare('SELECT * FROM srvy_responses WHERE ' . implode(' AND ', $where) . ' ORDER BY srvy_rpl_dt DESC, id DESC LIMIT 10000');
+    // Export every response in the permitted, selected scope. This intentionally
+    // has no page-size or 10,000-row cap; the Feedback page exports in the
+    // background so the administrator can keep using the page while it runs.
+    $stmt = $con->prepare('SELECT * FROM srvy_responses WHERE ' . implode(' AND ', $where) . ' ORDER BY srvy_rpl_dt DESC, id DESC');
     if ($types !== '') $stmt->bind_param($types, ...$values);
     $stmt->execute(); $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC); $stmt->close();
     $facilityMap = feedbackFacilityMap(); $departmentMap = feedbackDepartmentMap();

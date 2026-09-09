@@ -91,7 +91,7 @@
     try {
       const payload = await json(await fetch('/api/v1/auth/me', { credentials: 'same-origin', headers: { Accept: 'application/json' } }));
       const roleId = Number(payload.data?.user?.role_id);
-      if (payload.status !== 'success' || ![1, 2, 3].includes(roleId)) throw new Error('Unauthorized');
+      if (payload.status !== 'success' || ![1, 2, 3, 7, 8].includes(roleId)) throw new Error('Unauthorized');
       const username = String(payload.data.user.u_name || '');
       const roleLabel = String(payload.data.user.role_name || 'Administrator');
       const displayName = payload.data.user.full_name || (/^\d+$/.test(username) ? '' : username) || roleLabel;

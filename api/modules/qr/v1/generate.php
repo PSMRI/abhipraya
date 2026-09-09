@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__, 3) . '/public_api.php';
 require_once dirname(__DIR__, 3) . '/helpers/SurveyConfig.php';
+require_once dirname(__DIR__, 3) . '/helpers/AccessScope.php';
 
 Security::requireMethod('POST');
 SessionManager::requireLogin();
 Csrf::validate();
 
 $roleId = (int) (SessionManager::user()['role_id'] ?? 0);
-if (!in_array($roleId, [1, 2, 3], true)) {
+if (!in_array($roleId, [1, 2, 3, 7, 8], true)) {
     Response::forbidden('Your role is not allowed to generate QR links.');
 }
 
@@ -17,9 +18,7 @@ try {
     $payload = Security::jsonInput();
     Security::requireFields($payload, ['facility_nin', 'department_id']);
     $facilityNin = trim((string) $payload['facility_nin']);
-    if ($roleId === 2 && !hash_equals((string) SessionManager::facilityId(), $facilityNin)) {
-        Response::forbidden('Facility Administrators can generate QR links only for their assigned facility.');
-    }
+    AccessScope::assertFacilityAllowed($facilityNin);
     $reference = $facilityNin . '_' . (int) $payload['department_id'];
     $context = SurveyConfig::resolveReference($reference);
     $url = SurveyConfig::surveyUrl($context['reference']);

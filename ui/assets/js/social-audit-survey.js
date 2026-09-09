@@ -1,0 +1,23 @@
+(() => {
+  'use strict';
+  const app = document.querySelector('#app');
+  const token = new URLSearchParams(location.search).get('token') || '';
+  const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let data, language = '', current = 0, audioEnabled = false, activeAudio = null;
+  const request = async (url, options = {}) => { const response = await fetch(url, { headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options }); const body = await response.json().catch(() => ({})); if (!response.ok || body.status !== 'success') throw new Error(body.message || 'Unable to load survey.'); return body.data; };
+  const respondentKey = () => localStorage.socialAuditKey || (localStorage.socialAuditKey = crypto.randomUUID());
+  const audio = (question) => language === 'hi' ? `/ui/assets/audio/social-audit/hi/${question.id}.mp3` : '';
+  const stopAudio = () => { if (!activeAudio) return; activeAudio.pause(); activeAudio.currentTime = 0; activeAudio = null; };
+  const play = (source) => { stopAudio(); if (!source) return; activeAudio = new Audio(source); activeAudio.play().catch(() => {}); };
+  function languageScreen() {
+    app.innerHTML = '<div class="lang"><button class="soundBtn" data-a="/ui/assets/audio/social-audit/hi/language_select.mp3">🔊</button><h1 class="title">Social Audit Survey</h1><p>भाषा चुनें / Select language</p><button class="button" data-language="en">English</button><button class="button" data-language="hi">हिन्दी</button></div>';
+    app.onclick = (event) => { if (event.target.dataset.a) play(event.target.dataset.a); if (event.target.dataset.language) { language = event.target.dataset.language; render(); } };
+  }
+  function render() {
+    const question = data.questions[current]; const options = data.answer_options[question.type]?.[language] || data.answer_options[question.type]?.en || []; const answer = data.answers?.[question.id] || '';
+    app.innerHTML = `<h1 class="title">${language === 'hi' ? 'सामाजिक अंकेक्षण सर्वेक्षण' : 'Social Audit Survey'}</h1><button class="soundBtn" id="sound">🔊</button><p class="progress">${language === 'hi' ? 'प्रश्न' : 'Question'} ${current + 1} ${language === 'hi' ? '/' : 'of'} ${data.questions.length}</p><div class="progressbar"><span style="width:${(current + 1) * 100 / data.questions.length}%"></span></div><section class="qbox"><h3>${escapeHtml(question.text[language] || question.text.en)}</h3>${options.map((item) => `<label class="option option-${escapeHtml(item.value)}"><input type="radio" name="answer" value="${escapeHtml(item.value)}" ${answer === item.value ? 'checked' : ''}>${escapeHtml(item.label)}</label>`).join('')}</section><div class="nav"><button class="back" id="back" ${current ? '' : 'disabled'}>${language === 'hi' ? 'पीछे' : 'Back'}</button><button class="${current === data.questions.length - 1 ? 'submit' : 'next'}" id="next">${current === data.questions.length - 1 ? (language === 'hi' ? 'सबमिट करें' : 'Submit') : (language === 'hi' ? 'आगे' : 'Next')}</button></div>`;
+    app.onclick = async (event) => { if (event.target.id === 'sound') { audioEnabled = true; play(audio(question)); return; } if (event.target.id === 'back') { stopAudio(); current--; render(); if (audioEnabled) setTimeout(() => play(audio(data.questions[current])), 300); return; } if (event.target.id !== 'next') return; const selected = app.querySelector('input:checked'); if (!selected) return alert(language === 'hi' ? 'कृपया उत्तर चुनें' : 'Please select an answer'); stopAudio(); (data.answers ||= {})[question.id] = selected.value; if (current < data.questions.length - 1) { current++; render(); if (audioEnabled) setTimeout(() => play(audio(data.questions[current])), 300); return; } try { await request('/api/v1/social-audit/submit', { method: 'POST', body: JSON.stringify({ token, language, answers: data.answers, respondent_key: respondentKey() }) }); app.innerHTML = `<div class="lang"><h1 class="title">Thank you</h1><p>${language === 'hi' ? 'आपकी राय सफलतापूर्वक दर्ज हो गई है।' : 'Your opinion has been submitted successfully.'}</p></div>`; } catch (error) { alert(error.message); } };
+    app.onchange = (event) => { if (event.target.name === 'answer') setTimeout(() => app.querySelector('#next')?.click(), 600); };
+  }
+  request(`/api/v1/social-audit/resolve?token=${encodeURIComponent(token)}`).then((result) => { data = result; languageScreen(); }).catch((error) => { app.innerHTML = `<p class="error">${escapeHtml(error.message)}</p>`; });
+})();

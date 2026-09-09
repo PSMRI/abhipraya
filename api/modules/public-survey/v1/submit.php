@@ -19,7 +19,7 @@ function responseVersionColumnsAvailable(mysqli $connection): bool
 
 try {
     $payload = Security::jsonInput();
-    Security::requireFields($payload, ['ref', 'lang', 'device_id', 'latitude', 'longitude', 'answers']);
+    Security::requireFields($payload, ['ref', 'lang', 'device_id', 'answers']);
     $requestedVersion = trim((string) ($payload['survey_version'] ?? ''));
     $context = SurveyConfig::resolveReference(
         (string) $payload['ref'],
@@ -36,15 +36,18 @@ try {
     $language = (int) $payload['lang'];
     $questions = SurveyConfig::questions($context, $language);
     $deviceId = trim((string) $payload['device_id']);
-    $latitude = filter_var($payload['latitude'], FILTER_VALIDATE_FLOAT);
-    $longitude = filter_var($payload['longitude'], FILTER_VALIDATE_FLOAT);
+    $latitude = isset($payload['latitude']) ? filter_var($payload['latitude'], FILTER_VALIDATE_FLOAT) : null;
+    $longitude = isset($payload['longitude']) ? filter_var($payload['longitude'], FILTER_VALIDATE_FLOAT) : null;
 
-    if (strlen($deviceId) < 16 || strlen($deviceId) > 250 || $latitude === false || $longitude === false || !is_array($payload['answers'])) {
+    if (strlen($deviceId) < 16 || strlen($deviceId) > 250 || !is_array($payload['answers'])
+        || ($context['geo_required'] && ($latitude === false || $longitude === false || $latitude === null || $longitude === null))) {
         Response::validation(['submission' => 'Invalid device, location or answer data.']);
     }
 
-    $distance = SurveyConfig::distanceMeters((float) $context['facility']['facilityLat'], (float) $context['facility']['facilityLong'], (float) $latitude, (float) $longitude);
-    if ($distance > $context['geo_radius_meters']) {
+    $distance = $context['geo_required']
+        ? SurveyConfig::distanceMeters((float) $context['facility']['facilityLat'], (float) $context['facility']['facilityLong'], (float) $latitude, (float) $longitude)
+        : null;
+    if ($distance !== null && $distance > $context['geo_radius_meters']) {
         Response::error('Feedback can only be submitted within the facility premises.', ['distance_meters' => round($distance)], 403);
     }
 
@@ -91,8 +94,8 @@ try {
     $values = [
         $nin,
         $departmentId,
-        (string) $latitude,
-        (string) $longitude,
+        $latitude !== null && $latitude !== false ? (string) $latitude : '',
+        $longitude !== null && $longitude !== false ? (string) $longitude : '',
         (string) ($_SERVER['REMOTE_ADDR'] ?? ''),
         $deviceId,
         $submissionId,
@@ -126,7 +129,7 @@ try {
         'submission_id' => $submissionId,
         'survey_code' => $context['survey_code'],
         'survey_version' => $context['survey_version'],
-        'distance_meters' => round($distance),
+        'distance_meters' => $distance !== null ? round($distance) : null,
         'thank_you' => SurveyConfig::thankYouMessage($language),
     ], 201);
 } catch (Throwable $exception) {

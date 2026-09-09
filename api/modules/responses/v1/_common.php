@@ -5,16 +5,17 @@ require_once dirname(__DIR__, 3) . '/public_api.php';
 require_once dirname(__DIR__, 3) . '/assets/conn/db.php';
 require_once dirname(__DIR__, 3) . '/helpers/SurveyConfig.php';
 require_once dirname(__DIR__, 3) . '/helpers/RatingScale.php';
+require_once dirname(__DIR__, 3) . '/helpers/AccessScope.php';
 
 SessionManager::requireLogin();
-if (!in_array(SessionManager::roleId(), [1, 2, 3], true)) {
+if (!in_array(SessionManager::roleId(), [1, 2, 3, 7, 8], true)) {
     Response::forbidden('Your role is not allowed to view feedback responses.');
 }
 
 function feedbackFacilityMap(): array
 {
     $map = [];
-    foreach (SurveyConfig::facilities() as $facility) {
+    foreach (AccessScope::filterFacilities(SurveyConfig::facilities()) as $facility) {
         $nin = (string) ($facility['facilityNIN'] ?? '');
         if ($nin !== '') {
             $map[$nin] = (string) ($facility['facilityName'] ?? $nin);
@@ -57,7 +58,29 @@ function feedbackRatingMeta(string $nin, string $departmentId, string $surveyVer
         }
         return $cache[$key] = $meta;
     } catch (Throwable) {
-        return $cache[$key] = [];
+        /* Some historic/test responses use a NIN that is no longer present in
+           facilityCodes.json. Questions and scoring are department/version
+           specific, so use a configured facility only to load that same
+           department survey definition; never alter the stored response. */
+        try {
+            $fallbackFacility = SurveyConfig::facilities()[0]['facilityNIN'] ?? '';
+            if ($fallbackFacility === '') {
+                return $cache[$key] = [];
+            }
+            $context = SurveyConfig::resolveReference($fallbackFacility . '_' . $departmentId, $surveyVersion);
+            $questions = SurveyConfig::questions($context, 1);
+            $meta = [];
+            foreach ($questions as $question) {
+                if (strtolower(trim((string) ($question['report_type'] ?? 'rating'))) !== 'rating') continue;
+                $qn = (int) ($question['qn'] ?? 0);
+                if ($qn >= 1 && $qn <= 31 && count($question['options'] ?? []) >= 2) {
+                    $meta[] = ['qn' => $qn, 'scores' => RatingScale::optionScores($question)];
+                }
+            }
+            return $cache[$key] = $meta;
+        } catch (Throwable) {
+            return $cache[$key] = [];
+        }
     }
 }
 

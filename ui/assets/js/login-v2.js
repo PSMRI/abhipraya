@@ -51,7 +51,7 @@
       const payload = await readApiResponse(response);
       if (!response.ok || payload.status !== 'success') throw new Error(payload.message || 'Invalid username or password.');
       const roleId = Number(payload.data?.user?.role_id || 0);
-      if (![1, 2, 3].includes(roleId)) throw new Error('Your account does not have administrator access.');
+      if (![1, 2, 3, 7, 8].includes(roleId)) throw new Error('Your account does not have administrator access.');
       window.location.assign('/admin/dashboard');
     } catch (error) {
       message.textContent = error.message || 'Unable to sign in. Please try again.'; message.setAttribute('role', 'alert');

@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__, 3) . '/public_api.php';
 require_once dirname(__DIR__, 3) . '/helpers/SurveyConfig.php';
+require_once dirname(__DIR__, 3) . '/helpers/AccessScope.php';
 
 Security::requireMethod('POST');
 SessionManager::requireLogin();
 
-if (!in_array(SessionManager::roleId(), [1, 2, 3], true)) {
+if (!in_array(SessionManager::roleId(), [1, 2, 3, 7, 8], true)) {
     Response::forbidden('Your role is not allowed to validate QR links.');
 }
 
@@ -21,6 +22,7 @@ try {
     }
 
     $context = SurveyConfig::resolveReference($reference);
+    AccessScope::assertFacilityAllowed((string) ($context['facility']['facilityNIN'] ?? ''));
     $questions = SurveyConfig::questions($context, 1);
 
     Response::success('QR configuration is valid', [

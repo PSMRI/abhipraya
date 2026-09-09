@@ -433,7 +433,7 @@
     try {
       const me = await requestJson('/api/v1/auth/me');
       const user = me.data?.user || {};
-      if (![1, 2, 3].includes(Number(user.role_id))) throw new Error('Your role cannot manage CAPA plans.');
+      if (![1, 2, 3, 7, 8].includes(Number(user.role_id))) throw new Error('Your role cannot manage CAPA plans.');
       await loadConfiguration('');
       if (Number(user.role_id) === 2) facilityField.hidden = true;
     } catch (error) {

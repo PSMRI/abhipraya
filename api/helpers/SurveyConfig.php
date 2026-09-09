@@ -5,6 +5,15 @@ final class SurveyConfig
 {
     private const MASTER_DIR = __DIR__ . '/../masters';
 
+    /** @var array<string, array<int|string, mixed>> */
+    private static array $jsonCache = [];
+
+    /** @var array<string, array<string, mixed>>|null */
+    private static ?array $facilitiesByNin = null;
+
+    /** @var array<int, array<string, mixed>>|null */
+    private static ?array $englishFacilities = null;
+
     public static function resolveReference(string $reference, ?string $version = null): array
     {
         if (!preg_match('/^(\d{6,20})_(\d{1,2})$/', trim($reference), $matches)) {
@@ -72,6 +81,7 @@ final class SurveyConfig
         // facility master are descriptive data and must not change this rule.
         $facilityRadius = $radiusSettings['facility_overrides'][(string) $matches[1]]
             ?? $radiusSettings['default_radius_meters'];
+        $geoRequired = !in_array((string) $matches[1], $radiusSettings['geo_bypass_facilities'], true);
         $geoRadius = max(
             (int) $radiusSettings['minimum_radius_meters'],
             min((int) $radiusSettings['maximum_radius_meters'], (int) $facilityRadius)
@@ -82,6 +92,7 @@ final class SurveyConfig
             'facility' => $facility,
             'department' => $department,
             'geo_radius_meters' => $geoRadius,
+            'geo_required' => $geoRequired,
             'duplicate_window_hours' => (int) $radiusSettings['duplicate_window_hours'],
             'question_file' => $questionFile,
             'survey_code' => $surveyCode,
@@ -101,6 +112,13 @@ final class SurveyConfig
 
         usort($questions, static fn(array $left, array $right): int => (int) $left['qn'] <=> (int) $right['qn']);
         $departmentId = (int) ($context['department']['departmentId'] ?? 0);
+        // The OPD public survey uses the first ten service-rating questions only.
+        if ($departmentId === 4) {
+            $questions = array_values(array_filter(
+                $questions,
+                static fn(array $question): bool => (int) ($question['qn'] ?? 0) >= 1 && (int) ($question['qn'] ?? 0) <= 10
+            ));
+        }
         $versionToken = preg_replace('/[^0-9A-Za-z]+/', '_', (string) ($context['survey_version'] ?? '1.0'));
         return array_map(static function (array $question) use ($departmentId, $versionToken): array {
             $number = (int) ($question['qn'] ?? 0);
@@ -149,36 +167,24 @@ final class SurveyConfig
     public static function facilities(string $search = ''): array
     {
         $search = strtolower(trim($search));
-        $facilities = array_values(array_filter(
-            self::readJson(self::MASTER_DIR . '/facilityCodes.json'),
-            static function (array $facility) use ($search): bool {
-                if ((int) ($facility['langCode'] ?? 1) !== 1) {
-                    return false;
-                }
+        $facilities = self::englishFacilities();
+        if ($search === '') {
+            return $facilities;
+        }
 
-                if ($search === '') {
-                    return true;
-                }
-
-                return str_contains(strtolower((string) ($facility['facilityNIN'] ?? '')), $search)
-                    || str_contains(strtolower((string) ($facility['facilityName'] ?? '')), $search);
-            }
+        return array_values(array_filter($facilities, static fn(array $facility): bool =>
+            str_contains(strtolower((string) ($facility['facilityNIN'] ?? '')), $search)
+            || str_contains(strtolower((string) ($facility['facilityName'] ?? '')), $search)
         ));
-
-        usort($facilities, static fn(array $left, array $right): int => strcmp(
-            (string) ($left['facilityName'] ?? ''),
-            (string) ($right['facilityName'] ?? '')
-        ));
-
-        return $facilities;
     }
 
     /** @return array<int, array<string, mixed>> */
-    public static function departments(): array
+    public static function departments(int $language = 1): array
     {
+        $language = in_array($language, [1, 2], true) ? $language : 1;
         $departments = array_values(array_filter(
             self::readJson(self::MASTER_DIR . '/departmet.json'),
-            static fn(array $department): bool => (int) ($department['langCode'] ?? 1) === 1
+            static fn(array $department): bool => (int) ($department['langCode'] ?? 1) === $language
         ));
         usort($departments, static fn(array $left, array $right): int => (int) ($left['departmentId'] ?? 0) <=> (int) ($right['departmentId'] ?? 0));
         return $departments;
@@ -247,12 +253,46 @@ final class SurveyConfig
 
     private static function findFacility(string $nin): array
     {
-        foreach (self::readJson(self::MASTER_DIR . '/facilityCodes.json') as $facility) {
-            if ((string) ($facility['facilityNIN'] ?? '') === $nin && (int) ($facility['langCode'] ?? 1) === 1) {
-                return $facility;
-            }
+        $facilities = self::facilitiesByNin();
+        if (isset($facilities[$nin])) {
+            return $facilities[$nin];
         }
         throw new InvalidArgumentException('Facility was not found.');
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    private static function englishFacilities(): array
+    {
+        if (self::$englishFacilities !== null) {
+            return self::$englishFacilities;
+        }
+
+        self::$englishFacilities = array_values(self::facilitiesByNin());
+        usort(self::$englishFacilities, static fn(array $left, array $right): int => strcmp(
+            (string) ($left['facilityName'] ?? ''),
+            (string) ($right['facilityName'] ?? '')
+        ));
+        return self::$englishFacilities;
+    }
+
+    /** @return array<string, array<string, mixed>> */
+    private static function facilitiesByNin(): array
+    {
+        if (self::$facilitiesByNin !== null) {
+            return self::$facilitiesByNin;
+        }
+
+        self::$facilitiesByNin = [];
+        foreach (self::readJson(self::MASTER_DIR . '/facilityCodes.json') as $facility) {
+            if (!is_array($facility) || (int) ($facility['langCode'] ?? 1) !== 1) {
+                continue;
+            }
+            $nin = trim((string) ($facility['facilityNIN'] ?? ''));
+            if ($nin !== '') {
+                self::$facilitiesByNin[$nin] = $facility;
+            }
+        }
+        return self::$facilitiesByNin;
     }
 
     private static function findDepartment(int $departmentId): array
@@ -267,6 +307,9 @@ final class SurveyConfig
 
     private static function readJson(string $file): array
     {
+        if (isset(self::$jsonCache[$file])) {
+            return self::$jsonCache[$file];
+        }
         if (!is_file($file)) {
             throw new RuntimeException('Required survey configuration is unavailable.');
         }
@@ -278,7 +321,7 @@ final class SurveyConfig
         if (!is_array($data)) {
             throw new RuntimeException('Invalid survey configuration.');
         }
-        return $data;
+        return self::$jsonCache[$file] = $data;
     }
 
     /** @return array<string, mixed> */
@@ -290,6 +333,9 @@ final class SurveyConfig
         $settings['maximum_radius_meters'] = max((int) $settings['minimum_radius_meters'], (int) ($settings['maximum_radius_meters'] ?? 5000));
         $settings['duplicate_window_hours'] = max(1, min(168, (int) ($settings['duplicate_window_hours'] ?? 24)));
         $settings['facility_overrides'] = is_array($settings['facility_overrides'] ?? null) ? $settings['facility_overrides'] : [];
+        $settings['geo_bypass_facilities'] = is_array($settings['geo_bypass_facilities'] ?? null)
+            ? array_map('strval', $settings['geo_bypass_facilities'])
+            : [];
         return $settings;
     }
 

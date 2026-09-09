@@ -98,17 +98,46 @@
     return risks.sort((left, right) => right.percentage - left.percentage);
   }
 
-  function renderAdaptiveIndicators(categories, facilitySelected) {
+  function shortQuestion(question, maximumLength = 88) {
+    const text = String(question || '').trim();
+    if (text.length <= maximumLength) return text;
+    const shortened = text.slice(0, maximumLength);
+    const lastSpace = shortened.lastIndexOf(' ');
+    return `${(lastSpace > 35 ? shortened.slice(0, lastSpace) : shortened).trim()}…`;
+  }
+
+  function compactIndicatorLabel(question) {
+    const original = String(question || '').trim();
+    let label = original.replace(/^how would you rate\s+(?:the\s+)?/i, '');
+    label = label.replace(/\s+(?:in|within) the hospital(?:,.*)?\??$/i, '');
+    label = label.replace(/,\s*(?:such as|including)\s+.*\??$/i, '');
+    label = label.replace(/\?$/, '').trim();
+    if (/^overall,?\s+how satisfied were you/i.test(original)) label = 'Overall satisfaction';
+    if (!label || label === original) return shortQuestion(original);
+    return label.charAt(0).toUpperCase() + label.slice(1);
+  }
+
+  function renderAdaptiveIndicators(categories, indicators, facilitySelected) {
     const host = byId('adaptive-indicators');
-    if (!facilitySelected) {
-      host.innerHTML = '<div class="empty">Select a facility to view type-specific indicator analysis.</div>';
-      return;
-    }
-    if (!categories.length) {
+    const ratingCards = (indicators || []).filter((item) => Number.isFinite(Number(item.score))).map((item) => {
+      const score = Number(item.score);
+      return `
+        <article class="adaptive-card indicator-rating-card">
+          <header class="adaptive-card-head">
+            <div class="indicator-identity">
+              ${indicatorIconMarkup(item.icon, item.report_type)}
+              <div><h3 title="${escapeHtml(item.indicator_name)}">${escapeHtml(compactIndicatorLabel(item.indicator_name))}</h3><p>${number.format(Number(item.responses) || 0)} responses</p></div>
+            </div>
+            <span class="indicator-type">Overall rating</span>
+          </header>
+          <div class="indicator-overall-rating"><strong>${score.toFixed(1)}/5</strong>${starMarkup(score)}</div>
+        </article>`;
+    });
+    if (!ratingCards.length && !categories.length) {
       host.innerHTML = '<div class="empty">No type-specific indicator responses are available for this selection.</div>';
       return;
     }
-    host.innerHTML = categories.map((item) => {
+    const categoryCards = !facilitySelected ? [] : categories.map((item) => {
       const reportType = String(item.report_type || 'category');
       const unit = item.unit ? ` ${escapeHtml(item.unit)}` : '';
       let body = '';
@@ -160,13 +189,14 @@
           <header class="adaptive-card-head">
             <div class="indicator-identity">
               ${indicatorIconMarkup(item.icon, reportType)}
-              <div><h3>${escapeHtml(item.question_name)}</h3><p>${number.format(Number(item.total_responses) || 0)} responses &middot; Version ${escapeHtml(item.survey_version)}</p></div>
+              <div><h3 title="${escapeHtml(item.question_name)}">${escapeHtml(shortQuestion(item.question_name))}</h3><p>${number.format(Number(item.total_responses) || 0)} responses &middot; Version ${escapeHtml(item.survey_version)}</p></div>
             </div>
             <span class="indicator-type">${escapeHtml(reportTypeLabel(reportType))}</span>
           </header>
           ${body}
         </article>`;
-    }).join('');
+    });
+    host.innerHTML = [...ratingCards, ...categoryCards].join('');
   }
 
   function setText(id, value) {
@@ -209,6 +239,7 @@
 
   function filters() {
     const query = new URLSearchParams();
+    query.set('lang', localStorage.getItem('abhipraya_admin_language') === 'hi' ? '2' : '1');
     [
       ['facility_nin', 'facility-filter'],
       ['department_id', 'department-filter'],
@@ -891,7 +922,11 @@
     const facilitySelect = byId('facility-filter');
     (configuration.facilities || []).forEach((facility) => facilitySelect.add(new Option(facility.facilityName, facility.facilityNIN)));
     const departmentSelect = byId('department-filter');
-    (configuration.departments || []).forEach((item) => departmentSelect.add(new Option(item.departmentName, item.departmentId)));
+    (configuration.departments || []).forEach((item) => {
+      if (![...departmentSelect.options].some((option) => option.value === String(item.departmentId))) {
+        departmentSelect.add(new Option(item.departmentName, item.departmentId));
+      }
+    });
     configurationLoaded = true;
   }
 
@@ -927,6 +962,7 @@
       populateSurveyVersions(detailsPayload.data?.available_versions || summaryPayload.data?.available_versions || []);
 
       const summary = detailsPayload.data?.summary || summaryPayload.data?.summary || {};
+      const reportingSummary = summaryPayload.data?.summary || summary;
       const facilities = detailsPayload.data?.facilities || [];
       const departments = detailsPayload.data?.departments || [];
       const indicators = aggregateIndicators(detailsPayload.data?.indicators || []);
@@ -940,7 +976,9 @@
       }
       setText('metric-feedback', number.format(Number(summary.total_responses) || 0));
       setAverageScore('metric-score', summary.score === null || summary.score === undefined ? null : Number(summary.score));
-      setText('metric-facilities', number.format(Number(summary.facility_count) || 0));
+      // A reporting facility is a distinct NIN with a response in the
+      // database. The summary-only endpoint is the authoritative raw count.
+      setText('metric-facilities', number.format(Number(reportingSummary.facility_count) || 0));
       const categoryRisks = categoryRiskItems(categories);
       setText('metric-priority', number.format(indicators.filter((item) => Number(item.score) < 3).length + categoryRisks.length));
       const effectiveFilters = detailsPayload.data?.filters || {};
@@ -967,7 +1005,7 @@
       renderPriority(indicators, categories);
       renderFacilities(facilities);
       renderDepartments(departments);
-      renderAdaptiveIndicators(categories, Boolean(selectedFacility));
+      renderAdaptiveIndicators(categories, indicators, Boolean(selectedFacility));
       renderQuestions(indicators);
       setText('data-updated', `Updated ${new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date())}`);
     } catch (error) {

@@ -40,5 +40,19 @@
     "role_name": "Viewer",
     "active_status": 1,
     "description": "Read-only access to dashboards and reports."
+  },
+  {
+    "role_id": 7,
+    "role_code": "DISTRICT_ADMIN",
+    "role_name": "District Administrator",
+    "active_status": 1,
+    "description": "Views and manages data only for facilities in the assigned district."
+  },
+  {
+    "role_id": 8,
+    "role_code": "BLOCK_ADMIN",
+    "role_name": "Block Administrator",
+    "active_status": 1,
+    "description": "Views and manages data only for facilities in the assigned block."
   }
 ]

@@ -8,7 +8,7 @@ declare(strict_types=1);
 $route = trim((string) ($_GET['route'] ?? ''), '/');
 
 /* Protect direct navigation to administrator pages before sending HTML. */
-$adminRoutes = ['admin/dashboard', 'admin/qr', 'admin/analytics', 'admin/account', 'admin/reports', 'admin/capa', 'admin/feedback'];
+$adminRoutes = ['admin/dashboard', 'admin/qr', 'admin/analytics', 'admin/account', 'admin/reports', 'admin/capa', 'admin/feedback', 'admin/social-audit'];
 if (in_array($route, $adminRoutes, true)) {
     require_once __DIR__ . '/../api/bootstrap.php';
     if (!SessionManager::isLoggedIn()) {
@@ -29,8 +29,12 @@ $views = [
     'admin/reports' => __DIR__ . '/pages/reports/indicators.html',
     'admin/capa' => __DIR__ . '/pages/capa/index.html',
     'admin/feedback' => __DIR__ . '/pages/feedback/index.html',
+    'admin/social-audit' => __DIR__ . '/pages/social-audit/index.html',
+    'social-audit' => __DIR__ . '/pages/social-audit/survey.html',
     'survey' => __DIR__ . '/pages/public-survey/question.php',
     'question' => __DIR__ . '/pages/public-survey/question.php',
+    'opd-test-color' => __DIR__ . '/pages/public-survey/opd-test-color.html',
+    'opd-test-stars' => __DIR__ . '/pages/public-survey/opd-test-stars.html',
 ];
 
 if (!isset($views[$route])) {

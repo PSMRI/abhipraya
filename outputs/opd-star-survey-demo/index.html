@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OPD Survey Demo — Star Rating</title>
+  <style>
+    :root{--ink:#172550;--muted:#64708b;--line:#e4e8f2;--brand:#3157ca;--gold:#ffbd2e}*{box-sizing:border-box}body{min-height:100vh;margin:0;padding:22px 16px;display:grid;place-items:center;background:linear-gradient(145deg,#fff6df,#f4f7ff 55%,#eef4ff);color:var(--ink);font-family:Arial,"Noto Sans Devanagari",sans-serif}main{position:relative;overflow:hidden;width:min(100%,540px);padding:0 22px 23px;background:#fff;border:1px solid #e6e9f4;border-radius:25px;box-shadow:0 22px 65px #293f7626}main:before{content:"";display:block;height:8px;margin:0 -22px;background:linear-gradient(90deg,#6844bd,#3157ca 52%,#20a878)}.test{display:inline-flex;margin:20px 0 10px;padding:6px 10px;border-radius:99px;color:#765000;background:#fff4cd;font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}h1{margin:0;font-size:23px}.hint{margin:7px 0 17px;color:var(--muted);font-size:13px;line-height:1.5}.progress-copy{display:flex;justify-content:space-between;margin:0 0 7px;color:#53617d;font-size:12px;font-weight:700}.progress{height:8px;overflow:hidden;margin-bottom:18px;border-radius:99px;background:#e7ebf4}.progress span{display:block;width:10%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#6844bd,#3157ca);transition:width .22s ease}.question{padding:20px 18px 17px;border:1px solid #d6e2ff;border-radius:18px;background:linear-gradient(135deg,#edf3ff,#f7f4ff)}.question:before{content:"OPD सेवा मूल्यांकन";display:block;margin-bottom:9px;color:var(--brand);font-size:11px;font-weight:800;letter-spacing:.08em}.question p{margin:0;font-size:19px;font-weight:700;line-height:1.52}.listen{display:inline-flex;gap:7px;margin:15px 0 0;padding:10px 15px;border:0;border-radius:999px;color:#fff;background:linear-gradient(135deg,#7754ca,#5637a8);font:700 13px inherit;cursor:pointer}.rating-panel{margin-top:18px;padding:17px 11px 14px;border:2px solid #dfcc86;border-radius:18px;background:linear-gradient(135deg,#fff7d9,#f2f7ff);text-align:center;box-shadow:inset 0 1px #fff}.rating-title{margin:0;color:#394866;font-size:15px;font-weight:800}.stars{display:flex;justify-content:center;gap:2px;margin:12px 0 10px;direction:rtl}.stars input{position:absolute;opacity:0}.stars label{padding:3px;color:#d9deea;font-size:55px;line-height:1;cursor:pointer;transition:transform .15s,color .15s}.stars label:hover,.stars label:hover~label,.stars input:checked~label{color:var(--gold)}.stars label:hover{transform:translateY(-4px) scale(1.1)}.stars input:focus-visible+label{outline:3px solid #3157ca;border-radius:8px}.scale{display:flex;flex-wrap:wrap;justify-content:center;gap:5px 10px;padding:7px 7px 0;color:#53617d;font-size:11px;font-weight:700;border-top:1px dashed #d8c579}.scale span{white-space:nowrap}.selection{min-height:25px;margin:14px 0 0;color:#177045;font-size:14px;font-weight:700;text-align:center}.selection:empty{display:none}.nav{display:flex;justify-content:space-between;gap:12px;margin-top:17px}.nav button{min-width:108px;padding:12px 15px;border:1px solid #cad4ec;border-radius:11px;color:#29416f;background:#fff;font:700 14px inherit;cursor:pointer}.nav .next,.nav .finish{margin-left:auto;border-color:#3157ca;color:#fff;background:#3157ca}.nav .finish{background:#16805c;border-color:#16805c}.nav button:disabled{visibility:hidden}.complete{padding:27px 12px 10px;text-align:center}.complete h2{margin:0;color:#16805c}.complete p{color:var(--muted);line-height:1.5}.restart{padding:10px 15px;border:0;border-radius:999px;color:#fff;background:#3157ca;font-weight:700;cursor:pointer}.note{margin:16px 0 0;color:#7b869c;font-size:11px;line-height:1.45;text-align:center}@media(max-width:380px){main{padding-right:16px;padding-left:16px}main:before{margin-right:-16px;margin-left:-16px}.stars label{font-size:47px}.question p{font-size:17px}}
+    @media(max-width:600px){body{display:block;padding:0;background:#fff}main{width:100%;min-height:100dvh;padding:0 18px calc(20px + env(safe-area-inset-bottom));border:0;border-radius:0;box-shadow:none}main:before{height:6px;margin:0 -18px}.test{margin-top:16px}h1{font-size:22px}.hint{margin-bottom:15px}.question{padding:18px 15px}.question p{font-size:18px;line-height:1.48}.listen{min-height:44px;margin-top:13px;padding:10px 16px}.rating-panel{margin-top:14px;padding:15px 7px 13px}.stars{gap:0;margin:9px 0}.stars label{min-width:56px;padding:4px 2px;font-size:52px}.scale{padding:0 4px}.nav{position:sticky;bottom:0;margin:15px -18px 0;padding:12px 18px calc(12px + env(safe-area-inset-bottom));background:#fffffff2;border-top:1px solid var(--line)}.nav button{min-height:48px;min-width:120px;font-size:15px}.note{margin-top:14px;padding-bottom:4px}.complete{padding-top:42px}}
+    @media(max-width:380px){main{padding-right:14px;padding-left:14px}main:before{margin-right:-14px;margin-left:-14px}.question p{font-size:17px}.stars label{min-width:49px;font-size:46px}.nav{margin-right:-14px;margin-left:-14px;padding-right:14px;padding-left:14px}.nav button{min-width:108px;padding-right:11px;padding-left:11px}}
+    .nav #back{border-color:#efb400;color:#493700;background:#ffdc54}.nav .next{border-color:#16805c;background:#16805c}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="test">Demo only · answers are not saved</p>
+    <h1>OPD Feedback Survey</h1>
+    <p class="hint">अपना अनुभव बताने के लिए 1 से 5 स्टार चुनें।</p>
+    <div id="survey">
+      <div class="progress-copy"><span id="counter">प्रश्न 1 / 10</span><span id="percent">10%</span></div>
+      <div class="progress" aria-hidden="true"><span id="bar"></span></div>
+      <section class="question" aria-labelledby="question"><p id="question"></p><button class="listen" id="listen" type="button">🔊 सवाल सुनें</button></section>
+      <section class="rating-panel"><p class="rating-title">रेटिंग देने के लिए स्टार पर दबाएं</p><fieldset class="stars" aria-label="Star rating"><input id="star5" type="radio" name="rating" value="5"><label for="star5" aria-label="5 स्टार, उत्कृष्ट">★</label><input id="star4" type="radio" name="rating" value="4"><label for="star4" aria-label="4 स्टार, बहुत अच्छा">★</label><input id="star3" type="radio" name="rating" value="3"><label for="star3" aria-label="3 स्टार, अच्छा">★</label><input id="star2" type="radio" name="rating" value="2"><label for="star2" aria-label="2 स्टार, सामान्य">★</label><input id="star1" type="radio" name="rating" value="1"><label for="star1" aria-label="1 स्टार, बहुत बुरा">★</label></fieldset><div class="scale"><span>1 ★ बहुत बुरा</span><span>2 ★ सामान्य</span><span>3 ★ अच्छा</span><span>4 ★ बहुत अच्छा</span><span>5 ★ उत्कृष्ट</span></div></section>
+      <p class="selection" id="selection" aria-live="polite"></p>
+      <nav class="nav" aria-label="Survey navigation"><button id="back" type="button">← पीछे</button><button class="next" id="next" type="button">आगे →</button><button class="finish" id="finish" type="button" hidden>डेमो पूरा करें</button></nav>
+    </div>
+    <section class="complete" id="complete" hidden><h2>धन्यवाद!</h2><p>आपने OPD के सभी 10 डेमो प्रश्न पूरे कर लिए हैं। कोई उत्तर सहेजा नहीं गया है।</p><button class="restart" id="restart" type="button">फिर से शुरू करें</button></section>
+    <p class="note">यह केवल प्रस्तुति के लिए परीक्षण पेज है। यह मुख्य OPD सर्वे या उसके डेटा को नहीं बदलता।</p>
+  </main>
+  <script>
+    const questions=[
+      'आप अस्पताल में सूचना की उपलब्धता, जैसे साइनबोर्ड और विभिन्न योजनाओं के विवरण को कैसे आंकेंगे?',
+      'पंजीकरण काउंटर पर प्रतीक्षा समय का आप कैसे मूल्यांकन करेंगे?',
+      'आप अस्पताल के कर्मचारियों के रवैये और व्यवहार का कैसे आँकलन करेंगे?',
+      'आप प्रतीक्षा क्षेत्र में कुर्सियों, पंखों, पीने के पानी और बाथरूम और शौचालयों की सफाई सहित सुविधाओं का कैसे आँकलन करेंगे?',
+      'डॉक्टरों के रवैये और संचार का कैसे आँकलन करेंगे?',
+      'आप डॉक्टरों द्वारा परामर्श, जांच और काउंसलिंग पर दिए गए समय का कैसे आँकलन करेंगे?',
+      'आप अस्पताल के भीतर लैब और रेडियोलॉजी जांच सुविधाओं की उपलब्धता का कैसे आँकलन करेंगे?',
+      'आप दवा वितरण काउंटर पर तत्परता का कैसे आँकलन करेंगे?',
+      'आप अस्पताल की डिस्पेंसरी में निर्धारित दवाओं की उपलब्धता का कैसे आँकलन करेंगे?',
+      'अस्पताल में अपनी यात्रा के दौरान कुल मिलाकर आपकी संतुष्टि का स्तर क्या था?'
+    ],ratings={1:'बहुत बुरा',2:'सामान्य',3:'अच्छा',4:'बहुत अच्छा',5:'उत्कृष्ट'},answers=Array(questions.length).fill(null);let current=0;
+    const $=s=>document.querySelector(s);
+    let hindiVoice=null,activeSpeech=null;
+    const loadVoices=()=>{const voices=window.speechSynthesis?.getVoices?.()||[];hindiVoice=voices.find(v=>/^hi([_-]|$)/i.test(v.lang))||voices.find(v=>/hindi|हिंदी/i.test(v.name))||null};
+    if('speechSynthesis'in window){loadVoices();window.speechSynthesis.onvoiceschanged=loadVoices}
+    const say=text=>{
+      if(!('speechSynthesis'in window)){ $('#selection').textContent='इस ब्राउज़र में आवाज़ उपलब्ध नहीं है। कृपया Chrome, Edge या Firefox की आवाज़ सेटिंग जांचें।'; return; }
+      window.speechSynthesis.cancel();
+      activeSpeech=new SpeechSynthesisUtterance(text); activeSpeech.lang=hindiVoice?.lang||'hi-IN'; activeSpeech.rate=.9;
+      if(hindiVoice) activeSpeech.voice=hindiVoice;
+      activeSpeech.onend=activeSpeech.onerror=()=>{activeSpeech=null};
+      window.speechSynthesis.resume(); window.speechSynthesis.speak(activeSpeech);
+      window.setTimeout(()=>{if(window.speechSynthesis.paused)window.speechSynthesis.resume()},150);
+    };
+    let activeAudio=null;
+    const playAudio=(filename,fallback)=>{
+      if(activeAudio){activeAudio.pause();activeAudio.currentTime=0}
+      if('speechSynthesis'in window)window.speechSynthesis.cancel();
+      const base=location.protocol==='file:'?'./audio/':'/ui/assets/audio/opd-demo/hi/';
+      activeAudio=new Audio(`${base}${filename}.mp3`);
+      activeAudio.onended=()=>{activeAudio=null};
+      activeAudio.onerror=()=>{activeAudio=null;fallback?.()};
+      activeAudio.play().catch(()=>{activeAudio=null;fallback?.()});
+    };
+    function render(){const answer=answers[current],position=current+1;$('#question').textContent=questions[current];$('#counter').textContent=`प्रश्न ${position} / ${questions.length}`;$('#percent').textContent=`${position*10}%`;$('#bar').style.width=`${position*10}%`;document.querySelectorAll('input[name="rating"]').forEach(i=>i.checked=Number(i.value)===answer);$('#selection').textContent=answer?`आपने ${answer} स्टार — ${ratings[answer]} चुना है।`:'';$('#back').disabled=current===0;$('#next').hidden=current===questions.length-1;$('#finish').hidden=current!==questions.length-1}
+    const navigationHelp=()=>current===0?'दोबारा सुनने के लिए माइक बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं।':'दोबारा सुनने के लिए माइक बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं। पीछे जाने के लिए पीला बटन दबाएं।';
+    $('#listen').onclick=()=>speakCurrentQuestion();
+    document.querySelectorAll('input[name="rating"]').forEach(i=>i.onchange=e=>{answers[current]=Number(e.target.value);render();playAudio(`${current===0?'first-':''}rating-${e.target.value}`,()=>say(`आपने ${e.target.value} स्टार, ${ratings[e.target.value]} चुना है। ${navigationHelp()}`))});
+    const speakCurrentQuestion=()=>playAudio(`Q${current+1}`,()=>say(`${questions[current]} आप 1 से लेकर 5 तक स्टार रेटिंग दे सकते हैं। ${navigationHelp()}`));
+    $('#back').onclick=()=>{if(current>0){current--;render();speakCurrentQuestion()}};$('#next').onclick=()=>{if(!answers[current]){$('#selection').textContent='कृपया आगे बढ़ने से पहले स्टार रेटिंग चुनें।';return}current++;render();speakCurrentQuestion()};$('#finish').onclick=()=>{if(!answers[current]){$('#selection').textContent='कृपया डेमो पूरा करने से पहले स्टार रेटिंग चुनें।';return}$('#survey').hidden=true;$('#complete').hidden=false};$('#restart').onclick=()=>{answers.fill(null);current=0;$('#complete').hidden=true;$('#survey').hidden=false;render()};render();
+  </script>
+</body>
+</html>

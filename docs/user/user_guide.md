@@ -1,6 +1,6 @@
 # User guide
 
-This guide is for authorised Abhipraya administrators who use the Home page, QR Center, Analytics, Reports, and Profile. Public respondents do not need an account; see [Public feedback](#public-feedback) below.
+This guide is for authorised Abhipraya administrators who use the Home page, QR Center, Social Audit, Analytics, Reports, and Profile. Public respondents do not need an account; see [Public feedback](#public-feedback) below.
 
 ## Before you begin
 
@@ -92,6 +92,14 @@ Use **Open analytics** to investigate an alert before taking action. Check:
 5. Preview the QR poster, then download or print it for display at the department.
 
 Use the QR poster only at the selected department. The QR link resolves the facility and department before loading the public survey.
+
+## Social Audit
+
+Use **Social Audit** to generate a community-feedback QR link for a facility and survey date. QR links expire after four hours, except the non-expiring test link for NIN `1234567890`.
+
+Participants select English or Hindi, can play Hindi question audio, and answer one question at a time. Selecting an answer advances the survey after a short pause. For all non-test facilities, one browser device can submit once per QR token. The system stores response context, a device-derived key, and IP address for audit and duplicate prevention; do not use this technical data to identify beneficiaries.
+
+See the dedicated [Social Audit QR survey guide](social_audit.md) for the complete workflow.
 
 ## Analytics
 

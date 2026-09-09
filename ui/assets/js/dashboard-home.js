@@ -47,6 +47,21 @@
       : '\u2014';
   }
 
+  function renderFacilityBreakdown(items) {
+    const host = byId('kpi-facility-breakdown');
+    if (!host) return;
+    const types = Array.isArray(items) ? items.filter((item) => Number(item.configured) > 0) : [];
+    if (!types.length) {
+      host.replaceChildren();
+      return;
+    }
+    host.innerHTML = types.map((item) => {
+      const type = String(item.type || 'Other');
+      const colorKey = type.toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'other';
+      return `<span class="facility-type-${escapeHtml(colorKey)}" title="${escapeHtml(type)}: ${number.format(Number(item.configured) || 0)} configured facilities"><i aria-hidden="true"></i>${escapeHtml(type)} <b>${number.format(Number(item.configured) || 0)}</b></span>`;
+    }).join('');
+  }
+
   function indicatorIconMarkup(icon, fallback = 'bi-exclamation-octagon-fill') {
     if (!icon || typeof icon !== 'object') {
       return `<i class="bi ${fallback}" aria-hidden="true"></i>`;
@@ -104,6 +119,7 @@
 
   function currentFilters() {
     const query = new URLSearchParams();
+    query.set('lang', localStorage.getItem('abhipraya_admin_language') === 'hi' ? '2' : '1');
     [
       ['facility_nin', 'facility-filter'],
       ['department_id', 'department-filter'],
@@ -118,15 +134,18 @@
   }
 
   function setWelcomeName() {
-    const source = $('[data-user-name]');
+    const userSource = $('[data-user-name]');
+    const facilitySource = $('[data-facility-name]');
     const target = $('[data-user-first-name]');
-    if (!source || !target) return;
+    if (!userSource || !target) return;
     const update = () => {
-      const name = source.textContent.trim();
-      if (name && name !== 'Administrator') target.textContent = name.split(/\s+/)[0];
+      const facilityName = facilitySource?.textContent.trim();
+      const userName = userSource.textContent.trim();
+      const name = facilityName && facilityName !== 'Administrator' ? facilityName : userName;
+      if (name && name !== 'Administrator') target.textContent = name;
     };
     update();
-    new MutationObserver(update).observe(source, { childList: true, characterData: true, subtree: true });
+    new MutationObserver(update).observe(userSource, { childList: true, characterData: true, subtree: true });
   }
 
   function renderTrend(items) {
@@ -530,7 +549,10 @@
     return {
       summary: {
         ...(summaryResponse.data?.summary || {}),
-        ...(detailResponse.data?.summary || {})
+        ...(detailResponse.data?.summary || {}),
+        // Do not let score-processing add a facility to the KPI.  The raw
+        // summary count is the distinct NIN count in srvy_responses.
+        facility_count: summaryResponse.data?.summary?.facility_count || 0
       },
       trend: monthlyTrend,
       facilities: responseList.data?.filters?.facilities || summaryResponse.data?.facilities || [],
@@ -561,6 +583,7 @@
       'kpi-facilities',
       `${number.format(Number(model.summary.facility_count) || 0)}/${number.format(Number(model.summary.configured_facility_count) || 0)}`
     );
+    renderFacilityBreakdown(model.summary.facility_type_counts);
     const categoryRisks = categoryRiskItems(model.categories);
     setText('kpi-priority', number.format(indicators.filter((item) => Number(item.score) < 3).length + categoryRisks.length));
 
@@ -578,6 +601,7 @@
 
   function renderFailure() {
     ['kpi-responses', 'kpi-rating', 'kpi-facilities', 'kpi-priority'].forEach((id) => setText(id, '\u2014'));
+    renderFacilityBreakdown([]);
     renderTrend([]);
     renderAlerts([], []);
     renderDepartments([]);
@@ -622,8 +646,6 @@
     }
   }
 
-  const hour = new Date().getHours();
-  setText('greeting-period', hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening');
   setWelcomeName();
   const today = new Date();
   const localIsoDate = (date) => {

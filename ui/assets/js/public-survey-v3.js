@@ -7,6 +7,7 @@
   const suppliedNin = parameters.get('nin') || '';
   const suppliedDepartment = parameters.get('department') || parameters.get('dept') || '';
   const reference = parameters.get('ref') || (suppliedDepartment ? `${suppliedNin}_${suppliedDepartment}` : suppliedNin);
+  const surveyDepartment = (reference.match(/_(\d{1,2})$/) || [])[1] || suppliedDepartment;
 
   let context = null;
   let questions = [];
@@ -16,6 +17,49 @@
   let buttonLabels = { 1: 'Start Survey', 2: 'Previous', 3: 'Next', 4: 'Submit' };
   let verifiedLocation = null;
   const answers = {};
+  let activeAudio = null;
+  let playbackVersion = 0;
+  let cueTimers = [];
+
+  function clearAudioCues() {
+    cueTimers.forEach(window.clearTimeout);
+    cueTimers = [];
+    document.querySelectorAll('.ab-audio-cue').forEach((element) => element.classList.remove('ab-audio-cue'));
+  }
+
+  function cue(selector, delay) {
+    const timer = window.setTimeout(() => {
+      const element = document.querySelector(selector);
+      if (!element || element.hidden) return;
+      element.classList.add('ab-audio-cue');
+      cueTimers.push(window.setTimeout(() => element.classList.remove('ab-audio-cue'), 1300));
+    }, delay);
+    cueTimers.push(timer);
+  }
+
+  function scheduleOpdAudioCues(audio, firstQuestion, selectionAudio) {
+    audio.addEventListener('loadedmetadata', () => {
+      const duration = Number(audio.duration) || 0;
+      if (!duration) return;
+      const speakerAt = selectionAudio ? 0.38 : 0.74;
+      const nextAt = selectionAudio ? 0.65 : 0.87;
+      const backAt = selectionAudio ? 0.84 : 0.95;
+      cue('.ab-survey-read-aloud', duration * speakerAt * 1000);
+      cue('.ab-survey-nav button:last-child', duration * nextAt * 1000);
+      if (!firstQuestion) cue('.ab-survey-nav button:first-child', duration * backAt * 1000);
+    }, { once: true });
+  }
+
+  function stopPlayback() {
+    playbackVersion += 1;
+    clearAudioCues();
+    if (activeAudio) {
+      activeAudio.pause();
+      activeAudio.currentTime = 0;
+      activeAudio = null;
+    }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  }
 
   function apiUrl(path, query) {
     const url = new URL(`/api/v1/public-survey/${path.replace(/\.php$/, '')}`, window.location.origin);
@@ -112,6 +156,158 @@
     return image;
   }
 
+  function isOpdRating(question) {
+    return String(surveyDepartment) === '4' && Number(question.qn) >= 1 && Number(question.qn) <= 10;
+  }
+
+  function isOpdSurvey() {
+    return String(surveyDepartment) === '4';
+  }
+
+  function optionColorIndex(question, option, index) {
+    const isNotAvailed = ['सुविधा नहीं ली', 'Did not avail the service'].includes(String(option.text || '').trim());
+    let colorIndex = { red: 1, orange: 2, yellow: 3, blue: 4, green: 5, purple: 6, teal: 7, indigo: 8, cyan: 9, amber: 10, slate: 11 }[option.color]
+      || (isNotAvailed ? 11 : 0);
+    if (!colorIndex && isOpdSurvey()) {
+      // Published OPD versions created before color metadata retain this palette.
+      colorIndex = isOpdRating(question) && index < 5
+        ? index + 1
+        : [5, 4, 2, 6, 7, 8, 9][index % 7];
+    }
+    return colorIndex;
+  }
+
+  function optionColorName(question, option, index) {
+    const names = language === 2
+      ? ['', 'लाल', 'नारंगी', 'पीला', 'नीला', 'हरा', 'बैंगनी', 'टील', 'इंडिगो', 'सियान', 'एम्बर', 'स्लेटी']
+      : ['', 'red', 'orange', 'yellow', 'blue', 'green', 'purple', 'teal', 'indigo', 'cyan', 'amber', 'slate'];
+    return names[optionColorIndex(question, option, index)] || '';
+  }
+
+  function synthesizeQuestion(question) {
+    if (!('speechSynthesis' in window)) {
+      showError('Read aloud is not supported by this browser.');
+      return;
+    }
+    stopPlayback();
+    if (isOpdRating(question)) {
+      const firstQuestion = Number(question.qn) === 1;
+      const navigation = language === 2
+        ? (firstQuestion ? 'दोबारा सुनने के लिए स्पीकर बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं।' : 'दोबारा सुनने के लिए स्पीकर बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं। पीछे जाने के लिए पीला बटन दबाएं।')
+        : (firstQuestion ? 'To listen again, press the speaker button. To continue, press the green button.' : 'To listen again, press the speaker button. To continue, press the green button. To go back, press the yellow button.');
+      const ratingGuide = language === 2
+        ? 'आप 1 से लेकर 5 तक स्टार रेटिंग दे सकते हैं।'
+        : 'You can give your rating from 1 to 5 stars.';
+      const speech = new SpeechSynthesisUtterance(`${question.ques} ${ratingGuide} ${navigation}`);
+      speech.lang = language === 2 ? 'hi-IN' : 'en-IN';
+      window.speechSynthesis.speak(speech);
+      return;
+    }
+    const generatedScript = (question.options || []).map((option, index) => {
+      const color = optionColorName(question, option, index);
+      return language === 2
+        ? `${option.text} के लिए ${color} बटन दबाएं।`
+        : `For ${option.text}, press the ${color} button.`;
+    }).join(' ');
+    const speech = new SpeechSynthesisUtterance(question.voice_script || `${question.ques}. ${generatedScript}`);
+    speech.lang = language === 2 ? 'hi-IN' : 'en-IN';
+    window.speechSynthesis.speak(speech);
+  }
+
+  function speakQuestion(question) {
+    stopPlayback();
+    const version = playbackVersion;
+    if (isOpdRating(question)) {
+      const audioLanguage = language === 2 ? 'hi' : 'en';
+      const audio = new Audio(`/ui/assets/audio/opd-demo/${audioLanguage}/Q${question.qn}.mp3`);
+      activeAudio = audio;
+      scheduleOpdAudioCues(audio, Number(question.qn) === 1, false);
+      audio.addEventListener('ended', () => { if (activeAudio === audio) activeAudio = null; }, { once: true });
+      audio.addEventListener('error', () => { if (version === playbackVersion) synthesizeQuestion(question); }, { once: true });
+      audio.play().catch(() => { if (version === playbackVersion) synthesizeQuestion(question); });
+      return;
+    }
+    const voicePath = String(question.voice_path || '').replace(/^\/+/, '');
+    if (!voicePath) {
+      synthesizeQuestion(question);
+      return;
+    }
+    const audio = new Audio(`/${voicePath}`);
+    activeAudio = audio;
+    audio.addEventListener('ended', () => { if (activeAudio === audio) activeAudio = null; }, { once: true });
+    let fellBack = false;
+    const fallBackToSynthesis = () => {
+      if (fellBack) return;
+      fellBack = true;
+      synthesizeQuestion(question);
+    };
+    audio.addEventListener('error', fallBackToSynthesis, { once: true });
+    audio.play().catch(fallBackToSynthesis);
+  }
+
+  function playAnswerRequiredPrompt() {
+    const hindi = language === 2;
+    const message = hindi
+      ? 'कृपया आगे बढ़ने से पहले एक स्टार रेटिंग चुनें।'
+      : 'Please select a star rating before continuing.';
+    showError(message);
+    stopPlayback();
+    const audioLanguage = hindi ? 'hi' : 'en';
+    const audio = new Audio(`/ui/assets/audio/opd-demo/${audioLanguage}/select-rating.mp3`);
+    activeAudio = audio;
+    const fallback = () => {
+      if (!('speechSynthesis' in window)) return;
+      const speech = new SpeechSynthesisUtterance(message);
+      speech.lang = hindi ? 'hi-IN' : 'en-IN';
+      window.speechSynthesis.speak(speech);
+    };
+    audio.addEventListener('error', fallback, { once: true });
+    audio.play().catch(fallback);
+  }
+
+  function confirmSelection(option, question) {
+    stopPlayback();
+    const version = playbackVersion;
+    if (isOpdRating(question)) {
+      const prefix = currentIndex === 0 ? 'first-' : '';
+      const audioLanguage = language === 2 ? 'hi' : 'en';
+      const audio = new Audio(`/ui/assets/audio/opd-demo/${audioLanguage}/${prefix}rating-${option.value || (question.options || []).indexOf(option) + 1}.mp3`);
+      activeAudio = audio;
+      scheduleOpdAudioCues(audio, currentIndex === 0, true);
+      audio.addEventListener('ended', () => { if (activeAudio === audio) activeAudio = null; }, { once: true });
+      audio.addEventListener('error', () => { if (version === playbackVersion) synthesizeQuestion(question); }, { once: true });
+      audio.play().catch(() => { if (version === playbackVersion) synthesizeQuestion(question); });
+      return;
+    }
+    const selectedText = String(option.text || '');
+    const generatedMessage = language === 2
+      ? `आपने ${selectedText} चुना है। अगर यह सही है, तो आगे बढ़ें। बदलना हो तो दूसरा बटन दबाएं।`
+      : `You selected ${selectedText}. If this is correct, continue. To change it, press another button.`;
+    const speakFallback = () => {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const speech = new SpeechSynthesisUtterance(option.selection_voice_script || generatedMessage);
+      speech.lang = language === 2 ? 'hi-IN' : 'en-IN';
+      window.speechSynthesis.speak(speech);
+    };
+    const voicePath = String(option.selection_voice_path || '').replace(/^\/+/, '');
+    if (!voicePath) {
+      speakFallback();
+      return;
+    }
+    const audio = new Audio(`/${voicePath}`);
+    activeAudio = audio;
+    audio.addEventListener('ended', () => { if (activeAudio === audio) activeAudio = null; }, { once: true });
+    let fellBack = false;
+    const fallBackToSynthesis = () => {
+      if (fellBack) return;
+      fellBack = true;
+      speakFallback();
+    };
+    audio.addEventListener('error', fallBackToSynthesis, { once: true });
+    audio.play().catch(fallBackToSynthesis);
+  }
+
   function currentPosition() {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
@@ -137,6 +333,38 @@
     return status;
   }
 
+  function playOpdLanguagePrompt() {
+    stopPlayback();
+    const version = playbackVersion;
+    let fallbackUsed = false;
+    const speechFallback = () => {
+      if (fallbackUsed || version !== playbackVersion || !('speechSynthesis' in window)) return;
+      fallbackUsed = true;
+      const hindi = new SpeechSynthesisUtterance('कृपया अपनी भाषा चुनें। हिंदी के लिए हरा बटन दबाएं। दोबारा सुनने के लिए स्पीकर बटन दबाएं।');
+      hindi.lang = 'hi-IN';
+      hindi.onend = () => {
+        if (version !== playbackVersion) return;
+        const english = new SpeechSynthesisUtterance('For English, press the orange button. To listen again, press the speaker button.');
+        english.lang = 'en-IN';
+        window.speechSynthesis.speak(english);
+      };
+      window.speechSynthesis.speak(hindi);
+    };
+    const englishAudio = new Audio('/ui/assets/audio/opd-demo/hi/language-select-en.mp3');
+    const playEnglish = () => {
+      if (version !== playbackVersion) return;
+      activeAudio = englishAudio;
+      englishAudio.addEventListener('ended', () => { if (activeAudio === englishAudio) activeAudio = null; }, { once: true });
+      englishAudio.addEventListener('error', speechFallback, { once: true });
+      englishAudio.play().catch(speechFallback);
+    };
+    const hindiAudio = new Audio('/ui/assets/audio/opd-demo/hi/language-select-hi.mp3');
+    activeAudio = hindiAudio;
+    hindiAudio.addEventListener('ended', playEnglish, { once: true });
+    hindiAudio.addEventListener('error', speechFallback, { once: true });
+    hindiAudio.play().catch(speechFallback);
+  }
+
   function renderLanguageChoice(location) {
     clearError();
     const view = document.createElement('section');
@@ -155,19 +383,30 @@
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'ab-language-button';
+      if (isOpdSurvey()) button.classList.add(code === 2 ? 'ab-language-button--opd-hindi' : 'ab-language-button--opd-english');
       button.lang = code === 2 ? 'hi' : 'en';
       button.textContent = label;
       button.addEventListener('click', async () => {
+        stopPlayback();
         language = code;
-        await loadQuestions();
+        await loadQuestions(true);
       });
       actions.appendChild(button);
     });
     view.appendChild(actions);
+    if (isOpdSurvey()) {
+      const replay = document.createElement('button');
+      replay.type = 'button';
+      replay.className = 'ab-language-read-aloud';
+      replay.textContent = '🔊 भाषा सुनें / Listen';
+      replay.addEventListener('click', playOpdLanguagePrompt);
+      view.appendChild(replay);
+    }
     root.replaceChildren(view);
+    if (isOpdSurvey()) playOpdLanguagePrompt();
   }
 
-  async function loadQuestions() {
+  async function loadQuestions(autoPlayFirstQuestion = false) {
     clearError();
     root.textContent = 'Loading questions\u2026';
     try {
@@ -183,47 +422,87 @@
       if (!questions.length) {
         throw new Error('No survey questions are available.');
       }
-      renderQuestion();
+      renderQuestion(autoPlayFirstQuestion && isOpdSurvey());
     } catch (error) {
       showError(error.message || 'Unable to load questions.');
       root.textContent = '';
     }
   }
 
-  function renderQuestion() {
+  function renderQuestion(autoPlayQuestion = false) {
     clearError();
     const question = questions[currentIndex];
     const view = document.createElement('section');
     view.className = 'ab-survey-view';
+    if (isOpdRating(question)) view.classList.add('ab-survey-view--opd-stars');
     view.appendChild(brand(false));
-    view.appendChild(questionIcon(question));
+    if (!isOpdRating(question)) view.appendChild(questionIcon(question));
 
     const title = document.createElement('h1');
     title.className = 'ab-survey-question';
     title.textContent = question.ques;
 
+    const readAloud = document.createElement('button');
+    readAloud.type = 'button';
+    readAloud.className = 'ab-survey-read-aloud';
+    readAloud.setAttribute('aria-label', language === 2 ? 'प्रश्न सुनें' : 'Listen to question');
+    readAloud.title = language === 2 ? 'प्रश्न सुनें' : 'Listen to question';
+    readAloud.textContent = '🔊';
+    readAloud.addEventListener('click', () => speakQuestion(question));
+
+    const questionCard = document.createElement('div');
+    questionCard.className = 'ab-survey-question-card';
+    questionCard.append(title, readAloud);
+
     const options = document.createElement('fieldset');
     options.className = 'ab-survey-options';
+    if (isOpdRating(question)) options.classList.add('ab-opd-stars');
     const legend = document.createElement('legend');
     legend.className = 'visually-hidden';
     legend.textContent = question.ques;
     options.appendChild(legend);
+    if (isOpdRating(question)) {
+      const ratingTitle = document.createElement('p');
+      ratingTitle.className = 'ab-opd-rating-title';
+      ratingTitle.textContent = language === 2 ? 'रेटिंग देने के लिए स्टार पर दबाएं' : 'Tap a star to give your rating';
+      options.appendChild(ratingTitle);
+    }
 
-    (question.options || []).forEach((option, index) => {
+    const displayOptions = isOpdRating(question)
+      ? (question.options || []).slice(0, 5).reverse()
+      : (question.options || []);
+    displayOptions.forEach((option, index) => {
       const label = document.createElement('label');
       label.className = 'ab-survey-option';
+      if (isOpdRating(question)) label.classList.add('ab-survey-star-option');
+      const colorIndex = optionColorIndex(question, option, index);
+      if (colorIndex) {
+        label.classList.add(`ab-survey-option--rating-${colorIndex}`);
+      }
       const radio = document.createElement('input');
       radio.type = 'radio';
       radio.name = `q_${question.qn}`;
       const configuredValue = Number(option.value);
-      radio.value = String(Number.isInteger(configuredValue) ? configuredValue : index + 1);
+      const optionPosition = (question.options || []).indexOf(option) + 1;
+      radio.value = String(Number.isInteger(configuredValue) ? configuredValue : optionPosition);
       radio.checked = String(answers[question.qn] || '') === radio.value;
-      radio.addEventListener('change', () => { answers[question.qn] = radio.value; });
+      radio.addEventListener('change', () => {
+        answers[question.qn] = radio.value;
+        confirmSelection(option, question);
+      });
       const text = document.createElement('span');
-      text.textContent = option.text;
+      text.textContent = isOpdRating(question) ? '★' : option.text;
       label.append(radio, text);
       options.appendChild(label);
     });
+    if (isOpdRating(question)) {
+      const scale = document.createElement('p');
+      scale.className = 'ab-opd-rating-scale';
+      scale.textContent = language === 2
+        ? '1 ★ बहुत बुरा · 2 ★ सामान्य · 3 ★ अच्छा · 4 ★ बहुत अच्छा · 5 ★ उत्कृष्ट'
+        : '1 ★ Very Poor · 2 ★ Average · 3 ★ Good · 4 ★ Very Good · 5 ★ Excellent';
+      options.appendChild(scale);
+    }
 
     const navigation = document.createElement('nav');
     navigation.className = 'ab-survey-nav';
@@ -235,7 +514,7 @@
     previous.hidden = currentIndex === 0;
     previous.addEventListener('click', () => {
       currentIndex -= 1;
-      renderQuestion();
+      renderQuestion(true);
     });
 
     const step = document.createElement('p');
@@ -249,20 +528,34 @@
       : (buttonLabels[3] || 'Next');
     next.addEventListener('click', async () => {
       if (!answers[question.qn]) {
-        showError('Please select an answer before continuing.');
+        if (isOpdRating(question)) {
+          playAnswerRequiredPrompt();
+        } else {
+          showError(language === 2 ? 'कृपया आगे बढ़ने से पहले एक उत्तर चुनें।' : 'Please select an answer before continuing.');
+        }
         return;
       }
       if (currentIndex < questions.length - 1) {
         currentIndex += 1;
-        renderQuestion();
+        renderQuestion(true);
         return;
       }
       await submitSurvey(next);
     });
 
     navigation.append(previous, step, next);
-    view.append(title, options, navigation);
+    if (isOpdRating(question)) {
+      const surveyCard = document.createElement('div');
+      surveyCard.className = 'ab-opd-survey-card';
+      surveyCard.append(questionCard, options);
+      view.append(surveyCard, navigation);
+    } else {
+      view.append(questionCard, options, navigation);
+    }
     root.replaceChildren(view);
+    if (autoPlayQuestion && isOpdRating(question)) {
+      speakQuestion(question);
+    }
   }
 
   async function submitSurvey(button) {
@@ -270,9 +563,13 @@
     button.disabled = true;
     button.textContent = 'Submitting\u2026';
     try {
-      if (!verifiedLocation) {
+      if (context.geo_required && !verifiedLocation) {
         throw new Error('Facility location has not been verified. Please scan the QR code again.');
       }
+      const locationPayload = context.geo_required ? {
+        latitude: verifiedLocation.latitude,
+        longitude: verifiedLocation.longitude,
+      } : {};
       const submitted = await request(apiUrl('submit.php'), {
         method: 'POST',
         credentials: 'same-origin',
@@ -284,8 +581,7 @@
           survey_schema_hash: surveyIdentity?.survey_schema_hash || '',
           lang: language,
           device_id: deviceId(),
-          latitude: verifiedLocation.latitude,
-          longitude: verifiedLocation.longitude,
+          ...locationPayload,
           answers,
         }),
       });
@@ -324,6 +620,10 @@
     }
     try {
       context = await request(apiUrl('resolve.php', { ref: reference }));
+      if (!context.geo_required) {
+        renderLanguageChoice({ within_radius: true, distance_meters: 0, allowed_radius_meters: 0 });
+        return;
+      }
       root.textContent = 'Checking your distance from the facility\u2026';
       const position = await currentPosition();
       verifiedLocation = {

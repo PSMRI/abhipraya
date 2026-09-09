@@ -39,6 +39,7 @@ Review and apply the migrations in `api/database/migrations/` in a controlled en
 | `20260725_capa_survey_versioning.sql` | Associates CAPA records with survey version information. |
 | `20260725_capa_scope_index.sql` | Adds CAPA lookup/index support for scoped operational use. |
 | `20260728_core_performance_indexes.php` | Adds missing scoped user, response/survey, and CAPA performance indexes safely. |
+| `20260812_capa_schema_compatibility.php` | Idempotently upgrades legacy CAPA tables to the versioned CAPA schema; use this for existing deployments before releasing the CAPA API. |
 
 ## Safe migration process
 

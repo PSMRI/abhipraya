@@ -17,7 +17,7 @@ try {
         ],
         'department' => ['id' => $context['department']['departmentId'], 'name' => $context['department']['departmentName']],
         'languages' => [1, 2],
-        'geo_required' => true,
+        'geo_required' => $context['geo_required'],
         'geo_radius_meters' => $context['geo_radius_meters'],
         'duplicate_window_hours' => $context['duplicate_window_hours'],
     ]);

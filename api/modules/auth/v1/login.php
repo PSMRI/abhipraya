@@ -140,7 +140,7 @@ try {
     $password = (string) $request['password'];
     enforceLoginLock($con, $username);
     $statement = $con->prepare(
-        'SELECT u_id, u_name, u_pass, NIN_fk, active, u_role, u_identity
+        'SELECT u_id, u_name, u_pass, NIN_fk, active, u_role, u_identity, district_code, block_code
          FROM user_master
          WHERE u_name = ?
          LIMIT 1'
@@ -185,6 +185,8 @@ try {
         'role_id' => (int) $user['u_role'],
         'fac_id' => (int) $user['NIN_fk'],
         'dept_id' => (int) $user['u_identity'],
+        'dist_id' => (int) ($user['district_code'] ?? 0),
+        'block_id' => (int) ($user['block_code'] ?? 0),
     ]);
 
     Response::success('Login successful', [

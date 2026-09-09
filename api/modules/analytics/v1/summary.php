@@ -5,11 +5,12 @@ require_once dirname(__DIR__, 3) . '/public_api.php';
 require_once dirname(__DIR__, 3) . '/assets/conn/db.php';
 require_once dirname(__DIR__, 3) . '/helpers/SurveyConfig.php';
 require_once dirname(__DIR__, 3) . '/helpers/RatingScale.php';
+require_once dirname(__DIR__, 3) . '/helpers/AccessScope.php';
 
 Security::requireMethod('GET');
 SessionManager::requireLogin();
 
-if (!in_array(SessionManager::roleId(), [1, 2, 3], true)) {
+if (!in_array(SessionManager::roleId(), [1, 2, 3, 7, 8], true)) {
     Response::forbidden('Your role is not allowed to view feedback analytics.');
 }
 
@@ -20,6 +21,7 @@ function analyticsFilters(): array
     $from = trim((string) ($_GET['from'] ?? ''));
     $to = trim((string) ($_GET['to'] ?? ''));
     $surveyVersion = trim((string) ($_GET['survey_version'] ?? ''));
+    $districtId = trim((string) ($_GET['district_id'] ?? ''));
 
     if ($facilityNin !== '' && !preg_match('/^\d{6,20}$/', $facilityNin)) {
         Response::validation(['facility_nin' => 'Select a valid facility.']);
@@ -29,6 +31,9 @@ function analyticsFilters(): array
     }
     if ($surveyVersion !== '' && !preg_match('/^\d+\.\d+(?:\.\d+)?$/', $surveyVersion)) {
         Response::validation(['survey_version' => 'Select a valid survey version.']);
+    }
+    if ($districtId !== '' && !preg_match('/^[A-Za-z0-9_-]{1,30}$/', $districtId)) {
+        Response::validation(['district_id' => 'Select a valid district.']);
     }
     foreach (['from' => $from, 'to' => $to] as $field => $value) {
         if ($value !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
@@ -42,10 +47,16 @@ function analyticsFilters(): array
         }
         $facilityNin = $assigned;
     }
-    return [$facilityNin, $departmentId, $from, $to, $surveyVersion];
+    return [$facilityNin, $departmentId, $from, $to, $surveyVersion, $districtId];
 }
 
-function analyticsWhere(string $facilityNin, string $departmentId, string $from, string $to): array
+function analyticsLanguage(): int
+{
+    $language = (int) ($_GET['lang'] ?? 1);
+    return in_array($language, [1, 2], true) ? $language : 1;
+}
+
+function analyticsWhere(string $facilityNin, string $departmentId, string $from, string $to, string $districtId = ''): array
 {
     $where = [];
     $types = '';
@@ -54,6 +65,19 @@ function analyticsWhere(string $facilityNin, string $departmentId, string $from,
     if ($departmentId !== '') { $where[] = 'department_id = ?'; $types .= 's'; $values[] = $departmentId; }
     if ($from !== '') { $where[] = 'srvy_rpl_dt >= ?'; $types .= 's'; $values[] = $from . ' 00:00:00'; }
     if ($to !== '') { $where[] = 'srvy_rpl_dt < DATE_ADD(?, INTERVAL 1 DAY)'; $types .= 's'; $values[] = $to; }
+    if ($districtId !== '') {
+        $districtFacilities = [];
+        foreach (SurveyConfig::facilities() as $facility) {
+            if ((string) ($facility['districtCode'] ?? '') === $districtId) $districtFacilities[] = (string) ($facility['facilityNIN'] ?? '');
+        }
+        if ($districtFacilities === []) {
+            $where[] = '1 = 0';
+        } else {
+            $where[] = 'hospital_nin IN (' . implode(',', array_fill(0, count($districtFacilities), '?')) . ')';
+            $types .= str_repeat('s', count($districtFacilities));
+            foreach ($districtFacilities as $districtFacility) $values[] = $districtFacility;
+        }
+    }
     return [$where === [] ? '1=1' : implode(' AND ', $where), $types, $values];
 }
 
@@ -144,8 +168,19 @@ function analyticsSurveyVersionColumnAvailable(mysqli $connection): bool
 }
 
 try {
-    [$facilityNin, $departmentId, $from, $to, $surveyVersionFilter] = analyticsFilters();
-    [$where, $types, $values] = analyticsWhere($facilityNin, $departmentId, $from, $to);
+    [$facilityNin, $departmentId, $from, $to, $surveyVersionFilter, $districtId] = analyticsFilters();
+    $analyticsLanguage = analyticsLanguage();
+    [$where, $types, $values] = analyticsWhere($facilityNin, $departmentId, $from, $to, $districtId);
+    $allowedNins = AccessScope::facilityNins();
+    if ($allowedNins !== null) {
+        if ($allowedNins === []) {
+            $where .= ' AND 1 = 0';
+        } else {
+            $where .= ' AND hospital_nin IN (' . implode(',', array_fill(0, count($allowedNins), '?')) . ')';
+            $types .= str_repeat('s', count($allowedNins));
+            array_push($values, ...$allowedNins);
+        }
+    }
     $versioningEnabled = analyticsSurveyVersionColumnAvailable($con);
     $availableVersions = SurveyConfig::surveyVersions(
         $departmentId !== '' ? (int) $departmentId : null
@@ -206,9 +241,23 @@ try {
     $summaryStmt->close();
 
     $facilityNames = [];
-    foreach (SurveyConfig::facilities() as $facility) $facilityNames[(string) $facility['facilityNIN']] = (string) $facility['facilityName'];
+    $facilityDistricts = [];
+    $facilityTypes = [];
+    foreach (SurveyConfig::facilities() as $facility) {
+        $nin = (string) ($facility['facilityNIN'] ?? '');
+        $facilityNames[$nin] = (string) ($facility['facilityName'] ?? $nin);
+        $districtCode = trim((string) ($facility['districtCode'] ?? ''));
+        $districtName = '';
+        $address = (string) ($facility['facilityAddress'] ?? '');
+        if (preg_match('/^(.*)\\s+DISTRICT\\b/i', $address, $matches)) {
+            $parts = explode(',', trim($matches[1]));
+            $districtName = trim((string) end($parts));
+        }
+        $facilityDistricts[$nin] = ['district_code' => $districtCode !== '' ? $districtCode : 'unknown', 'district_name' => $districtName !== '' ? $districtName : ($districtCode !== '' ? 'District ' . $districtCode : 'District not specified')];
+        $facilityTypes[$nin] = trim((string) ($facility['facilityType'] ?? '')) ?: 'Other';
+    }
     $departmentNames = [];
-    foreach (SurveyConfig::departments() as $department) $departmentNames[(string) $department['departmentId']] = (string) $department['departmentName'];
+    foreach (SurveyConfig::departments($analyticsLanguage) as $department) $departmentNames[(string) $department['departmentId']] = (string) $department['departmentName'];
 
     if ((string) ($_GET['summary_only'] ?? '') === '1') {
         $facilityCounts = [];
@@ -219,6 +268,8 @@ try {
                 $facilityCounts[$nin] = [
                     'facility_nin' => $nin,
                     'facility_name' => $facilityNames[$nin] ?? $nin,
+                    'district_code' => $facilityDistricts[$nin]['district_code'] ?? 'unknown',
+                    'district_name' => $facilityDistricts[$nin]['district_name'] ?? 'District not specified',
                     'responses' => 0,
                     'score' => null,
                 ];
@@ -228,6 +279,18 @@ try {
         $facilities = array_values($facilityCounts);
         usort($facilities, static fn(array $left, array $right): int => $right['responses'] <=> $left['responses']);
         $totalResponses = array_sum(array_map(static fn(array $row): int => (int) $row['responses'], $facilities));
+        $facilityTypeCounts = [];
+        foreach ($facilityTypes as $type) {
+            $facilityTypeCounts[$type] = $facilityTypeCounts[$type] ?? ['type' => $type, 'configured' => 0, 'reporting' => 0];
+            $facilityTypeCounts[$type]['configured']++;
+        }
+        foreach ($facilityCounts as $nin => $_) {
+            $type = $facilityTypes[$nin] ?? 'Other';
+            $facilityTypeCounts[$type] = $facilityTypeCounts[$type] ?? ['type' => $type, 'configured' => 0, 'reporting' => 0];
+            $facilityTypeCounts[$type]['reporting']++;
+        }
+        $facilityTypeCounts = array_values($facilityTypeCounts);
+        usort($facilityTypeCounts, static fn(array $left, array $right): int => [$right['reporting'], $right['configured'], $left['type']] <=> [$left['reporting'], $left['configured'], $right['type']]);
 
         $trendMonths = (int) ($_GET['trend_months'] ?? 0);
         $monthlyTrend = [];
@@ -247,7 +310,7 @@ try {
         }
 
         Response::success('Facility response summary loaded.', [
-            'summary' => ['total_responses' => $totalResponses, 'score' => null, 'facility_count' => count($facilities), 'configured_facility_count' => count(SurveyConfig::facilities())],
+            'summary' => ['total_responses' => $totalResponses, 'score' => null, 'facility_count' => count($facilities), 'configured_facility_count' => count(SurveyConfig::facilities()), 'facility_type_counts' => $facilityTypeCounts],
             'facilities' => $facilities,
             'monthly_trend' => $monthlyTrend,
             'departments' => [],
@@ -255,7 +318,7 @@ try {
             'categories' => [],
             'available_versions' => $availableVersions,
             'ignored_legacy_groups' => 0,
-            'filters' => ['facility_nin' => $facilityNin, 'department_id' => $departmentId, 'survey_version' => $surveyVersionFilter, 'from' => $from, 'to' => $to],
+            'filters' => ['facility_nin' => $facilityNin, 'district_id' => $districtId, 'department_id' => $departmentId, 'survey_version' => $surveyVersionFilter, 'from' => $from, 'to' => $to],
         ]);
     }
 
@@ -283,7 +346,7 @@ try {
         if (!preg_match('/^\d{6,20}_\d{1,2}$/', $reference)) continue;
         try {
             $context = SurveyConfig::resolveReference($reference, $surveyVersion);
-            $questions = SurveyConfig::questions($context, 1);
+            $questions = SurveyConfig::questions($context, $analyticsLanguage);
             $questionsByReference[$versionReference] = $questions;
             $ratingQuestionsByVersion[$dept . '@' . $surveyVersion] = $questions;
         } catch (InvalidArgumentException|RuntimeException) {
@@ -680,7 +743,7 @@ try {
             'last_response' => $group['last_response'],
         ];
         $departmentSummary[] = $departmentRow;
-        if (!isset($facilitySummary[$nin])) $facilitySummary[$nin] = ['facility_nin' => $nin, 'facility_name' => $facilityNames[$nin] ?? $nin, 'responses' => 0, 'score_total' => 0.0, 'score_count' => 0];
+        if (!isset($facilitySummary[$nin])) $facilitySummary[$nin] = ['facility_nin' => $nin, 'facility_name' => $facilityNames[$nin] ?? $nin, 'district_code' => $facilityDistricts[$nin]['district_code'] ?? 'unknown', 'district_name' => $facilityDistricts[$nin]['district_name'] ?? 'District not specified', 'responses' => 0, 'score_total' => 0.0, 'score_count' => 0];
         $facilitySummary[$nin]['responses'] += $responseCount;
         if ($departmentScore !== null) { $facilitySummary[$nin]['score_total'] += $departmentScore * $responseCount; $facilitySummary[$nin]['score_count'] += $responseCount; }
         $totalResponses += $responseCount;
@@ -836,7 +899,7 @@ try {
         'available_versions' => $availableVersions,
         'monthly_performance' => $monthlyPerformance,
         'ignored_legacy_groups' => $ignoredLegacyGroups,
-        'filters' => ['facility_nin' => $facilityNin, 'department_id' => $departmentId, 'survey_version' => $surveyVersionFilter, 'from' => $from, 'to' => $to],
+        'filters' => ['facility_nin' => $facilityNin, 'district_id' => $districtId, 'department_id' => $departmentId, 'survey_version' => $surveyVersionFilter, 'from' => $from, 'to' => $to],
     ]);
 } catch (Throwable $exception) {
     Event::dispatch('analytics.summary.failed', [

@@ -17,6 +17,7 @@ Examples:
 - `/docs/project-overview.md`
 - `/docs/technical-architecture.md`
 - `/docs/user-guide.md`
+- `/docs/user/social_audit.md`
 - `/docs/developer-guide.md`
 - `/docs/security.md`
 - `/docs/dpg-readiness.md`
@@ -30,6 +31,7 @@ The HTML renderer uses a safe allow-list of documents. Documentation files remai
 3. Use the Markdown file's path below `docs/` as its HTML route; for example, `architecture/new-page.md` opens at `/docs/architecture/new-page.md`.
 4. Use relative Markdown links for repository/GitBook readers.
 5. Test the HTML page after reloading the selected web-server/PHP process when PHP or routing files change; recycle the IIS application pool only when using the supplied IIS reference deployment.
+6. Document a new user-facing workflow in both the main user guide and its focused GitBook page.
 
 ## Publishing check
 

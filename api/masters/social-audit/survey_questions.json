@@ -1,0 +1,243 @@
+{
+  "survey_id": "hwc_monthly_feedback",
+  "audio_prompts": {
+    "language_select": {
+      "hi": "ui/assets/audio/social-audit/hi/language_select.mp3",
+      "en": "ui/assets/audio/social-audit/en/language_select.mp3"
+    },
+    "yes": {
+      "hi": "ui/assets/audio/social-audit/hi/yes.mp3",
+      "en": "ui/assets/audio/social-audit/en/yes.mp3"
+    },
+    "no": {
+      "hi": "ui/assets/audio/social-audit/hi/no.mp3",
+      "en": "ui/assets/audio/social-audit/en/no.mp3"
+    },
+    "dk": {
+      "hi": "ui/assets/audio/social-audit/hi/dk.mp3",
+      "en": "ui/assets/audio/social-audit/en/dk.mp3"
+    },
+     "thank_you": {
+    "hi": "ui/assets/audio/social-audit/hi/thanks.mp3",
+    "en": "ui/assets/audio/social-audit/en/thanks.mp3"
+  }
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "type": "yes_no",
+      "text": {
+        "en": "Is CHO available at SC-HWC regularly?",
+        "hi": "क्या सीएचओ (CHO) एससी-एचडब्ल्यूसी (SC-HWC) पर नियमित रूप से उपलब्ध रहते हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q1.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q1.mp3"
+      }
+    },
+    {
+      "id": "Q2",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are outpatient (OPD) services for fever, cough, diarrhea, minor injuries, etc. provided regularly?",
+        "hi": "क्या बुखार, खाँसी, दस्त, हल्की चोट आदि के लिए बाह्य रोगी (OPD) सेवाएँ नियमित रूप से उपलब्ध हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q2.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q2.mp3"
+      }
+    },
+    {
+      "id": "Q3",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are ANC services provided in your area regularly?",
+        "hi": "क्या आपके क्षेत्र में एएनसी (ANC) सेवाएँ नियमित रूप से प्रदान की जाती हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q3.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q3.mp3"
+      }
+    },
+    {
+      "id": "Q4",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are normal deliveries conducted at centre regularly? Special emphasis on inclusivity of services",
+        "hi": "क्या केन्द्र पर सामान्य प्रसव नियमित रूप से कराए जाते हैं? सेवाओं की समावेशन-उन्मुखता (Inclusivity) पर विशेष जोर दिया जाता है या नहीं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q4.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q4.mp3"
+      }
+    },
+    {
+      "id": "Q5",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are immunization services provided in your area regularly?",
+        "hi": "क्या आपके क्षेत्र में टीकाकरण सेवाएँ नियमित रूप से प्रदान की जाती हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q5.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q5.mp3"
+      }
+    },
+    {
+      "id": "Q6",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are Family Planning services available in your area regularly?",
+        "hi": "क्या आपके क्षेत्र में परिवार नियोजन सेवाएँ नियमित रूप से उपलब्ध हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q6.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q6.mp3"
+      }
+    },
+    {
+      "id": "Q7",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Is Tuberculosis testing and treatment available at HWC regularly?",
+        "hi": "क्या एचडब्ल्यूसी (HWC) पर क्षय रोग (टीबी) की जाँच और उपचार नियमित रूप से उपलब्ध है?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q7.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q7.mp3"
+      }
+    },
+    {
+      "id": "Q8",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are testing services for chronic conditions, such as, diabetes, hypertension and cancers provided at HWC regularly?",
+        "hi": "क्या एचडब्ल्यूसी पर मधुमेह, उच्च रक्तचाप और कैंसर जैसी दीर्घकालिक बीमारियों की जाँच सेवाएँ नियमित रूप से उपलब्ध हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q8.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q8.mp3"
+      }
+    },
+    {
+      "id": "Q9",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are patients of Diabetes, Hypertension followed up regularly?",
+        "hi": "क्या मधुमेह और उच्च रक्तचाप के रोगियों की नियमित रूप से फॉलो-अप जाँच की जाती है?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q9.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q9.mp3"
+      }
+    },
+    {
+      "id": "Q10",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are malaria testing services available at HWC regularly?",
+        "hi": "क्या एचडब्ल्यूसी पर मलेरिया की जाँच सेवाएँ नियमित रूप से उपलब्ध हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q10.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q10.mp3"
+      }
+    },
+    {
+      "id": "Q11",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are VHND sessions conducted in your area regularly?",
+        "hi": "क्या आपके क्षेत्र में वीएचएनडी (VHND) सत्र नियमित रूप से आयोजित किए जाते हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q11.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q11.mp3"
+      }
+    },
+    {
+      "id": "Q12",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are yoga sessions conducted at HWC regularly?",
+        "hi": "क्या एचडब्ल्यूसी पर योग सत्र नियमित रूप से आयोजित किए जाते हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q12.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q12.mp3"
+      }
+    },
+    {
+      "id": "Q13",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Is referral transport facility available in your area regularly?",
+        "hi": "क्या आपके क्षेत्र में रेफरल परिवहन सुविधा नियमित रूप से उपलब्ध है?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q13.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q13.mp3"
+      }
+    },
+    {
+      "id": "Q14",
+      "type": "yes_no_dk",
+      "text": {
+        "en": "Are medicines available at HWC regularly for fever, cold, diarrhea, diabetes, hypertension and other ailments?",
+        "hi": "क्या एचडब्ल्यूसी पर बुखार, सर्दी, दस्त, मधुमेह, उच्च रक्तचाप तथा अन्य रोगों के लिए दवाएँ नियमित रूप से उपलब्ध रहती हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q14.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q14.mp3"
+      }
+    },
+    {
+      "id": "Q15",
+      "type": "yes_no",
+      "text": {
+        "en": "Are you happy with the staff behavior at HWC?",
+        "hi": "क्या आप एचडब्ल्यूसी पर स्टाफ के व्यवहार से संतुष्ट हैं?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q15.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q15.mp3"
+      }
+    },
+    {
+      "id": "Q16",
+      "type": "yes_no",
+      "text": {
+        "en": "Do you incur any expenditure in seeking health services at SHC-HWC?",
+        "hi": "क्या एसएचसी-एचडब्ल्यूसी (SHC-HWC) पर स्वास्थ्य सेवाएँ लेते समय आपका कोई खर्च होता है?"
+      },
+      "audio": {
+        "en": "ui/assets/audio/social-audit/en/Q16.mp3",
+        "hi": "ui/assets/audio/social-audit/hi/Q16.mp3"
+      }
+    }
+  ],
+  "answer_options": {
+    "yes_no": {
+      "en": [
+        { "value": "yes", "label": "Yes 🙂" },
+        { "value": "no", "label": "No ☹" }
+      ],
+      "hi": [
+        { "value": "yes", "label": "हाँ 🙂" },
+        { "value": "no", "label": "नहीं ☹" }
+      ]
+    },
+    "yes_no_dk": {
+      "en": [
+        { "value": "yes", "label": "Yes 🙂" },
+        { "value": "no", "label": "No ☹" },
+        { "value": "dk", "label": "Don't know 😐" }
+      ],
+      "hi": [
+        { "value": "yes", "label": "हाँ 🙂" },
+        { "value": "no", "label": "नहीं ☹" },
+        { "value": "dk", "label": "पता नहीं 😐" }
+      ]
+    }
+  }
+}

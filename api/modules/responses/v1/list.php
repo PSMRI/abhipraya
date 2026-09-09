@@ -15,6 +15,7 @@ try {
     $from = trim((string) ($_GET['from'] ?? $_GET['date_from'] ?? ''));
     $to = trim((string) ($_GET['to'] ?? $_GET['date_to'] ?? ''));
 
+    $facilityMap = feedbackFacilityMap();
     $where = ['1=1']; $types = ''; $values = [];
     if ($surveyVersion !== '' && !preg_match('/^\d+\.\d+(?:\.\d+)?$/', $surveyVersion)) {
         Response::validation(['survey_version' => 'Select a valid survey version.']);
@@ -31,6 +32,11 @@ try {
         }
         $facilityNin = $assignedFacilityNin;
     }
+    $allowedNins = AccessScope::facilityNins();
+    if ($allowedNins !== null) {
+        if ($allowedNins === []) $where[] = '1 = 0';
+        else { $where[] = 'hospital_nin IN (' . implode(',', array_fill(0, count($allowedNins), '?')) . ')'; $types .= str_repeat('s', count($allowedNins)); array_push($values, ...$allowedNins); }
+    }
     if ($facilityNin !== '') { $where[] = 'hospital_nin = ?'; $types .= 's'; $values[] = $facilityNin; }
     if ($departmentId !== '') { $where[] = 'department_id = ?'; $types .= 's'; $values[] = $departmentId; }
     if ($surveyVersion !== '') {
@@ -38,11 +44,25 @@ try {
         $types .= 's';
         $values[] = $surveyVersion;
     }
-    if ($from !== '') { $where[] = 'DATE(srvy_rpl_dt) >= ?'; $types .= 's'; $values[] = $from; }
-    if ($to !== '') { $where[] = 'DATE(srvy_rpl_dt) <= ?'; $types .= 's'; $values[] = $to; }
+    if ($from !== '') { $where[] = 'srvy_rpl_dt >= ?'; $types .= 's'; $values[] = $from . ' 00:00:00'; }
+    if ($to !== '') { $where[] = 'srvy_rpl_dt < DATE_ADD(?, INTERVAL 1 DAY)'; $types .= 's'; $values[] = $to; }
     if ($search !== '') {
-        $where[] = '(submission_id LIKE ? OR hospital_nin LIKE ? OR CAST(id AS CHAR) LIKE ?)';
-        $like = '%' . $search . '%'; $types .= 'sss'; array_push($values, $like, $like, $like);
+        $matchingNins = [];
+        foreach ($facilityMap as $nin => $facilityName) {
+            if (stripos((string) $nin, $search) !== false || stripos($facilityName, $search) !== false) {
+                $matchingNins[] = (string) $nin;
+            }
+        }
+        $searchWhere = ['submission_id LIKE ?', 'hospital_nin LIKE ?', 'CAST(id AS CHAR) LIKE ?'];
+        $like = '%' . $search . '%';
+        $types .= 'sss';
+        array_push($values, $like, $like, $like);
+        if ($matchingNins !== []) {
+            $searchWhere[] = 'hospital_nin IN (' . implode(',', array_fill(0, count($matchingNins), '?')) . ')';
+            $types .= str_repeat('s', count($matchingNins));
+            array_push($values, ...$matchingNins);
+        }
+        $where[] = '(' . implode(' OR ', $searchWhere) . ')';
     }
 
     $sqlWhere = implode(' AND ', $where);
@@ -62,15 +82,6 @@ try {
     $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     $stmt->close();
 
-    $facilityMap = feedbackFacilityMap();
-    if (SessionManager::roleId() === 2) {
-        $assignedFacilityNin = (string) SessionManager::facilityId();
-        $facilityMap = array_filter(
-            $facilityMap,
-            static fn(string $name, string $nin): bool => hash_equals($assignedFacilityNin, $nin),
-            ARRAY_FILTER_USE_BOTH
-        );
-    }
     $departmentMap = feedbackDepartmentMap();
     $items = array_map(static fn(array $row): array => feedbackPublicRow($row, $facilityMap, $departmentMap), $rows);
     if (in_array($sentiment, ['positive', 'negative', 'neutral'], true)) {

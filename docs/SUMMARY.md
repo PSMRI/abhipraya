@@ -22,6 +22,7 @@
 ## User guide
 
 - [User guide](user/user_guide.md)
+- [Social Audit QR survey](user/social_audit.md)
 - [Home dashboard](user/user_guide.md#home-dashboard)
 
 ## Developer guide

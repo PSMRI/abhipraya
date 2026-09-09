@@ -48,7 +48,7 @@
 
   function displayName(profile) {
     const name = [profile.first_name, profile.middle_name, profile.last_name].filter(Boolean).join(' ').trim();
-    return name || currentUser.full_name || currentUser.u_name || 'Administrator';
+    return currentUser.facility_name || name || currentUser.full_name || currentUser.u_name || 'Administrator';
   }
 
   function updateIdentity(profile) {

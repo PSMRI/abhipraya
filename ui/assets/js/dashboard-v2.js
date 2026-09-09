@@ -21,7 +21,11 @@
     const raw = await response.text();
     let payload = {};
     try { payload = raw ? JSON.parse(raw) : {}; } catch (_) { throw new Error('The server returned an invalid response.'); }
-    if (!response.ok || payload.status !== 'success') throw new Error(payload.message || 'Request failed.');
+    if (!response.ok || payload.status !== 'success') {
+      const error = new Error(payload.message || 'Request failed.');
+      error.status = response.status;
+      throw error;
+    }
     return payload;
   }
 
@@ -201,15 +205,18 @@
     try {
       const payload = await getJson('/api/v1/auth/me');
       const user = payload.data?.user;
-      if (!user || ![1, 2, 3].includes(Number(user.role_id))) throw new Error('Unauthorized');
+      if (!user || ![1, 2, 3, 7, 8].includes(Number(user.role_id))) throw new Error('Unauthorized');
       const roleLabel = String(user.role_name || 'Administrator');
       const username = String(user.u_name || '');
       const displayName = user.full_name || (/^\d+$/.test(username) ? '' : username) || roleLabel;
       document.querySelectorAll('.ab-user, [data-profile-name]').forEach((node) => { node.textContent = displayName; });
       document.getElementById('page-title').textContent = 'Welcome back, ' + displayName;
     } catch (error) {
-      /* Any failed session/user lookup means the admin context is unusable. */
-      window.location.assign('/admin/login?reason=session-expired');
+      if (error?.status === 401 || error?.status === 403) {
+        window.location.assign('/admin/login?reason=session-expired');
+        return;
+      }
+      window.AbhiprayaFeedback?.error('Your session is active, but dashboard user details could not be loaded. Please refresh the page.');
     }
   }
 

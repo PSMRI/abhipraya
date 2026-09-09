@@ -68,7 +68,7 @@
         <p class="ab-wcag-status" role="status" aria-live="polite">Accessibility options ready.</p>
       </div>`;
 
-    const topHeaderActions = document.querySelector('.header-actions');
+    const topHeaderActions = document.querySelector('.header-actions, .feedback-header-actions');
     const compactHeader = document.querySelector('.ab-topbar');
     if (topHeaderActions) {
       topHeaderActions.prepend(menu);

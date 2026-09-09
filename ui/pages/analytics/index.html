@@ -37,6 +37,7 @@
         <a href="/admin/dashboard"><i class="bi bi-house-door" aria-hidden="true"></i>Home</a>
         <a href="/admin/qr"><i class="bi bi-qr-code" aria-hidden="true"></i>QR Center</a>
         <a href="/admin/analytics" aria-current="page"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i>Analytics</a>
+        <a href="/admin/social-audit"><i class="bi bi-people" aria-hidden="true"></i>Social Audit</a>
         <a href="/admin/reports"><i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i>Reports</a>
       </nav>
     </div>
@@ -76,13 +77,13 @@
     </section>
 
     <div class="analysis-tabs" role="tablist" aria-label="Analytics views">
-      <button role="tab" aria-selected="true" aria-controls="panel-overview" id="tab-overview" data-tab="overview"><i class="bi bi-speedometer2" aria-hidden="true"></i>Overview</button>
+      <button role="tab" aria-selected="false" aria-controls="panel-overview" id="tab-overview" data-tab="overview"><i class="bi bi-speedometer2" aria-hidden="true"></i>Overview</button>
       <button role="tab" aria-selected="false" aria-controls="panel-facilities" id="tab-facilities" data-tab="facilities"><i class="bi bi-hospital" aria-hidden="true"></i>Facilities</button>
       <button role="tab" aria-selected="false" aria-controls="panel-departments" id="tab-departments" data-tab="departments"><i class="bi bi-diagram-3" aria-hidden="true"></i>Departments</button>
-      <button role="tab" aria-selected="false" aria-controls="panel-questions" id="tab-questions" data-tab="questions"><i class="bi bi-ui-checks" aria-hidden="true"></i>Indicators</button>
+      <button role="tab" aria-selected="true" aria-controls="panel-questions" id="tab-questions" data-tab="questions"><i class="bi bi-ui-checks" aria-hidden="true"></i>Indicators</button>
     </div>
 
-    <section id="panel-overview" class="tab-panel" role="tabpanel" aria-labelledby="tab-overview">
+    <section id="panel-overview" class="tab-panel" role="tabpanel" aria-labelledby="tab-overview" hidden>
       <div class="overview-grid">
         <article class="surface analysis-panel trend-panel">
           <header class="panel-head"><div><p class="eyebrow">Last 12 months</p><h2 id="trend-title">Feedback trend</h2><p id="trend-description">Monthly response volume and reporting facilities for the selected scope.</p></div></header>
@@ -117,11 +118,11 @@
       </article>
     </section>
 
-    <section id="panel-questions" class="tab-panel" role="tabpanel" aria-labelledby="tab-questions" hidden>
+    <section id="panel-questions" class="tab-panel" role="tabpanel" aria-labelledby="tab-questions">
       <article class="surface analysis-panel">
-        <header class="panel-head"><div><p class="eyebrow">Adaptive visualisation</p><h2>Indicator distributions</h2><p>Each indicator uses the visualisation configured by its question type.</p></div></header>
+        <header class="panel-head"><div><p class="eyebrow">Adaptive visualisation</p><h2>Indicator distributions</h2><p>Review each indicator's short question, icon, and overall rating.</p></div></header>
         <div id="adaptive-indicators" class="adaptive-indicator-grid">
-          <div class="empty">Select a facility to view category, binary, availability, severity and demographic distributions.</div>
+          <div class="empty">Loading OPD indicator performance…</div>
         </div>
       </article>
       <article class="surface analysis-panel">
@@ -131,7 +132,8 @@
     </section>
   </main>
 
-  <script src="/ui/assets/js/app-shell-v2.js"></script>
-  <script src="/ui/assets/js/analytics-home.js?v=20260726-binary-semantics"></script>
+  <script src="/ui/assets/js/admin-language.js?v=20260907-analytics-hindi"></script>
+  <script src="/ui/assets/js/app-shell-v2.js?v=20260909-standard-header"></script>
+<script src="/ui/assets/js/analytics-home.js?v=20260909-all-departments"></script>
 </body>
 </html>

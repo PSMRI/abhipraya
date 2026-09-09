@@ -8,6 +8,10 @@
     return String(option?.textContent || '').trim();
   }
 
+  function optionSearchText(option) {
+    return `${optionLabel(option)} ${String(option?.dataset?.searchText || '')}`.trim();
+  }
+
   function initialize(select) {
     if (!(select instanceof HTMLSelectElement) || instances.has(select)) return;
 
@@ -104,7 +108,7 @@
       list.replaceChildren();
       const matches = [...select.options].filter((option) => {
         if (option.hidden) return false;
-        return !normalized || optionLabel(option).toLocaleLowerCase().includes(normalized);
+        return !normalized || optionSearchText(option).toLocaleLowerCase().includes(normalized);
       });
 
       matches.forEach((option) => {

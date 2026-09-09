@@ -7,49 +7,29 @@
   <title>Home | Abhipraya</title>
   <link rel="stylesheet" href="/ui/assets/vendor/bootstrap-icons/bootstrap-icons.css">
   <link rel="stylesheet" href="/ui/assets/css/tokens-v2.css">
-  <link rel="stylesheet" href="/ui/assets/css/dashboard-home.css?v=20260725-type-aware">
+  <link rel="stylesheet" href="/ui/assets/css/dashboard-home.css?v=20260909-mobile-facility-card">
 </head>
 <body>
   <a class="ab-skip" href="#main">Skip to main content</a>
 
   <header class="app-header">
     <div class="header-primary">
-      <a class="brand" href="/admin/dashboard" aria-label="Abhipraya home">
-        <img src="/ui/assets/img/abhipraya-logo.png" alt="">
-        <span>
-          <strong>Abhipraya</strong>
-          <small>Healthcare experience intelligence</small>
-        </span>
-      </a>
-
+      <a class="brand" href="/admin/dashboard" aria-label="Abhipraya home"><img src="/ui/assets/img/abhipraya-logo.png" alt=""><span><strong>Abhipraya</strong><small>Healthcare experience intelligence</small></span></a>
       <div class="header-actions">
         <span id="data-updated" class="data-updated" aria-live="polite">Updating data...</span>
-        <button class="icon-button" type="button" aria-label="Notifications">
-          <i class="bi bi-bell" aria-hidden="true"></i>
-        </button>
-        <div class="profile">
-          <span class="avatar" data-avatar>A</span>
-          <span class="profile-copy">
-            <strong data-user-name>Administrator</strong>
-            <small data-user-role>Loading role...</small>
-          </span>
-        </div>
+        <button class="icon-button" type="button" aria-label="Notifications"><i class="bi bi-bell" aria-hidden="true"></i></button>
+        <div class="profile"><span class="avatar" data-avatar>A</span><span class="profile-copy"><strong data-user-name>Administrator</strong><small data-user-role>Loading role...</small></span></div>
         <a class="profile-button" href="/admin/account"><i class="bi bi-person-gear" aria-hidden="true"></i><span>My Profile</span></a>
-        <button class="icon-button" type="button" data-logout aria-label="Sign out">
-          <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
-        </button>
+        <button class="icon-button" type="button" data-logout aria-label="Sign out"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></button>
       </div>
     </div>
-
     <div class="nav-row">
-      <button class="mobile-menu-button" type="button" data-topnav-toggle aria-expanded="false" aria-controls="primary-navigation">
-        <i class="bi bi-list" aria-hidden="true"></i>
-        <span>Menu</span>
-      </button>
+      <button class="mobile-menu-button" type="button" data-topnav-toggle aria-expanded="false" aria-controls="primary-navigation"><i class="bi bi-list" aria-hidden="true"></i><span>Menu</span></button>
       <nav id="primary-navigation" class="top-navigation" aria-label="Primary navigation">
         <a href="/admin/dashboard" aria-current="page"><i class="bi bi-house-door" aria-hidden="true"></i>Home</a>
         <a href="/admin/qr"><i class="bi bi-qr-code" aria-hidden="true"></i>QR Center</a>
         <a href="/admin/analytics"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i>Analytics</a>
+        <a href="/admin/social-audit"><i class="bi bi-people" aria-hidden="true"></i>Social Audit</a>
         <a href="/admin/reports"><i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i>Reports</a>
       </nav>
     </div>
@@ -59,25 +39,25 @@
     <section class="home-hero" aria-labelledby="home-title">
       <div>
         <p class="eyebrow">Home</p>
-        <h1 id="home-title">Good <span id="greeting-period">day</span>, <span data-user-first-name>Administrator</span>.</h1>
+        <h1 id="home-title">Welcome, <span data-user-first-name data-facility-name>Administrator</span>.</h1>
         <p>See what needs attention and how beneficiary experience is changing.</p>
       </div>
       <form class="dashboard-filters" id="dashboard-filter-form" aria-label="Dashboard filters">
         <label>
           <span>Facility</span>
-          <select id="facility-filter">
+          <select id="facility-filter" data-search-disabled>
             <option value="">All permitted facilities</option>
           </select>
         </label>
         <label>
           <span>Department</span>
-          <select id="department-filter">
+          <select id="department-filter" data-search-disabled>
             <option value="">All departments</option>
           </select>
         </label>
         <label>
           <span>Survey version</span>
-          <select id="survey-version-filter">
+          <select id="survey-version-filter" data-search-disabled>
             <option value="">All survey versions</option>
           </select>
         </label>
@@ -110,6 +90,7 @@
         <div class="kpi-head"><span>Facilities reporting</span><i class="bi bi-hospital" aria-hidden="true"></i></div>
         <strong id="kpi-facilities" class="skeleton">00/00</strong>
         <small>Coverage in selected period</small>
+        <div id="kpi-facility-breakdown" class="kpi-facility-breakdown" aria-label="Facility type breakdown"></div>
       </article>
       <article class="surface kpi">
         <div class="kpi-head"><span>Priority issues</span><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></div>
@@ -198,7 +179,8 @@
     </section>
   </main>
 
-  <script src="/ui/assets/js/app-shell-v2.js"></script>
-  <script src="/ui/assets/js/dashboard-home.js?v=20260726-facility-scope"></script>
+  <script src="/ui/assets/js/admin-language.js?v=20260908-all-departments"></script>
+  <script src="/ui/assets/js/app-shell-v2.js?v=20260909-no-duplicate-update"></script>
+  <script src="/ui/assets/js/dashboard-home.js?v=20260909-reporting-count"></script>
 </body>
 </html>

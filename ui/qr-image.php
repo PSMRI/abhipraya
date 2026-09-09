@@ -1,23 +1,38 @@
 <?php
 declare(strict_types=1);
+
+$data = trim((string) ($_GET['data'] ?? ''));
+if ($data === '' || strlen($data) > 1000) { http_response_code(400); exit; }
+
 $autoload = dirname(__DIR__) . '/vendor/autoload.php';
 if (is_file($autoload)) {
     require_once $autoload;
     if (class_exists('chillerlan\\QRCode\\QRCode')) {
-        $data = trim((string) ($_GET['data'] ?? ''));
-        if ($data === '' || strlen($data) > 1000) { http_response_code(400); exit; }
-        $options = new \chillerlan\QRCode\QROptions(['outputInterface' => \chillerlan\QRCode\Output\QRGdImagePNG::class, 'eccLevel' => 'M', 'scale' => 8]);
-        header('Content-Type: image/png');
-        header('Cache-Control: private, no-store');
-        $png = (new \chillerlan\QRCode\QRCode($options))->render($data);
-        if (is_string($png) && str_starts_with($png, 'data:image/png;base64,')) $png = base64_decode(substr($png, 22), true);
-        if (!is_string($png) || $png === false) { http_response_code(500); exit; }
-        echo $png;
-        exit;
+        try {
+            /* SVG is generated entirely in PHP. Unlike QRGdImagePNG it does
+             * not require the optional GD extension, which is unavailable on
+             * some production IIS/PHP installations. */
+            $options = new \chillerlan\QRCode\QROptions([
+                'outputInterface' => \chillerlan\QRCode\Output\QRMarkupSVG::class,
+                'outputBase64' => false,
+                'eccLevel' => 'M',
+            ]);
+            $svg = (new \chillerlan\QRCode\QRCode($options))->render($data);
+            $svgStart = ltrim((string) $svg);
+            if (
+                is_string($svg)
+                && (str_starts_with($svgStart, '<svg') || str_starts_with($svgStart, '<?xml'))
+            ) {
+                header('Content-Type: image/svg+xml; charset=utf-8');
+                header('Cache-Control: private, no-store');
+                echo $svg;
+                exit;
+            }
+        } catch (Throwable) {
+            // Continue to the legacy fallback when Composer is incomplete.
+        }
     }
 }
-$data = trim((string) ($_GET['data'] ?? ''));
-if ($data === '' || strlen($data) > 1000) { http_response_code(400); exit; }
 $urls = [
     'https://quickchart.io/qr?size=700&text=' . rawurlencode($data),
     'https://api.qrserver.com/v1/create-qr-code/?size=700x700&data=' . rawurlencode($data),

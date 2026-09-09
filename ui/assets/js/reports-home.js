@@ -4,6 +4,94 @@
   const byId = (id) => document.getElementById(id);
   const number = new Intl.NumberFormat();
   let currentExport = { headers: [], rows: [], fileName: 'abhipraya-report' };
+  let reportFacilities = [];
+  let allReportFacilities = [];
+  let districtByFacility = new Map();
+  let facilitySearchTimer = null;
+
+  function clearFacilitySearch() {
+    const search = byId('report-facility-search');
+    const results = byId('report-facility-results');
+    if (search) search.value = '';
+    if (results) results.hidden = true;
+  }
+
+  function chooseReportFacility(facility) {
+    const select = byId('report-facility');
+    select.replaceChildren(new Option(allFacilitiesLabel(Boolean(byId('report-district').value)), ''));
+    select.add(new Option(facility.facilityName, facility.facilityNIN));
+    select.value = String(facility.facilityNIN);
+    const search = byId('report-facility-search');
+    search.value = facility.facilityName;
+    byId('report-facility-results').hidden = true;
+  }
+
+  function renderFacilitySearchResults(facilities) {
+    const results = byId('report-facility-results');
+    results.replaceChildren();
+    facilities.forEach((facility) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.setAttribute('role', 'option');
+      const name = document.createElement('strong');
+      name.textContent = facility.facilityName || 'Unnamed facility';
+      const meta = document.createElement('small');
+      meta.textContent = `NIN ${facility.facilityNIN}${facility.facilityAddress ? ` · ${facility.facilityAddress}` : ''}`;
+      button.append(name, meta);
+      button.addEventListener('click', () => chooseReportFacility(facility));
+      results.appendChild(button);
+    });
+    results.hidden = facilities.length === 0;
+    byId('report-facility-search').setAttribute('aria-expanded', String(facilities.length > 0));
+  }
+
+  async function searchReportFacilities(query) {
+    const search = String(query || '').trim();
+    if (search.length < 2) {
+      renderFacilitySearchResults([]);
+      return;
+    }
+    const api = window.AbhiprayaUI?.json;
+    if (!api) return;
+    const district = byId('report-district').value;
+    const languageQuery = localStorage.getItem('abhipraya_admin_language') === 'hi' ? '&lang=2' : '';
+    const districtQuery = district ? `&district_id=${encodeURIComponent(district)}` : '';
+    try {
+      const payload = await api(`/api/v1/qr?limit=25&search=${encodeURIComponent(search)}${districtQuery}${languageQuery}`);
+      if (byId('report-facility-search').value.trim() === search) renderFacilitySearchResults(payload.data?.facilities || []);
+    } catch (error) {
+      renderFacilitySearchResults([]);
+    }
+  }
+
+  function allFacilitiesLabel(selectedDistrict = false) {
+    if (localStorage.getItem('abhipraya_admin_language') === 'hi') {
+      return selectedDistrict ? 'चुने गए जिले के सभी स्वास्थ्य केंद्र' : 'सभी अनुमत स्वास्थ्य केंद्र';
+    }
+    return selectedDistrict ? 'All facilities in selected district' : 'All permitted facilities';
+  }
+
+  function updateFacilityOptions(districtCode = '') {
+    const select = byId('report-facility');
+    const selectedFacility = select.value;
+    const selected = String(districtCode || '').trim();
+    const facilities = selected
+      ? reportFacilities.filter((facility) => String(facility.districtCode || '') === selected)
+      : reportFacilities;
+
+    select.replaceChildren(new Option(allFacilitiesLabel(Boolean(selected)), ''));
+    facilities.forEach((facility) => select.add(new Option(facility.facilityName, facility.facilityNIN)));
+    if (facilities.some((facility) => String(facility.facilityNIN) === selectedFacility)) {
+      select.value = selectedFacility;
+    }
+  }
+
+  async function loadDistrictFacilities(districtCode = '') {
+    const selected = String(districtCode || '').trim();
+    reportFacilities = selected ? [] : allReportFacilities;
+    updateFacilityOptions(selected);
+    clearFacilitySearch();
+  }
 
   const escapeHtml = (value) => String(value ?? '').replace(
     /[&<>'"]/g,
@@ -80,12 +168,15 @@
 
   function reportFilters() {
     const query = new URLSearchParams();
+    if (localStorage.getItem('abhipraya_admin_language') === 'hi') query.set('lang', '2');
     const facility = byId('report-facility').value;
+    const district = byId('report-district').value;
     const department = byId('report-department').value;
     const surveyVersion = byId('report-survey-version').value;
     const from = byId('report-from').value;
     const to = byId('report-to').value;
     if (facility) query.set('facility_nin', facility);
+    if (district) query.set('district_id', district);
     if (department) query.set('department_id', department);
     if (surveyVersion) query.set('survey_version', surveyVersion);
     if (from) query.set('from', from);
@@ -115,6 +206,21 @@
       score: group.weight ? group.weighted / group.weight : null,
       facilities: group.facilities.size
     }));
+  }
+
+  function aggregateDistricts(items) {
+    const groups = new Map();
+    items.forEach((item) => {
+      const code = String(item.district_code || 'unknown');
+      if (!groups.has(code)) groups.set(code, { name: item.district_name || 'District not specified', facilities: new Set(), responses: 0, weighted: 0, weight: 0 });
+      const group = groups.get(code);
+      const responses = Number(item.responses) || 0;
+      const score = Number(item.score);
+      group.facilities.add(String(item.facility_nin || item.facility_name || code));
+      group.responses += responses;
+      if (Number.isFinite(score)) { group.weighted += score * responses; group.weight += responses; }
+    });
+    return [...groups.values()].map((group) => ({ name: group.name, facilities: group.facilities.size, responses: group.responses, score: group.weight ? group.weighted / group.weight : null }));
   }
 
   function aggregateIndicators(items) {
@@ -194,6 +300,11 @@
         const score = Number(item.score);
         return `<tr><td>${escapeHtml(item.facility_name)}</td><td>${number.format(Number(item.responses) || 0)}</td><td>${scoreBadge(score)}</td></tr>`;
       });
+    } else if (type === 'districts') {
+      headers = ['District', 'Reporting facilities', 'Responses', 'Average score'];
+      const items = aggregateDistricts(data.facilities).sort((left, right) => left.name.localeCompare(right.name));
+      rows = items.map((item) => [item.name, item.facilities, item.responses, item.score === null ? '' : item.score.toFixed(1)]);
+      htmlRows = items.map((item) => `<tr><td>${escapeHtml(item.name)}</td><td>${number.format(item.facilities)}</td><td>${number.format(item.responses)}</td><td>${scoreBadge(Number(item.score))}</td></tr>`);
     } else if (type === 'questions') {
       headers = ['Indicator', 'Type', 'Facilities', 'Departments', 'Valid responses', 'Average score'];
       const items = [...data.indicators].filter((item) => Number.isFinite(Number(item.score))).sort((left, right) => Number(left.score) - Number(right.score));
@@ -276,11 +387,12 @@
   function contextLabel() {
     const type = byId('report-type').selectedOptions[0].textContent;
     const facility = byId('report-facility').selectedOptions[0].textContent;
+    const district = byId('report-district').selectedOptions[0].textContent;
     const department = byId('report-department').selectedOptions[0].textContent;
     const surveyVersion = byId('report-survey-version').selectedOptions[0].textContent;
     const from = byId('report-from').value;
     const to = byId('report-to').value;
-    const scope = [facility, department, surveyVersion].filter((value) => !/^All /.test(value)).join(' \u00b7 ') || 'All permitted data';
+    const scope = [district, facility, department, surveyVersion].filter((value) => !/^All /.test(value)).join(' \u00b7 ') || 'All permitted data';
     const period = from || to ? `${from || 'Beginning'} to ${to || 'Today'}` : 'All available dates';
     return { type, scope, period };
   }
@@ -358,18 +470,21 @@
   async function loadConfiguration() {
     const api = window.AbhiprayaUI?.json;
     if (!api) return;
+    const languageQuery = localStorage.getItem('abhipraya_admin_language') === 'hi' ? '&lang=2' : '';
     try {
       const [payload, versionPayload] = await Promise.all([
-        api('/api/v1/qr?limit=500'),
-        api('/api/v1/analytics/summary?summary_only=1')
+        api(`/api/v1/qr?limit=1${languageQuery}`),
+        api(`/api/v1/analytics/summary?summary_only=1${languageQuery}`)
       ]);
-      const facilities = payload.data?.facilities || [];
       const departments = payload.data?.departments || [];
       const versions = versionPayload.data?.available_versions || [];
-      facilities.forEach((item) => byId('report-facility').add(new Option(item.facilityName, item.facilityNIN)));
       departments.forEach((item) => byId('report-department').add(new Option(item.departmentName, item.departmentId)));
       versions.forEach((version) => byId('report-survey-version').add(new Option(`Version ${version}`, version)));
-      if (facilities.length === 1) byId('report-facility').value = facilities[0].facilityNIN;
+      districtByFacility = new Map();
+      allReportFacilities = [];
+      reportFacilities = allReportFacilities;
+      updateFacilityOptions();
+      (payload.data?.districts || []).forEach((district) => byId('report-district').add(new Option(district.districtName, district.districtCode)));
     } catch (error) {
       showError(error.message || 'Unable to load report settings.');
     }
@@ -379,6 +494,28 @@
   byId('report-to').value = isoDate(now);
   byId('report-from').value = isoDate(new Date(now.getFullYear(), now.getMonth(), 1));
   byId('report-form').addEventListener('submit', generateReport);
+  byId('report-type').addEventListener('change', () => {
+    const districtReport = byId('report-type').value === 'districts';
+    byId('report-district-field').hidden = !districtReport;
+    if (!districtReport) {
+      byId('report-district').value = '';
+      loadDistrictFacilities();
+    }
+  });
+  byId('report-district').addEventListener('change', (event) => loadDistrictFacilities(event.target.value));
+  byId('report-facility-search').addEventListener('input', (event) => {
+    window.clearTimeout(facilitySearchTimer);
+    const query = event.target.value;
+    if (!query.trim()) {
+      byId('report-facility').value = '';
+      renderFacilitySearchResults([]);
+      return;
+    }
+    facilitySearchTimer = window.setTimeout(() => searchReportFacilities(query), 220);
+  });
+  byId('report-facility-search').addEventListener('blur', () => window.setTimeout(() => {
+    byId('report-facility-results').hidden = true;
+  }, 160));
   byId('download-csv').addEventListener('click', downloadCsv);
   byId('print-report').addEventListener('click', () => window.print());
   document.querySelector('[data-topnav-toggle]')?.addEventListener('click', (event) => {

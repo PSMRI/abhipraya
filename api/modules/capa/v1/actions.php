@@ -4,12 +4,13 @@ declare(strict_types=1);
 require_once dirname(__DIR__, 3) . '/public_api.php';
 require_once dirname(__DIR__, 3) . '/assets/conn/db.php';
 require_once dirname(__DIR__, 3) . '/helpers/SurveyConfig.php';
+require_once dirname(__DIR__, 3) . '/helpers/AccessScope.php';
 require_once dirname(__DIR__, 3) . '/core/PersisterService.php';
 
 SessionManager::requireLogin();
 Security::requireAnyMethod(['GET', 'POST']);
 
-if (!in_array(SessionManager::roleId(), [1, 2, 3], true)) {
+if (!in_array(SessionManager::roleId(), [1, 2, 3, 7, 8], true)) {
     Response::forbidden('Your role is not allowed to manage CAPA plans.');
 }
 
@@ -54,13 +55,7 @@ function capaSurveyContext(string $facilityNin, int $department, string $version
 
 function capaEnforceScope(string $facilityNin): void
 {
-    if (SessionManager::roleId() !== 2) {
-        return;
-    }
-    $assignedFacility = (string) SessionManager::facilityId();
-    if ($assignedFacility === '' || !hash_equals($assignedFacility, $facilityNin)) {
-        Response::forbidden('You can manage CAPA plans only for your assigned facility.');
-    }
+    AccessScope::assertFacilityAllowed($facilityNin);
 }
 
 function capaText(array $action, string $field, int $maximum, bool $required = false): string
@@ -80,6 +75,41 @@ function capaText(array $action, string $field, int $maximum, bool $required = f
     return $value;
 }
 
+/**
+ * Fetch an associative result set without requiring the optional mysqlnd
+ * extension. Production PHP deployments using the native mysqli driver do
+ * not provide mysqli_stmt::get_result().
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function capaStatementRows(mysqli_stmt $statement): array
+{
+    $metadata = $statement->result_metadata();
+    if ($metadata === false) {
+        return [];
+    }
+
+    $fields = $metadata->fetch_fields();
+    $values = [];
+    $references = [];
+    foreach ($fields as $field) {
+        $values[$field->name] = null;
+        $references[] = &$values[$field->name];
+    }
+    call_user_func_array([$statement, 'bind_result'], $references);
+
+    $rows = [];
+    while ($statement->fetch()) {
+        $row = [];
+        foreach ($fields as $field) {
+            $row[$field->name] = $values[$field->name];
+        }
+        $rows[] = $row;
+    }
+    $metadata->free();
+    return $rows;
+}
+
 function capaLoad(mysqli $con, string $facilityNin, int $department, string $month, string $surveyVersion): array
 {
     $statement = $con->prepare(
@@ -92,7 +122,7 @@ function capaLoad(mysqli $con, string $facilityNin, int $department, string $mon
     );
     $statement->bind_param('siss', $facilityNin, $department, $month, $surveyVersion);
     $statement->execute();
-    $rows = $statement->get_result()->fetch_all(MYSQLI_ASSOC);
+    $rows = capaStatementRows($statement);
     $statement->close();
     return array_map(static function (array $row): array {
         return [
@@ -122,7 +152,7 @@ try {
             capaEnforceScope($facilityNin);
             $stmt = $con->prepare('SELECT DISTINCT month FROM capa_actions WHERE hospital_nin = ? AND dept_id = ? ORDER BY month DESC');
             $stmt->bind_param('si', $facilityNin, $department); $stmt->execute();
-            $months = array_column($stmt->get_result()->fetch_all(MYSQLI_ASSOC), 'month'); $stmt->close();
+            $months = array_column(capaStatementRows($stmt), 'month'); $stmt->close();
             Response::success('CAPA months loaded.', ['months' => $months]);
         }
         $month = capaScopeValue($_GET['month'] ?? '', 'month');

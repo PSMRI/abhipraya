@@ -1,0 +1,1 @@
+(()=>{'use strict';document.querySelector('[data-topnav-toggle]')?.addEventListener('click',event=>{const nav=document.getElementById('primary-navigation');if(!nav)return;const open=nav.classList.toggle('is-open');event.currentTarget.setAttribute('aria-expanded',String(open));});})();

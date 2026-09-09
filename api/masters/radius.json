@@ -3,5 +3,6 @@
   "minimum_radius_meters": 25,
   "maximum_radius_meters": 5000,
   "duplicate_window_hours": 24,
-  "facility_overrides": {}
+  "facility_overrides": {},
+  "geo_bypass_facilities": ["1234567890"]
 }

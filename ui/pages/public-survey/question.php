@@ -9,13 +9,13 @@
   <link rel="stylesheet" href="/ui/assets/css/reset.css">
   <link rel="stylesheet" href="/ui/assets/css/variables.css">
   <link rel="stylesheet" href="/ui/assets/css/global.css">
-  <link rel="stylesheet" href="/ui/assets/css/public-survey-v3.css">
+  <link rel="stylesheet" href="/ui/assets/css/public-survey-v3.css?v=20260908-opd-audio-cues">
 </head>
 <body class="ab-public-feedback">
   <main class="ab-public-feedback-main" id="main-content" tabindex="-1">
     <div id="survey-alert" class="ab-public-alert" aria-live="assertive"></div>
     <div id="survey-root" class="ab-public-loading" aria-live="polite">Loading feedback survey&hellip;</div>
   </main>
-  <script src="/ui/assets/js/public-survey-v3.js"></script>
+  <script src="/ui/assets/js/public-survey-v3.js?v=20260909-opd-rating-guidance-en"></script>
 </body>
 </html>
