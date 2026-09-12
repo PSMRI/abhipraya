@@ -40,10 +40,11 @@ MASTER_QUESTIONS = json.loads(
 )
 QUESTIONS = [item["ques"] for item in MASTER_QUESTIONS if item.get("lang") == "2" and int(item.get("qn", 0)) <= 10]
 ENGLISH_QUESTIONS = [item["ques"] for item in MASTER_QUESTIONS if item.get("lang") == "1" and int(item.get("qn", 0)) <= 10]
-RATING_GUIDANCE = "आप 1 से लेकर 5 तक स्टार रेटिंग दे सकते हैं।"
+# Say "स्टार" only once; the following numbers inherit that rating context.
+RATING_GUIDANCE = "एक स्टार बहुत बुरा, दो सामान्य, तीन अच्छा, चार बहुत अच्छा, और पाँच उत्कृष्ट।"
 FIRST_GUIDANCE = "दोबारा सुनने के लिए स्पीकर बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं।"
 NEXT_GUIDANCE = "दोबारा सुनने के लिए स्पीकर बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं। पीछे जाने के लिए पीला बटन दबाएं।"
-ENGLISH_RATING_GUIDANCE = "You can give your rating from 1 to 5 stars."
+ENGLISH_RATING_GUIDANCE = "One star is very poor, two average, three good, four very good, and five excellent."
 ENGLISH_FIRST_GUIDANCE = "To listen again, press the speaker button. To continue, press the green button."
 ENGLISH_NEXT_GUIDANCE = "To listen again, press the speaker button. To continue, press the green button. To go back, press the yellow button."
 ENGLISH_RATINGS = ["Very Poor", "Average", "Good", "Very Good", "Excellent"]

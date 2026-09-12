@@ -196,8 +196,8 @@
         ? (firstQuestion ? 'दोबारा सुनने के लिए स्पीकर बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं।' : 'दोबारा सुनने के लिए स्पीकर बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं। पीछे जाने के लिए पीला बटन दबाएं।')
         : (firstQuestion ? 'To listen again, press the speaker button. To continue, press the green button.' : 'To listen again, press the speaker button. To continue, press the green button. To go back, press the yellow button.');
       const ratingGuide = language === 2
-        ? 'आप 1 से लेकर 5 तक स्टार रेटिंग दे सकते हैं।'
-        : 'You can give your rating from 1 to 5 stars.';
+        ? 'एक स्टार बहुत बुरा, दो सामान्य, तीन अच्छा, चार बहुत अच्छा, और पाँच उत्कृष्ट।'
+        : 'One star is very poor, two average, three good, four very good, and five excellent.';
       const speech = new SpeechSynthesisUtterance(`${question.ques} ${ratingGuide} ${navigation}`);
       speech.lang = language === 2 ? 'hi-IN' : 'en-IN';
       window.speechSynthesis.speak(speech);
@@ -219,7 +219,7 @@
     const version = playbackVersion;
     if (isOpdRating(question)) {
       const audioLanguage = language === 2 ? 'hi' : 'en';
-      const audio = new Audio(`/ui/assets/audio/opd-demo/${audioLanguage}/Q${question.qn}.mp3`);
+      const audio = new Audio(`/ui/assets/audio/opd-demo/${audioLanguage}/Q${question.qn}.mp3?v=rating-guide-2`);
       activeAudio = audio;
       scheduleOpdAudioCues(audio, Number(question.qn) === 1, false);
       audio.addEventListener('ended', () => { if (activeAudio === audio) activeAudio = null; }, { once: true });
@@ -389,6 +389,19 @@
       button.addEventListener('click', async () => {
         stopPlayback();
         language = code;
+        // Start the first OPD prompt within the language-button tap. Mobile
+        // browsers otherwise treat playback after the asynchronous API request
+        // as autoplay and can block it silently.
+        if (isOpdSurvey()) {
+          const audioLanguage = code === 2 ? 'hi' : 'en';
+          const audio = new Audio(`/ui/assets/audio/opd-demo/${audioLanguage}/Q1.mp3?v=rating-guide-2`);
+          activeAudio = audio;
+          scheduleOpdAudioCues(audio, true, false);
+          audio.addEventListener('ended', () => { if (activeAudio === audio) activeAudio = null; }, { once: true });
+          audio.play().catch(() => { if (activeAudio === audio) activeAudio = null; });
+          await loadQuestions(false);
+          return;
+        }
         await loadQuestions(true);
       });
       actions.appendChild(button);

@@ -16,6 +16,6 @@
     <div id="survey-alert" class="ab-public-alert" aria-live="assertive"></div>
     <div id="survey-root" class="ab-public-loading" aria-live="polite">Loading feedback survey&hellip;</div>
   </main>
-  <script src="/ui/assets/js/public-survey-v3.js?v=20260909-opd-rating-guidance-en"></script>
+  <script src="/ui/assets/js/public-survey-v3.js?v=20260909-rating-guide-2"></script>
 </body>
 </html>

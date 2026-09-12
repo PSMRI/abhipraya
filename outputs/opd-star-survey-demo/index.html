@@ -58,7 +58,7 @@
       if(activeAudio){activeAudio.pause();activeAudio.currentTime=0}
       if('speechSynthesis'in window)window.speechSynthesis.cancel();
       const base=location.protocol==='file:'?'./audio/':'/ui/assets/audio/opd-demo/hi/';
-      activeAudio=new Audio(`${base}${filename}.mp3`);
+      activeAudio=new Audio(`${base}${filename}.mp3?v=rating-guide-2`);
       activeAudio.onended=()=>{activeAudio=null};
       activeAudio.onerror=()=>{activeAudio=null;fallback?.()};
       activeAudio.play().catch(()=>{activeAudio=null;fallback?.()});
@@ -67,7 +67,7 @@
     const navigationHelp=()=>current===0?'दोबारा सुनने के लिए माइक बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं।':'दोबारा सुनने के लिए माइक बटन दबाएं। आगे बढ़ने के लिए हरा बटन दबाएं। पीछे जाने के लिए पीला बटन दबाएं।';
     $('#listen').onclick=()=>speakCurrentQuestion();
     document.querySelectorAll('input[name="rating"]').forEach(i=>i.onchange=e=>{answers[current]=Number(e.target.value);render();playAudio(`${current===0?'first-':''}rating-${e.target.value}`,()=>say(`आपने ${e.target.value} स्टार, ${ratings[e.target.value]} चुना है। ${navigationHelp()}`))});
-    const speakCurrentQuestion=()=>playAudio(`Q${current+1}`,()=>say(`${questions[current]} आप 1 से लेकर 5 तक स्टार रेटिंग दे सकते हैं। ${navigationHelp()}`));
+    const speakCurrentQuestion=()=>playAudio(`Q${current+1}`,()=>say(`${questions[current]} एक स्टार बहुत बुरा, दो सामान्य, तीन अच्छा, चार बहुत अच्छा, और पाँच उत्कृष्ट। ${navigationHelp()}`));
     $('#back').onclick=()=>{if(current>0){current--;render();speakCurrentQuestion()}};$('#next').onclick=()=>{if(!answers[current]){$('#selection').textContent='कृपया आगे बढ़ने से पहले स्टार रेटिंग चुनें।';return}current++;render();speakCurrentQuestion()};$('#finish').onclick=()=>{if(!answers[current]){$('#selection').textContent='कृपया डेमो पूरा करने से पहले स्टार रेटिंग चुनें।';return}$('#survey').hidden=true;$('#complete').hidden=false};$('#restart').onclick=()=>{answers.fill(null);current=0;$('#complete').hidden=true;$('#survey').hidden=false;render()};render();
   </script>
 </body>
